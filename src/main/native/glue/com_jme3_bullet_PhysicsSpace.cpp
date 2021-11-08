@@ -159,6 +159,41 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addRigidBody
 
 /*
  * Class:     com_jme3_bullet_PhysicsSpace
+ * Method:    addProceduralStaticRigidBody
+ * Signature: (JJII)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addProceduralStaticRigidBody
+(JNIEnv *pEnv, jclass, jlong spaceId, jlong rigidBodyId, jlong shapeId, jint proxyGroup,
+        jint proxyMask) {
+    jmePhysicsSpace * const
+            pSpace = reinterpret_cast<jmePhysicsSpace *> (spaceId);
+    NULL_CHK(pEnv, pSpace, "The physics space does not exist.",)
+    btDynamicsWorld * const pWorld = pSpace->getDynamicsWorld();
+    NULL_CHK(pEnv, pWorld, "The physics world does not exist.",);
+
+    btRigidBody * const pBody = reinterpret_cast<btRigidBody *> (rigidBodyId);
+    NULL_CHK(pEnv, pBody, "The collision object does not exist.",)
+    btAssert(pBody->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+
+    btCollisionShape * const pShape = reinterpret_cast<btCollisionShape *> (shapeId);
+    NULL_CHK(pEnv, pShape, "The collision shape does not exist.",)
+    btAssert(pShape->getShapeType() == CUSTOM_CONCAVE_SHAPE_TYPE);
+
+    jmeUserPointer const pUser0 = (jmeUserPointer) pBody->getUserPointer();
+    NULL_CHK(pEnv, pUser0, "The user object does not exist.",)
+    btAssert(pUser0->m_jmeSpace == NULL);
+    pUser0->m_jmeSpace = pSpace;
+
+    jmeUserPointer const pUser1 = (jmeUserPointer) pShape->getUserPointer();
+    NULL_CHK(pEnv, pUser1, "The user object does not exist.",)
+    btAssert(pUser1->m_jmeSpace == NULL);
+    pUser1->m_jmeSpace = pSpace;
+
+    pWorld->addRigidBody(pBody, proxyGroup, proxyMask);
+}
+
+/*
+ * Class:     com_jme3_bullet_PhysicsSpace
  * Method:    createPhysicsSpace
  * Signature: (Lcom/jme3/math/Vector3f;Lcom/jme3/math/Vector3f;II)J
  */

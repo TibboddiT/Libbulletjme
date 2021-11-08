@@ -34,6 +34,7 @@ package com.jme3.bullet;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.shapes.ProceduralCollisionShape;
 import com.jme3.bullet.joints.Constraint;
 import com.jme3.bullet.joints.PhysicsJoint;
 import com.jme3.bullet.objects.PhysicsBody;
@@ -1040,7 +1041,13 @@ public class PhysicsSpace extends CollisionSpace {
         int proxyGroup = useStaticGroup ? 2 : 1;
         int proxyMask = useStaticGroup ? -3 : -1;
         long spaceId = nativeId();
-        addRigidBody(spaceId, rigidBodyId, proxyGroup, proxyMask);
+
+        if (rigidBody.getCollisionShape() instanceof ProceduralCollisionShape) {
+            long shapeId = rigidBody.getCollisionShape().nativeId();
+            addProceduralStaticRigidBody(spaceId, rigidBodyId, shapeId, proxyGroup, proxyMask);
+        } else {
+            addRigidBody(spaceId, rigidBodyId, proxyGroup, proxyMask);
+        }
 
         if (kinematic) {
             rigidBody.setKinematic(true);
@@ -1163,6 +1170,9 @@ public class PhysicsSpace extends CollisionSpace {
             boolean disableCollisions);
 
     native private static void addRigidBody(long spaceId, long rigidBodyId,
+            int proxyGroup, int proxyMask);
+
+    native private static void addProceduralStaticRigidBody(long spaceId, long rigidBodyId, long shapeId,
             int proxyGroup, int proxyMask);
 
     native private long createPhysicsSpace(Vector3f minVector,

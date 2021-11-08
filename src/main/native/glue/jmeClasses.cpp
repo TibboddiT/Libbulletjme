@@ -52,6 +52,8 @@ jmethodID jmeClasses::PhysicsSpace_postTick;
 jmethodID jmeClasses::PhysicsSpace_addCollisionEvent;
 jmethodID jmeClasses::PhysicsSpace_addContactProcessed;
 
+jmethodID jmeClasses::ProceduralCollisionShape_getTriangles;
+
 jmethodID jmeClasses::PhysicsGhostObject_addOverlappingObject;
 
 jfieldID jmeClasses::Vec3d_x;
@@ -240,6 +242,19 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
     PhysicsSpace_addContactProcessed = pEnv->GetMethodID(PhysicsSpace,
             "addContactProcessed",
             "(Lcom/jme3/bullet/collision/PhysicsCollisionObject;Lcom/jme3/bullet/collision/PhysicsCollisionObject;J)V");
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+
+    jclass ProceduralCollisionShape = pEnv->FindClass("com/jme3/bullet/collision/shapes/ProceduralCollisionShape");
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+    ProceduralCollisionShape_getTriangles = pEnv->GetMethodID(ProceduralCollisionShape,
+            "getTriangles",
+            "(FFFFFF)Ljava/nio/FloatBuffer;");
     if (pEnv->ExceptionCheck()) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;

@@ -2,5 +2,11 @@
 /.gradle/
 /.nb-gradle/
 /.idea/
+/.vscode/
 /build/
 /private/
+/bin/
+/dist/
+.classpath
+.project
+.settings/

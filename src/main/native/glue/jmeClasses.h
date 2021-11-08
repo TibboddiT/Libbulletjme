@@ -65,6 +65,8 @@ public:
     static jmethodID PhysicsSpace_addCollisionEvent;
     static jmethodID PhysicsSpace_addContactProcessed;
 
+    static jmethodID ProceduralCollisionShape_getTriangles;
+
     static jmethodID PhysicsGhostObject_addOverlappingObject;
 
     static jfieldID Vec3d_x;
