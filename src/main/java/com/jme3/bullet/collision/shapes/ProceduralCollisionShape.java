@@ -75,7 +75,7 @@ public class ProceduralCollisionShape extends CollisionShape {
         this.trianglesFeeder = trianglesFeeder;
         this.maxTriangles = maxTriangles;
 
-        this.trianglesStorage = BufferUtils.createFloatBuffer(maxTriangles);
+        trianglesStorage = BufferUtils.createFloatBuffer(maxTriangles * 3 * 3);
 
         createShape();
     }
@@ -83,24 +83,28 @@ public class ProceduralCollisionShape extends CollisionShape {
     /**
      * This method is invoked by native code.
      */
-    private FloatBuffer getTriangles(float aabbMinX, float aabbMinY, float aabbMinZ, float aabbMaxX, float aabbMaxY, float aabbMaxZ) {
+    private int getTriangles(float aabbMinX, float aabbMinY, float aabbMinZ, float aabbMaxX, float aabbMaxY, float aabbMaxZ) {
         aabbMin.set(aabbMinX, aabbMinY, aabbMinZ);
         aabbMax.set(aabbMaxX, aabbMaxY, aabbMaxZ);
 
-        this.trianglesFeeder.getTriangles(aabbMin, aabbMax, this.trianglesStorage);
+        trianglesStorage.clear();
 
-        return this.trianglesStorage;
+        trianglesFeeder.getTriangles(aabbMin, aabbMax, trianglesStorage);
+
+        trianglesStorage.flip();
+
+        return trianglesStorage.limit();
     }
 
     /**
      * Instantiate the configured btTriangleMeshShape.
      */
     private void createShape() {
-        long shapeId = createShape_native();
+        long shapeId = createShape_native(trianglesStorage);
         setNativeId(shapeId);
    }
     // *************************************************************************
     // native private methods
 
-    native private long createShape_native();
+    native private long createShape_native(FloatBuffer storage);
 }

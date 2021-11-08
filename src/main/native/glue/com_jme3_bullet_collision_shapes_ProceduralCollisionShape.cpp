@@ -51,6 +51,8 @@ public:
 
 	btVector3 m_localScaling;
 
+	jfloat *buffer;
+
 	virtual void getAabb(const btTransform& t, btVector3& aabbMin, btVector3& aabbMax) const
 	{
 		btVector3 dims(20000, 3000, 20000);
@@ -85,7 +87,7 @@ public:
 
         jobject javaShape = pEnv->NewLocalRef(pUser->m_javaRef);
 
-        jobject triangles = pEnv->CallObjectMethod(javaShape,
+        jint nbPoints = pEnv->CallIntMethod(javaShape,
                 jmeClasses::ProceduralCollisionShape_getTriangles,
                 aabbMin.getX(), aabbMin.getY(), aabbMin.getZ(),
                 aabbMax.getX(), aabbMax.getY(), aabbMax.getZ());
@@ -95,42 +97,22 @@ public:
             return;
         }
 
-        jfloat *buffer = (jfloat *) pEnv->GetDirectBufferAddress(triangles);
+		// printf("processAllTriangles: nb triangles fetched: %d\n", nbPoints / 9);
 
-		btVector3 expand(1.5,1.5,1.5);
-		btVector3 min = aabbMin-expand, max = aabbMax+expand;
+		btVector3 triangle[3];
 
-		btVector3 c  = btVector3((min.x() + max.x()) * 0.5, 0.5, (min.z() + max.z()) * 0.5);
-		btVector3 bl = btVector3(min.x(), 0.5, min.z());
-		btVector3 br = btVector3(min.x(), 0.5, max.z());
-		btVector3 tl = btVector3(max.x(), 0.5, min.z());
-		btVector3 tr = btVector3(max.x(), 0.5, max.z());
+		for (int i = 0; i < nbPoints; i += 9)
+		{
+			// printf("  - [%f, %f, %f]\n", buffer[i], buffer[i + 1], buffer[i + 2]);
 
-		btVector3 vertices[3];
+			triangle[0] = {buffer[i + 0], buffer[i + 1], buffer[i + 2]};
+			triangle[1] = {buffer[i + 3], buffer[i + 4], buffer[i + 5]};
+			triangle[2] = {buffer[i + 6], buffer[i + 7], buffer[i + 8]};
 
-		vertices[0] = bl;
-		vertices[1] = br;
-		vertices[2] = c;
-		assert(btCross(vertices[1]-vertices[0], vertices[2]-vertices[0]).y()>0);
-		callback->processTriangle(vertices, 1, 0);
+			callback->processTriangle(triangle, i / 9 + 1, 0);
+		}
 
-		vertices[0] = tr;
-		vertices[1] = tl;
-		vertices[2] = c;
-		assert(btCross(vertices[1]-vertices[0], vertices[2]-vertices[0]).y()>0);
-		callback->processTriangle(vertices, 2, 0);
-
-		vertices[0] = br;
-		vertices[1] = tr;
-		vertices[2] = c;
-		assert(btCross(vertices[1]-vertices[0], vertices[2]-vertices[0]).y()>0);
-		callback->processTriangle(vertices, 3, 0);
-
-		vertices[0] = tl;
-		vertices[1] = bl;
-		vertices[2] = c;
-		assert(btCross(vertices[1]-vertices[0], vertices[2]-vertices[0]).y()>0);
-		callback->processTriangle(vertices, 4, 0);
+		// fflush(stdout);
 
         // printf("out ProceduralCollisionShape.processAllTriangles\n");
         // fflush(stdout);
@@ -160,7 +142,7 @@ public:
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisionShape_createShape_1native
-  (JNIEnv *pEnv, jobject object) {
+  (JNIEnv *pEnv, jobject object, jobject storage) {
     jmeClasses::initJavaClasses(pEnv);
 
     printf("in ProceduralCollisionShape_createShape_native\n");
@@ -171,6 +153,8 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisio
     jmeUserPointer pUser = new jmeUserInfo();
 
     pUser->m_javaRef = pEnv->NewWeakGlobalRef(object);
+
+	pShape->buffer = (jfloat *) pEnv->GetDirectBufferAddress(storage);
 
     pShape->setUserPointer(pUser);
 

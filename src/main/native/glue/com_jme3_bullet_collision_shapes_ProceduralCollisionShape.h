@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_jme3_bullet_collision_shapes_ProceduralCollisionShape
  * Method:    createShape_native
- * Signature: ()J
+ * Signature: (Ljava/nio/FloatBuffer;)J
  */
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisionShape_createShape_1native
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobject);
 
 #ifdef __cplusplus
 }

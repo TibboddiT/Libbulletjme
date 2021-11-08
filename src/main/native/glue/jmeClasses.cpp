@@ -254,7 +254,7 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
     }
     ProceduralCollisionShape_getTriangles = pEnv->GetMethodID(ProceduralCollisionShape,
             "getTriangles",
-            "(FFFFFF)Ljava/nio/FloatBuffer;");
+            "(FFFFFF)I");
     if (pEnv->ExceptionCheck()) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;
