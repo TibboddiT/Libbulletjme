@@ -66,8 +66,8 @@ public:
 		// - 3 m3 chunks, add some margins to current aabb
 		// - Cache every 3 m3 computed chunks in a FIFO
 
-        printf("in ProceduralCollisionShape.processAllTriangles\n");
-        fflush(stdout);
+        // printf("in ProceduralCollisionShape.processAllTriangles\n");
+        // fflush(stdout);
 
         jmeUserPointer const pUser = (jmeUserPointer) getUserPointer();
         if (pUser == NULL) {
@@ -145,8 +145,8 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisio
   (JNIEnv *pEnv, jobject object, jobject storage) {
     jmeClasses::initJavaClasses(pEnv);
 
-    printf("in ProceduralCollisionShape_createShape_native\n");
-    fflush(stdout);
+    // printf("in ProceduralCollisionShape_createShape_native\n");
+    // fflush(stdout);
 
     btProcMeshShape * pShape = new btProcMeshShape();
 
@@ -158,8 +158,8 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisio
 
     pShape->setUserPointer(pUser);
 
-    printf("ProceduralCollisionShape created\n");
-    fflush(stdout);
+    // printf("ProceduralCollisionShape created\n");
+    // fflush(stdout);
 
     return reinterpret_cast<jlong> (pShape);
 }
