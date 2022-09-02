@@ -31,14 +31,13 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import com.jme3.math.Vector3f;
+import com.jme3.util.BufferUtils;
 import java.nio.FloatBuffer;
 import java.util.logging.Logger;
 
-import com.jme3.math.Vector3f;
-import com.jme3.util.BufferUtils;
-
 /**
- * A mesh CollisionShape based on
+ * A procedural CollisionShape based on
  * Bullet's btTriangleMeshShape. Not for use in dynamic bodies. Collisions
  * between HeightfieldCollisionShape, ProceduralCollisionShape, and
  * PlaneCollisionShape objects are never detected.
@@ -70,8 +69,13 @@ public class ProceduralCollisionShape extends CollisionShape {
 
     /**
      * Instantiate a shape.
+     *
+     * @param trianglesFeeder the triangles feeder
+     * @param maxTriangles max number of triangles the feeder will return
      */
-    public ProceduralCollisionShape(ProceduralCollisionShapeTrianglesFeeder trianglesFeeder, int maxTriangles) {
+    public ProceduralCollisionShape(
+        ProceduralCollisionShapeTrianglesFeeder trianglesFeeder,
+        int maxTriangles) {
         this.trianglesFeeder = trianglesFeeder;
         this.maxTriangles = maxTriangles;
 
@@ -82,8 +86,17 @@ public class ProceduralCollisionShape extends CollisionShape {
 
     /**
      * This method is invoked by native code.
+     *
+     * @param aabbMinX AABB min x
+     * @param aabbMinY AABB min y
+     * @param aabbMinZ AABB min z
+     * @param aabbMaxX AABB max x
+     * @param aabbMaxY AABB max x
+     * @param aabbMaxZ AABB max x
+     * @return number of triangles returned
      */
-    private int getTriangles(float aabbMinX, float aabbMinY, float aabbMinZ, float aabbMaxX, float aabbMaxY, float aabbMaxZ) {
+    private int getTriangles(float aabbMinX, float aabbMinY, float aabbMinZ,
+        float aabbMaxX, float aabbMaxY, float aabbMaxZ) {
         aabbMin.set(aabbMinX, aabbMinY, aabbMinZ);
         aabbMax.set(aabbMaxX, aabbMaxY, aabbMaxZ);
 

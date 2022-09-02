@@ -1162,7 +1162,8 @@ public class PhysicsSpace
 
         if (rigidBody.getCollisionShape() instanceof ProceduralCollisionShape) {
             long shapeId = rigidBody.getCollisionShape().nativeId();
-            addProceduralStaticRigidBody(spaceId, rigidBodyId, shapeId, proxyGroup, proxyMask);
+            addProceduralStaticRigidBody(spaceId, rigidBodyId, shapeId,
+                proxyGroup, proxyMask);
         } else {
             addRigidBody(spaceId, rigidBodyId, proxyGroup, proxyMask);
         }
@@ -1300,8 +1301,8 @@ public class PhysicsSpace
 
     native private static int countManifolds(long spaceId);
 
-    native private static void addProceduralStaticRigidBody(long spaceId, long rigidBodyId, long shapeId,
-            int proxyGroup, int proxyMask);
+    native private static void addProceduralStaticRigidBody(long spaceId,
+            long rigidBodyId, long shapeId, int proxyGroup, int proxyMask);
 
     native private long createPhysicsSpace(Vector3f minVector,
             Vector3f maxVector, int broadphaseType, int numSolvers);

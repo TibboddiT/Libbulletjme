@@ -31,13 +31,23 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import com.jme3.math.Vector3f;
 import java.nio.FloatBuffer;
 
-import com.jme3.math.Vector3f;
-
 /**
+ * A triangles feeder that will return triangles near an AABB
+ *
  * @author tibbo
  */
 public interface ProceduralCollisionShapeTrianglesFeeder {
-    public void getTriangles(Vector3f aabbMin, Vector3f aabbMax, FloatBuffer trianglesStorage);
+
+    /**
+     * Returns triangles of interest.
+     *
+     * @param aabbMin min corner of AABB
+     * @param aabbMax max corner of AABB
+     * @param trianglesStorage a buffer to store returned triangles
+     */
+    void getTriangles(Vector3f aabbMin, Vector3f aabbMax,
+        FloatBuffer trianglesStorage);
 }
