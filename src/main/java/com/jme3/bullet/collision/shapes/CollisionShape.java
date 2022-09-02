@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.MyVector3f;
+import jme3utilities.minie.MyShape;
 
 /**
  * The abstract base class for collision shapes based on Bullet's
@@ -86,6 +87,15 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * copy of the scale factors, one for each local axis
      */
     protected Vector3f scale = new Vector3f(1f, 1f, 1f);
+    // *************************************************************************
+    // constructors
+
+    /**
+     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     */
+    public CollisionShape() {
+        // do nothing
+    }
     // *************************************************************************
     // new methods exposed
 
@@ -137,8 +147,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
         recalculateAabb();
 
         long shapeId = nativeId();
-        Matrix3f basisMatrix = new Matrix3f();
-        basisMatrix.set(rotation);
+        Matrix3f basisMatrix = new Matrix3f().set(rotation);
         Vector3f maxima = new Vector3f();
         Vector3f minima = new Vector3f();
         getAabb(shapeId, translation, basisMatrix, minima, maxima);
@@ -242,7 +251,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * @return true if enabled, otherwise false
      */
     public boolean isContactFilterEnabled() {
-        assert enableContactFilter == isContactFilterEnabled(nativeId()) : enableContactFilter;
+        assert enableContactFilter == isContactFilterEnabled(nativeId()) :
+                enableContactFilter;
         return enableContactFilter;
     }
 
@@ -445,6 +455,20 @@ abstract public class CollisionShape extends NativePhysicsObject {
     protected void setNativeId(long shapeId) {
         super.setNativeId(shapeId);
         logger.log(Level.FINE, "Created {0}.", this);
+    }
+
+    /**
+     * Represent this CollisionShape as a String.
+     *
+     * @return a descriptive string of text (not null, not empty)
+     */
+    @Override
+    public String toString() {
+        String result = MyShape.describeType(this);
+        long shapeId = nativeId();
+        result += "#" + Long.toHexString(shapeId);
+
+        return result;
     }
     // *************************************************************************
     // Java private methods

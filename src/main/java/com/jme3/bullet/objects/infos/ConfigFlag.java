@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020 jMonkeyEngine
+ * Copyright (c) 2019-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 package com.jme3.bullet.objects.infos;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * @author Stephen Gold sgold@sonic.net
  * @see SoftBodyConfig#collisionFlags()
  */
-public class ConfigFlag {
+final public class ConfigFlag {
     // *************************************************************************
     // constants and loggers
 
@@ -56,11 +56,7 @@ public class ConfigFlag {
     /**
      * enable the SDF-based handler for rigid-versus-deformable collisions
      */
-    final public static int SDF_RD = 0x3;
-    /**
-     * enable the SDF-based handler for rigid-versus-deformable face collisions
-     */
-    final public static int SDF_RDF = 0x4;
+    final public static int SDF_RD = 0x4;
     /**
      * enable the Node-versus-Face handler for soft-versus-soft collisions
      */
@@ -76,7 +72,20 @@ public class ConfigFlag {
     /**
      * enable the Vertex-versus-Face handler for soft-versus-soft collisions
      */
-    final public static int VF_DD = 0x50;
+    final public static int VF_DD = 0x80;
+    /**
+     * enable the GJK-based handler for rigid-versus-deformable face collisions
+     */
+    final public static int SDF_RDF = 0x100;
+    /**
+     * enable the GJK-based handler for multibody-versus-deformable face
+     * collisions
+     */
+    final public static int SDF_MDF = 0x200;
+    /**
+     * enable the SDF-based handler for rigid-versus-deformable node collisions
+     */
+    final public static int SDF_RDN = 0x400;
     /**
      * message logger for this class
      */
@@ -100,12 +109,15 @@ public class ConfigFlag {
      * @return description (not null, may be empty)
      */
     public static String describe(int flags) {
-        List<String> flagList = new ArrayList<>(5);
+        Collection<String> flagList = new ArrayList<>(5);
         if ((flags & SDF_RS) != 0x0) {
             flagList.add("SDF_RS");
         }
         if ((flags & CL_RS) != 0x0) {
             flagList.add("CL_RS");
+        }
+        if ((flags & SDF_RD) != 0x0) {
+            flagList.add("SDF_RD");
         }
         if ((flags & VF_SS) != 0x0) {
             flagList.add("VF_SS");
@@ -116,8 +128,20 @@ public class ConfigFlag {
         if ((flags & CL_SELF) != 0x0) {
             flagList.add("CL_SELF");
         }
+        if ((flags & VF_DD) != 0x0) {
+            flagList.add("VF_DD");
+        }
+        if ((flags & SDF_RDF) != 0x0) {
+            flagList.add("SDF_RDF");
+        }
+        if ((flags & SDF_MDF) != 0x0) {
+            flagList.add("SDF_MDF");
+        }
+        if ((flags & SDF_RDN) != 0x0) {
+            flagList.add("SDF_RDN");
+        }
 
-        StringBuilder result = new StringBuilder(40);
+        StringBuilder result = new StringBuilder(60);
         boolean addSeparators = false;
         for (String flagName : flagList) {
             if (addSeparators) {

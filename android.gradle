@@ -1,4 +1,4 @@
-// Gradle build script for Android native libraries
+// Gradle script to build Android native libraries
 
 buildscript {
     repositories {
@@ -12,8 +12,8 @@ buildscript {
 apply plugin: 'com.android.library'
 
 String flavor = 'Sp'
-if (rootProject.hasProperty('flavor')) {
-    flavor = rootProject.ext.flavor
+if (project.hasProperty('flavor')) {
+    flavor = project.ext.flavor
 }
 
 android {
@@ -34,12 +34,7 @@ android {
     ndkVersion '21.3.6528147'
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
-task copyToDist() {}
+tasks.register('copyToDist') {}
 def archmap = [ 'ARM7' : 'armeabi-v7a', \
                 'ARM8' : 'arm64-v8a', \
                 'X86' : 'x86', \
@@ -52,7 +47,8 @@ archmap.each { arch ->
         String so = bt.value + "/out/lib/${arch.value}/libbulletjme.so"
         def sharedLibraryFile = file('build/intermediates/' + so)
         copyToDist.dependsOn('copyToDist_' + q)
-        task "copyToDist_$q" (type: Copy, dependsOn: 'assemble' + bt.key) {
+        tasks.register('copyToDist_' + q, Copy) {
+            dependsOn 'assemble' + bt.key
             from sharedLibraryFile
             rename { return 'Android_' + q + '_libbulletjme.so' }
             into 'dist'
@@ -60,11 +56,18 @@ archmap.each { arch ->
     }
 }
 
-// cleanup tasks
+repositories {
+    google()
+    mavenCentral()
+}
+
+// cleanup tasks:
+
 clean.dependsOn('cleanCxx', 'cleanDist')
-task cleanCxx(type: Delete) {
+
+tasks.register('cleanCxx', Delete) {
     delete '.cxx'
 }
-task cleanDist(type: Delete) {
+tasks.register('cleanDist', Delete) { // files to be distributed
     delete 'dist'
 }

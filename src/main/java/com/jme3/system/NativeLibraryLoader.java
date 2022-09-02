@@ -109,6 +109,10 @@ public final class NativeLibraryLoader {
         } else {
             String subdirectory = MyString.firstToLower(platform.toString());
             file = new File(directory, subdirectory);
+            if (!file.exists()) {
+                // Look for a native library built using current.gradle:
+                file = directory;
+            }
 
             String bt = MyString.firstToLower(buildType);
             file = new File(file, bt);
@@ -125,6 +129,8 @@ public final class NativeLibraryLoader {
         } else if (!file.canRead()) {
             logger.log(Level.SEVERE, "{0} is not readable", absoluteFilename);
         } else {
+            logger.log(Level.INFO, "Loading native library from {0}",
+                    absoluteFilename);
             System.load(absoluteFilename);
             success = true;
         }

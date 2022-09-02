@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 package com.jme3.bullet;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * @author Stephen Gold sgold@sonic.net
  * @see com.jme3.bullet.SolverInfo#setMode(int)
  */
-public class SolverMode {
+final public class SolverMode {
     // *************************************************************************
     // constants and loggers
 
@@ -54,7 +54,7 @@ public class SolverMode {
      */
     final public static int Separate = 0x2;
     /**
-     * use warmstarting
+     * use warm start
      */
     final public static int WarmStart = 0x4;
     /**
@@ -90,7 +90,7 @@ public class SolverMode {
      */
     final public static int NoCone = 0x800;
     /**
-     * use articulated warmstarting
+     * use articulated warm start
      */
     final public static int ArticulatedWarmStart = 0x1000;
     /**
@@ -116,7 +116,7 @@ public class SolverMode {
      * @return description (not null, may be empty)
      */
     public static String describe(int flags) {
-        List<String> flagList = new ArrayList<>(12);
+        Collection<String> flagList = new ArrayList<>(12);
 
         if ((flags & RandomOrder) != 0x0) {
             flagList.add("RandomOrder");

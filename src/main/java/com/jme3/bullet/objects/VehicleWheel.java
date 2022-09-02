@@ -89,7 +89,7 @@ public class VehicleWheel {
     /**
      * reusable rotation matrix
      */
-    final private Matrix3f tmp_Matrix = new Matrix3f();
+    final private Matrix3f tmpMatrix = new Matrix3f();
     /**
      * wheel orientation in physics-space coordinates
      */
@@ -226,7 +226,7 @@ public class VehicleWheel {
     }
 
     /**
-     * Determine how much this wheel has turned since the last physics step.
+     * Determine how much this wheel has turned since the last simulation step.
      *
      * @return the rotation angle (in radians)
      */
@@ -587,7 +587,8 @@ public class VehicleWheel {
 
     /**
      * Alter the length of this wheel's suspension (native field:
-     * m_suspensionLength). Bullet updates the length on every physics tick.
+     * m_suspensionLength). Bullet updates the length during every simulation
+     * step.
      *
      * @param length the desired length (in physics-space units)
      */
@@ -661,8 +662,8 @@ public class VehicleWheel {
      */
     public void updatePhysicsState() {
         getWheelLocation(vehicleId, wheelIndex, wheelWorldLocation);
-        getWheelRotation(vehicleId, wheelIndex, tmp_Matrix);
-        wheelWorldRotation.fromRotationMatrix(tmp_Matrix);
+        getWheelRotation(vehicleId, wheelIndex, tmpMatrix);
+        wheelWorldRotation.fromRotationMatrix(tmpMatrix);
     }
     // *************************************************************************
     // Java private methods

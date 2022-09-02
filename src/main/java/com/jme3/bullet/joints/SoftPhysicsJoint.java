@@ -104,7 +104,7 @@ public abstract class SoftPhysicsJoint extends PhysicsJoint {
      * @param clusterIndexA the index of the cluster for the A end (&ge;0)
      * @param rigidBodyB the rigid body for the B end (not null, alias created)
      */
-    public SoftPhysicsJoint(PhysicsSoftBody softBodyA, int clusterIndexA,
+    protected SoftPhysicsJoint(PhysicsSoftBody softBodyA, int clusterIndexA,
             PhysicsRigidBody rigidBodyB) {
         int numClustersA = softBodyA.countClusters();
         Validate.inRange(clusterIndexA, "cluster index", 0, numClustersA - 1);
@@ -129,7 +129,7 @@ public abstract class SoftPhysicsJoint extends PhysicsJoint {
      * @param softBodyB the body for the B end (not null, alias created)
      * @param clusterIndexB the index of the cluster for the B end (&ge;0)
      */
-    public SoftPhysicsJoint(PhysicsSoftBody softBodyA, int clusterIndexA,
+    protected SoftPhysicsJoint(PhysicsSoftBody softBodyA, int clusterIndexA,
             PhysicsSoftBody softBodyB, int clusterIndexB) {
         int numClustersA = softBodyA.countClusters();
         Validate.inRange(clusterIndexA, "cluster index A", 0, numClustersA - 1);
@@ -148,7 +148,7 @@ public abstract class SoftPhysicsJoint extends PhysicsJoint {
     // new methods exposed
 
     /**
-     * Compare Bullet parameters against their the local copies.
+     * Compare Bullet parameters against their local copies.
      *
      * @return true if the local copies are accurate, otherwise false
      */
@@ -251,7 +251,7 @@ public abstract class SoftPhysicsJoint extends PhysicsJoint {
     }
 
     /**
-     * TODO description
+     * Return the split.
      *
      * @return the split value
      */
@@ -332,7 +332,7 @@ public abstract class SoftPhysicsJoint extends PhysicsJoint {
     }
 
     /**
-     * TODO description
+     * Alter the split.
      *
      * @param split the desired split value (default=1)
      */

@@ -31,7 +31,6 @@
  */
 package com.jme3.bullet;
 
-import com.jme3.bullet.objects.PhysicsSoftBody;
 import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -54,7 +53,7 @@ public class SoftBodyWorldInfo extends NativePhysicsObject {
      * message logger for this class
      */
     final public static Logger logger
-            = Logger.getLogger(PhysicsSoftBody.class.getName());
+            = Logger.getLogger(SoftBodyWorldInfo.class.getName());
     // *************************************************************************
     // constructors
 

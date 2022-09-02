@@ -42,6 +42,7 @@ import jme3utilities.Validate;
 import jme3utilities.math.MyMath;
 import jme3utilities.math.MyVector3f;
 import vhacd.VHACDHull;
+import vhacd4.Vhacd4Hull;
 
 /**
  * A convex-hull CollisionShape based on Bullet's btConvexHullShape. For a 2-D
@@ -89,7 +90,7 @@ public class HullCollisionShape extends ConvexShape {
         Validate.nonEmpty(locations, "locations");
 
         int numLocations = locations.size();
-        points = new float[numAxes * numLocations];
+        this.points = new float[numAxes * numLocations];
         int j = 0;
         for (Vector3f location : locations) {
             points[j + PhysicsSpace.AXIS_X] = location.x;
@@ -111,23 +112,10 @@ public class HullCollisionShape extends ConvexShape {
      */
     public HullCollisionShape(float... points) {
         Validate.nonEmpty(points, "points");
-        Validate.require(points.length % numAxes == 0,
-                "length a multiple of 3");
+        Validate.require(
+                points.length % numAxes == 0, "length a multiple of 3");
 
         this.points = points.clone();
-        createShape();
-    }
-
-    /**
-     * Instantiate a shape based on a VHACDHull. For best performance and
-     * stability, the convex hull should have no more than 100 vertices.
-     *
-     * @param vhacdHull (not null, unaffected)
-     */
-    public HullCollisionShape(VHACDHull vhacdHull) {
-        Validate.nonNull(vhacdHull, "V-HACD hull");
-
-        points = vhacdHull.clonePositions();
         createShape();
     }
 
@@ -145,11 +133,37 @@ public class HullCollisionShape extends ConvexShape {
         Validate.positive(numFloats, "limit");
         Validate.require(numFloats % numAxes == 0, "limit a multiple of 3");
 
-        points = new float[numFloats];
+        this.points = new float[numFloats];
         for (int i = 0; i < numFloats; ++i) {
             points[i] = flippedBuffer.get(i);
         }
 
+        createShape();
+    }
+
+    /**
+     * Instantiate a shape based on a Vhacd4Hull. For best performance and
+     * stability, the convex hull should have no more than 100 vertices.
+     *
+     * @param vhacd4Hull (not null, unaffected)
+     */
+    public HullCollisionShape(Vhacd4Hull vhacd4Hull) {
+        Validate.nonNull(vhacd4Hull, "V-HACD hull");
+
+        this.points = vhacd4Hull.clonePositions();
+        createShape();
+    }
+
+    /**
+     * Instantiate a shape based on a VHACDHull. For best performance and
+     * stability, the convex hull should have no more than 100 vertices.
+     *
+     * @param vhacdHull (not null, unaffected)
+     */
+    public HullCollisionShape(VHACDHull vhacdHull) {
+        Validate.nonNull(vhacdHull, "V-HACD hull");
+
+        this.points = vhacdHull.clonePositions();
         createShape();
     }
     // *************************************************************************
@@ -316,7 +330,7 @@ public class HullCollisionShape extends ConvexShape {
         assert (numFloats % numAxes == 0) : numFloats;
         int numVertices = numFloats / numAxes;
 
-        directBuffer = BufferUtils.createFloatBuffer(numFloats);
+        this.directBuffer = BufferUtils.createFloatBuffer(numFloats);
         for (float f : points) {
             if (!MyMath.isFinite(f)) {
                 throw new IllegalArgumentException("illegal coordinate: " + f);
@@ -336,11 +350,11 @@ public class HullCollisionShape extends ConvexShape {
 
     native private static int countHullVertices(long shapeId);
 
-    native private static long createShapeF(FloatBuffer vertices,
-            int numVertices);
+    native private static long createShapeF(
+            FloatBuffer vertices, int numVertices);
 
-    native private static void getHullVerticesF(long shapeId,
-            FloatBuffer vertices);
+    native private static void getHullVerticesF(
+            long shapeId, FloatBuffer vertices);
 
     native private static void recalcAabb(long shapeId);
 }

@@ -59,6 +59,9 @@ public:
 
     virtual ~jmePhysicsSpace();
 
+    static void
+    contactEndedCallback(btPersistentManifold * const &);
+
     static bool
     contactProcessedCallback(btManifoldPoint&, void* pBody0, void* pBody1);
 
@@ -98,6 +101,7 @@ public:
 
     void
     stepSimulation(jfloat timeInterval, jint maxSteps, jfloat accuracy,
+            jboolean enableContactEndedCallback,
             jboolean enableContactProcessedCallback,
             jboolean enableContactStartedCallback);
 };

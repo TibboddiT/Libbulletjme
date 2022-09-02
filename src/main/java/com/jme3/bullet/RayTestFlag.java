@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 jMonkeyEngine
+ * Copyright (c) 2019-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 package com.jme3.bullet;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  * @author Stephen Gold sgold@sonic.net
  * @see com.jme3.bullet.CollisionSpace#getRayTestFlags()
  */
-public class RayTestFlag {
+final public class RayTestFlag {
     // *************************************************************************
     // constants and loggers
 
@@ -94,7 +94,7 @@ public class RayTestFlag {
      * @return description (not null, may be empty)
      */
     public static String describe(int flags) {
-        List<String> flagList = new ArrayList<>(5);
+        Collection<String> flagList = new ArrayList<>(5);
         if ((flags & FilterBackfaces) != 0x0) {
             flagList.add("FilterBackfaces");
         }

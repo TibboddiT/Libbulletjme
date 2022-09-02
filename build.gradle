@@ -1,6 +1,7 @@
-// Gradle build script for Maven artifacts and non-Android native libraries
+// Gradle script to build Maven artifacts and desktop native libraries
 
 plugins {
+    id 'checkstyle'
     id 'cpp'
     id 'java-library'
     id 'maven-publish'
@@ -10,12 +11,10 @@ plugins {
 ext {
     group = 'com.github.stephengold'
     artifact = 'Libbulletjme'
-    version = '12.5.0'
+    version = '16.1.0'
     baseName = "${artifact}-${version}"
     websiteUrl = 'https://github.com/stephengold/Libbulletjme'
 }
-
-description = 'a JNI interface for Bullet Physics and V-HACD'
 
 sourceSets.main.java {
     srcDir 'src/main/java'
@@ -28,10 +27,11 @@ sourceSets.test.java {
 
 // Regenerate all JNI header files before compiling any C++ source code.
 tasks.withType(CppCompile) {
-    dependsOn('classes')
+    dependsOn('classes', 'compileTestJava')
 }
 
 String javaHome = org.gradle.internal.jvm.Jvm.current().javaHome.absolutePath
+
 model {
     buildTypes {
         Debug
@@ -76,6 +76,10 @@ model {
             architecture 'x86_64'
             operatingSystem 'osx'
         }
+        MacOSX_ARM64 {
+            architecture 'arm-v8'
+            operatingSystem 'osx'
+        }
         Windows32 {
             architecture 'x86'
             operatingSystem 'windows'
@@ -88,33 +92,27 @@ model {
 
     toolChains { // prioritize among the native toolchains
         visualCpp(VisualCpp)
-        //clang(Clang)
+        //clang(Clang) // to favor Clang over Gcc
         gcc(Gcc)
-        clang(Clang)
-        gcc5Arm32(Gcc) {
-            target('Linux_ARM32') {
-                cppCompiler.executable = 'arm-linux-gnueabi-g++-5'
-                linker.executable = 'arm-linux-gnueabi-g++-5'
-            }
-        }
-        gcc5Arm32hf(Gcc) {
+        gcc6Arm32hf(Gcc) {
             target('Linux_ARM32hf') {
-                cppCompiler.executable = 'arm-linux-gnueabihf-g++-5'
-                linker.executable = 'arm-linux-gnueabihf-g++-5'
+                cppCompiler.executable = 'arm-linux-gnueabihf-g++-6'
+                linker.executable = 'arm-linux-gnueabihf-g++-6'
             }
         }
-        gccArm64(Gcc) {
+        gcc6Arm64(Gcc) {
             target('Linux_ARM64') {
-                cppCompiler.executable = 'aarch64-linux-gnu-g++'
-                linker.executable = 'aarch64-linux-gnu-g++'
+                cppCompiler.executable = 'aarch64-linux-gnu-g++-6'
+                linker.executable = 'aarch64-linux-gnu-g++-6'
             }
         }
-        gcc8Arm64(Gcc) {
-            target('Linux_ARM64') {
-                cppCompiler.executable = 'aarch64-linux-gnu-g++-8'
-                linker.executable = 'aarch64-linux-gnu-gcc-8'
+        gcc7Arm32(Gcc) {
+            target('Linux_ARM32') {
+                cppCompiler.executable = 'arm-linux-gnueabi-g++-7'
+                linker.executable = 'arm-linux-gnueabi-g++-7'
             }
         }
+        clang(Clang)
     }
 
     components {
@@ -126,6 +124,7 @@ model {
             targetPlatform 'Linux_ARM64'
             targetPlatform 'MacOSX32'
             targetPlatform 'MacOSX64'
+            targetPlatform 'MacOSX_ARM64'
             targetPlatform 'Windows32'
             targetPlatform 'Windows64'
 
@@ -142,48 +141,51 @@ model {
             binaries.withType(SharedLibraryBinarySpec) {
                 Boolean isDebug = (buildType == buildTypes.Debug)
                 Boolean isMt = (flavor == flavors.SpMt || flavor == flavors.SpMtQuickprof || flavor == flavors.DpMt)
+                String pName = targetPlatform.name
+                //println " - $pName  $buildType  $flavor" // to debug this script
+
                 // Decide whether to build for the target platform:
                 if (project.hasProperty('github')) {
-                    // -Pgithub= specified on the command line
+                    // CI build with -Pgithub= specified on the command line
                     String github = project.ext.github
-                    if (github.equals('xcode11')) { // typically Xcode_12.4
-                        buildable = isDebug && (flavor == flavors.Sp) && targetPlatform.name.equals('MacOSX64')
-                    } else if (github.equals('debug64')) {
-                        buildable = isDebug && targetPlatform.name.contains('64') && !targetPlatform.name.startsWith('Linux_ARM')
+                    if (github == 'debug64') { // skip all except debug/64-bit/non-ARM
+                        buildable = isDebug && pName.contains('64') && !pName.contains('_ARM')
                     }
                 } else if (project.hasProperty('travis')) {
-                    // -Ptravis= specified on the command line
+                    // CI build with -Ptravis= specified on the command line
                     String travis = project.ext.travis
-                    if (travis.equals('amd64')) { // using g++-4.7, so skip Mt flavors
-                        buildable = (!isMt) && !targetPlatform.name.startsWith('Linux_ARM')
-                    } else if (travis.equals('amd64mt')) { // use g++-5 to build Mt flavors
-                        buildable = isMt && targetPlatform.name.equals('Linux64')
-                    } else if (travis.equals('arm32')) {
-                        buildable = targetPlatform.name.equals('Linux_ARM32')
-                    } else if (travis.equals('arm32hf')) {
-                        buildable = targetPlatform.name.equals('Linux_ARM32hf')
-                    } else if (travis.equals('arm64')) {
-                        buildable = targetPlatform.name.equals('Linux_ARM64')
-                    } else if (travis.equals('osx')) { // using xcode9.3 for its 32-bit support
-                        buildable = targetPlatform.name.startsWith('MacOSX')
+                    if (travis == 'amd64') { // using g++-4.7, so skip Mt flavors
+                        buildable = (!isMt) && !pName.startsWith('Linux_ARM')
+                    } else if (travis == 'amd64mt') { // using g++-5 to build Mt flavors
+                        buildable = isMt && (pName == 'Linux64')
+                    } else if (travis == 'arm32') {
+                        buildable = (pName == 'Linux_ARM32')
+                    } else if (travis == 'arm32hf') {
+                        buildable = (pName == 'Linux_ARM32hf')
+                    } else if (travis == 'arm64') {
+                        buildable = (pName == 'Linux_ARM64')
+                    } else if (travis == 'osx') { // using xcode9.3 for its 32-bit support
+                        buildable = pName.startsWith('MacOSX')
                     }
-                } else { // neither -Pgithub= nor -Ptravis= specified
-                    buildable = !targetPlatform.name.startsWith('Linux_ARM')
-                    //buildable = targetPlatform.name.equals('Linux64') // to skip all except Linux64
-                    //buildable = targetPlatform.name.equals('Windows64') // to skip all except Windows64
+                } else {
+                    // non-CI build (neither -Pgithub= nor -Ptravis= specified)
+                    buildable = !pName.startsWith('Linux_ARM')
+                    //buildable = (pName == 'Linux64') // to build Linux64 only
+                    //buildable = (pName == 'Windows64') // to build Windows64 only
                 }
 
                 Boolean isDp = (flavor == flavors.Dp || flavor == flavors.DpMt)
-                Boolean isQuickprof = (flavor == flavors.SpMtQuickprof || flavor == flavors.SpQuickprof);
+                Boolean isQuickprof = (flavor == flavors.SpMtQuickprof || flavor == flavors.SpQuickprof)
+                String os = targetPlatform.operatingSystem.name
                 if (buildable) {
                     // Decide whether to build the current flavor:
                     if (project.hasProperty('flavor')) {
                         // -Pflavor= specified on the command line
                         String flavorArg = project.ext.flavor
-                        buildable = flavor.name.equals(flavorArg)
+                        buildable = (flavor.name == flavorArg)
                     } else if (isMt) {
                         // Skip Mt for MacOSX (Xcode does not support OpenMP) and 32-bit targets
-                        buildable = targetPlatform.name.contains('64') && !targetPlatform.name.startsWith('MacOSX')
+                        buildable = (os != 'osx') && pName.contains('64')
                     }
                     //if (isDp) buildable = false // to skip all double-precision flavors
                     //if (isMt) buildable = false // to skip all multithreaded flavors
@@ -192,8 +194,10 @@ model {
 
                 if (isDebug) {
                     cppCompiler.define '_DEBUG'
+                    //cppCompiler.define 'BT_ADDITIONAL_DEBUG'
                     //cppCompiler.define 'BT_DEBUG_MEMORY_ALLOCATIONS'
                     //cppCompiler.define 'DEBUG_PERSISTENCY'
+                    //cppCompiler.define 'VERBOSE_RESIDUAL_PRINTF'
                 }
                 if (isDp) {
                     cppCompiler.define 'BT_USE_DOUBLE_PRECISION'
@@ -207,7 +211,7 @@ model {
                     //cppCompiler.define 'BT_LINUX_REALTIME'
                 }
 
-                String q = targetPlatform.name + buildType.name + flavor.name
+                String q = pName + buildType.name + flavor.name
                 if (toolChain in VisualCpp) {
                     cppCompiler.define 'WIN32'
                     cppCompiler.args '/EHsc' // synchronous exceptions only
@@ -225,18 +229,18 @@ model {
                         linker.args '/DEBUG'
                         if (buildable) {
                             String pdbFile = 'build/libs/bulletjme/shared/'
-                            pdbFile += targetPlatform.name + '/debug/'
+                            pdbFile += pName + '/debug/'
                             pdbFile += flavor.name + '/bulletjme.pdb'
 
-                            task "copyPdbToDist$q" (type: Copy, dependsOn:
-                                 "bulletjme${q}SharedLibrary") {
+                            project.tasks.register('copyPdbToDist' + q, Copy) {
+                                dependsOn "bulletjme${q}SharedLibrary"
                                 from pdbFile
                                 rename { String filename ->
                                     return q + '_' + filename
                                 }
                                 into 'dist'
                             }
-                            jar.dependsOn("copyPdbToDist$q")
+                            jar.dependsOn('copyPdbToDist' + q)
                         }
                     } else { // buildType == Release
                         cppCompiler.args '/O2'
@@ -253,7 +257,7 @@ model {
                     cppCompiler.args '-I', "$projectDir/src/main/native/bullet3/LinearMath"
                     cppCompiler.args '-I', "$projectDir/src/main/native/v-hacd/inc"
                     cppCompiler.args '-I', "$projectDir/src/main/native/v-hacd/public"
-                    cppCompiler.args '-std=c++11' // ignored by g++-4.7
+                    cppCompiler.args '-std=c++11'
                     if (isDebug) {
                         cppCompiler.args '-O0', '-g3'
                     } else { // buildType == Release
@@ -264,7 +268,6 @@ model {
                         linker.args '-lgomp'
                     }
 
-                    String os = targetPlatform.operatingSystem.name
                     if (os == 'osx') {
                         cppCompiler.args '-I', "$javaHome/include/darwin"
                     } else if (os == 'linux') {
@@ -286,8 +289,8 @@ model {
                 if (buildable) {
                     println 'Build ' + q + ' using ' + toolChain
 
-                    task "copyToDist$q" (type: Copy, dependsOn:
-                         "bulletjme${q}SharedLibrary") {
+                    project.tasks.register('copyToDist' + q, Copy) {
+                        dependsOn "bulletjme${q}SharedLibrary"
                         from sharedLibraryFile
                         rename { String filename ->
                             return q + '_' + filename
@@ -296,57 +299,63 @@ model {
                     }
                     jar.dependsOn('copyToDist' + q)
                 } else {
-                    //println 'Do not build ' + q
+                    //println 'Do not build ' + q // to debug this script
                 }
             }
         }
     }
 }
 
-description = 'JNI interface to Bullet Physics and V-HACD'
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) { // Java compile-time options:
+    options.compilerArgs << '-Xdiags:verbose'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true // to provide detailed deprecation warnings
+    options.encoding = 'UTF-8'
+    options.headerOutputDirectory = new File('src/main/native/glue')
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_1_10)) {
+        options.release = 8
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation 'junit:junit:4.13.2'
-}
-
-tasks.withType(JavaCompile) { // compile-time options:
-    options.compilerArgs << '-Xdiags:verbose'
-    options.compilerArgs << '-Xlint:unchecked'
-    options.deprecation = true
-    options.encoding = 'UTF-8'
-    options.headerOutputDirectory = new File('src/main/native/glue')
-}
-
 test.dependsOn('assemble')
+
+// publishing tasks
+
+tasks.register('install') {
+    dependsOn 'publishMavenPublicationToMavenLocal'
+    description 'Installs Maven artifacts to the local repository.'
+}
+
 assemble.dependsOn('copyToDistJars')
-task copyToDistJars (type: Copy) {
-    dependsOn 'jar', 'javadocJar', 'signArchives', 'sourcesJar'
+tasks.register('copyToDistJars', Copy) {
+    dependsOn 'jar', 'javadocJar', 'signArchives', 'signMavenPublication', 'sourcesJar'
     from 'build/libs'
     include '*.jar', '*.jar.asc'
     into 'dist'
 }
 
-// custom tasks for creating source/javadoc JARs
 jar {
     archiveBaseName = project.ext.baseName
 }
-
-task javadocJar(type: Jar) {
+tasks.register('javadocJar', Jar) {
     archiveBaseName = project.ext.baseName
     archiveClassifier = 'javadoc'
     dependsOn 'javadoc'
     description 'Creates a JAR of javadoc.'
     from javadoc.destinationDir
 }
-
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     archiveBaseName = project.ext.baseName
     archiveClassifier = 'sources'
     description 'Creates a JAR of Java sourcecode.'
@@ -357,16 +366,33 @@ task sourcesJar(type: Jar) {
 artifacts {
     archives jar, javadocJar, sourcesJar
 }
+javadoc.dependsOn('compileTestJava')
 
-build.dependsOn('pom', 'pomAsc')
-task('pom', type: Copy) {
+checkstyleMain.dependsOn('compileTestJava')
+
+assemble.dependsOn('module', 'moduleAsc', 'pom', 'pomAsc')
+tasks.register('module', Copy) {
+    dependsOn 'generateMetadataFileForMavenPublication'
+    description 'Copies the module metadata to dist.'
+    from "${buildDir}/publications/maven/module.json"
+    into 'dist'
+    rename 'module.json', project.ext.baseName + '.module'
+}
+tasks.register('moduleAsc', Copy) {
+    dependsOn 'signMavenPublication'
+    description 'Copies the signature of the module metadata to dist.'
+    from "${buildDir}/publications/maven/module.json.asc"
+    into 'dist'
+    rename 'module.json.asc', project.ext.baseName + '.module.asc'
+}
+tasks.register('pom', Copy) {
     dependsOn 'generatePomFileForMavenPublication'
     description 'Copies the Maven POM to dist.'
     from "${buildDir}/publications/maven/pom-default.xml"
     into 'dist'
     rename 'pom-default.xml', project.ext.baseName + '.pom'
 }
-task('pomAsc', type: Copy) {
+tasks.register('pomAsc', Copy) {
     dependsOn 'signMavenPublication'
     description 'Copies the signature of the Maven POM to dist.'
     from "${buildDir}/publications/maven/pom-default.xml.asc"
@@ -381,7 +407,7 @@ publishing {
             from components.java
             groupId project.ext.group
             pom {
-                description = project.description
+                description = 'a JNI interface for Bullet Physics and V-HACD'
                 developers {
                     developer {
                         email = 'sgold@sonic.net'
@@ -401,14 +427,22 @@ publishing {
                     developerConnection = 'scm:git:ssh://github.com:stephengold/Libbulletjme.git'
                     url = project.ext.websiteUrl + '/tree/master'
                 }
-                url = project.ext.websiteUrl
+                url = 'https://stephengold.github.io/Libbulletjme'
             }
             version project.ext.version
         }
     }
 }
+publishMavenPublicationToMavenLocal.dependsOn('assemble')
+publishMavenPublicationToMavenLocal.doLast {
+    println 'installed locally as ' + project.ext.baseName
+}
 
 // signing tasks
+
+// Signing relies on the existence of 3 properties
+// (signing.keyId, signing.password, and signing.secretKeyRingFile)
+// which should be stored in ~/.gradle/gradle.properties
 
 signing {
     sign configurations.archives
@@ -417,16 +451,29 @@ signing {
 tasks.withType(Sign) {
     onlyIf { project.hasProperty('signing.keyId') }
 }
+signMavenPublication.dependsOn('module')
 
-// cleanup tasks
+// cleanup tasks:
 
 clean.dependsOn('cleanCxx', 'cleanDist', 'cleanLogs')
-task cleanCxx(type: Delete) {
+
+tasks.register('cleanCxx', Delete) {
     delete '.cxx'
 }
-task cleanDist(type: Delete) {
+tasks.register('cleanDist', Delete) { // files to be distributed
     delete 'dist'
 }
-task cleanLogs(type: Delete) {
+tasks.register('cleanLogs', Delete) { // JVM crash logs
     delete fileTree(dir: '.', include: 'hs_err_pid*.log')
+}
+
+// javadoc to (web)site tasks, triggered by push-master.yml
+
+tasks.register('copyJavadocToSite') {
+    dependsOn 'copyMasterJavadocToSite'
+}
+tasks.register('copyMasterJavadocToSite', Copy) {
+    dependsOn 'javadoc'
+    from "${buildDir}/docs/javadoc"
+    into 'build/site/javadoc/master'
 }

@@ -310,18 +310,21 @@ public class HingeJoint extends Constraint {
     }
 
     /**
-     * Test whether this joint is angular-only.
+     * Test whether this joint is angular-only, meaning no constraints on
+     * translation.
      *
-     * @return true if angular only, otherwise false
+     * @return true if angular-only, otherwise false
      */
     public boolean isAngularOnly() {
         return angularOnly;
     }
 
     /**
-     * Alter whether this joint is angular-only.
+     * Alter whether this joint is angular-only, meaning no constraints on
+     * translation.
      *
-     * @param angularOnly the desired setting (default=false)
+     * @param angularOnly true&rarr;translation is free, false&rarr;translation
+     * is constrained (default=false)
      */
     public void setAngularOnly(boolean angularOnly) {
         this.angularOnly = angularOnly;
@@ -441,9 +444,11 @@ public class HingeJoint extends Constraint {
 
     native private static boolean getEnableAngularMotor(long jointId);
 
-    native private static void getFrameOffsetA(long jointId, Transform frameInA);
+    native private static void getFrameOffsetA(
+            long jointId, Transform frameInA);
 
-    native private static void getFrameOffsetB(long jointId, Transform frameInB);
+    native private static void getFrameOffsetB(
+            long jointId, Transform frameInB);
 
     native private static float getHingeAngle(long jointId);
 
@@ -455,8 +460,8 @@ public class HingeJoint extends Constraint {
 
     native private static float getUpperLimit(long jointId);
 
-    native private static void setAngularOnly(long jointId,
-            boolean angularOnly);
+    native private static void setAngularOnly(
+            long jointId, boolean angularOnly);
 
     native private static void setLimit(long jointId, float low, float high,
             float softness, float biasFactor, float relaxationFactor);

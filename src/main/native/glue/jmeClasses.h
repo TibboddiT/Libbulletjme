@@ -38,7 +38,7 @@
 
 #include <jni.h>
 
-#define LIBBULLETJME_VERSION "12.5.0"
+#define LIBBULLETJME_VERSION "16.1.0"
 
 #ifdef _DEBUG
 #define NULL_CHK(pEnv, pointer, message, retval) \
@@ -62,8 +62,9 @@ public:
 
     static jmethodID PhysicsSpace_preTick;
     static jmethodID PhysicsSpace_postTick;
-    static jmethodID PhysicsSpace_addCollisionEvent;
-    static jmethodID PhysicsSpace_addContactProcessed;
+    static jmethodID PhysicsSpace_onContactEnded;
+    static jmethodID PhysicsSpace_onContactProcessed;
+    static jmethodID PhysicsSpace_onContactStarted;
 
     static jmethodID ProceduralCollisionShape_getTriangles;
 
@@ -125,6 +126,10 @@ public:
     static jmethodID Transform_rotation;
     static jmethodID Transform_translation;
     static jmethodID Transform_scale;
+
+    static jclass Vhacd4;
+    static jmethodID Vhacd4_addHull;
+    static jmethodID Vhacd4_update;
 
     static jclass Vhacd;
     static jmethodID Vhacd_addHull;

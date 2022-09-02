@@ -38,6 +38,7 @@ import com.jme3.bullet.collision.PcoType;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.objects.infos.RigidBodyMotionState;
+import com.jme3.bullet.objects.infos.RigidBodySnapshot;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -571,6 +572,51 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
+     * Rebuild this rigid body with a new native object.
+     */
+    public void rebuildRigidBody() {
+        PhysicsSpace removedFrom = null;
+        RigidBodySnapshot snapshot = null;
+
+        if (hasAssignedNativeObject()) {
+            // Gather information regarding the existing native object.
+            removedFrom = (PhysicsSpace) getCollisionSpace();
+            if (removedFrom != null) {
+                removedFrom.removeCollisionObject(this);
+            }
+            snapshot = new RigidBodySnapshot(this);
+
+            logger2.log(Level.FINE, "Clearing {0}.", this);
+            clearIgnoreList();
+            unassignNativeObject();
+        }
+
+        preRebuild();
+
+        CollisionShape shape = getCollisionShape();
+        long objectId = createRigidBody(
+                mass, motionState.nativeId(), shape.nativeId());
+        setNativeId(objectId);
+        assert getInternalType(objectId) == PcoType.rigid :
+                getInternalType(objectId);
+        logger2.log(Level.FINE, "Created {0}.", this);
+
+        if (mass != massForStatic) {
+            setKinematic(kinematic);
+        }
+
+        postRebuild();
+
+        if (removedFrom != null) {
+            removedFrom.addCollisionObject(this);
+        }
+        if (snapshot != null) {
+            snapshot.applyTo(this);
+        }
+        // TODO physics joints
+    }
+
+    /**
      * Alter this body's angular damping.
      *
      * @param angularDamping the desired angular damping fraction (&ge;0, &le;1,
@@ -722,15 +768,22 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Alter this body's gravitational acceleration.
      * <p>
      * Invoke this method <em>after</em> adding the body to a PhysicsSpace.
-     * Adding a body to a PhysicsSpace may override its gravity.
+     * Unless protection is set, adding a body to a PhysicsSpace overrides its
+     * gravity.
+     *
+     * @see #setProtectGravity(boolean)
      *
      * @param acceleration the desired acceleration vector (in physics-space
      * coordinates, not null, unaffected, default=(0,0,0))
      */
     public void setGravityDp(Vec3d acceleration) {
         Validate.nonNull(acceleration, "acceleration");
-        if (!isInWorld()) {
-            logger2.warning("The body is not in any PhysicsSpace.");
+        if (!isInWorld() && !isGravityProtected()) {
+            logger2.warning(
+                    "The body isn't in any PhysicsSpace, and its gravity isn't"
+                    + " protected. Unless protection is set, adding it"
+                    + " to a PhysicsSpace will override its gravity."
+            );
         }
 
         long objectId = nativeId();
@@ -1014,37 +1067,6 @@ public class PhysicsRigidBody extends PhysicsBody {
     protected void preRebuild() {
         // do nothing
     }
-
-    /**
-     * Build/rebuild this body after parameters have changed.
-     */
-    protected void rebuildRigidBody() {
-        PhysicsSpace removedFrom = null;
-        if (hasAssignedNativeObject()) {
-            removedFrom = (PhysicsSpace) getCollisionSpace();
-            if (removedFrom != null) {
-                removedFrom.removeCollisionObject(this);
-            }
-            logger2.log(Level.FINE, "Clearing {0}.", this);
-            unassignNativeObject();
-        }
-
-        preRebuild();
-
-        CollisionShape shape = getCollisionShape();
-        long objectId = createRigidBody(mass, motionState.nativeId(),
-                shape.nativeId());
-        setNativeId(objectId);
-        assert getInternalType(objectId) == PcoType.rigid :
-                getInternalType(objectId);
-        logger2.log(Level.FINE, "Created {0}.", this);
-
-        postRebuild();
-
-        if (removedFrom != null) {
-            removedFrom.addCollisionObject(this);
-        }
-    }
     // *************************************************************************
     // PhysicsBody methods
 
@@ -1080,7 +1102,11 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Alter this body's gravitational acceleration.
      * <p>
      * Invoke this method <em>after</em> adding the body to a PhysicsSpace.
-     * Adding a body to a PhysicsSpace may override its gravity.
+     * Unless protection is set, adding a body to a PhysicsSpace overrides its
+     * gravity.
+     *
+     * @see #setProtectGravity(boolean)
+     * @see #setGravityDp(com.simsilica.mathd.Vec3d)
      *
      * @param acceleration the desired acceleration vector (in physics-space
      * coordinates, not null, unaffected, default=(0,0,0))
@@ -1088,8 +1114,12 @@ public class PhysicsRigidBody extends PhysicsBody {
     @Override
     public void setGravity(Vector3f acceleration) {
         Validate.nonNull(acceleration, "acceleration");
-        if (!isInWorld()) {
-            logger2.warning("The body is not in any PhysicsSpace.");
+        if (!isInWorld() && !isGravityProtected()) {
+            logger2.warning(
+                    "The body isn't in any PhysicsSpace, and its gravity isn't"
+                    + " protected. Unless protection is set, adding it"
+                    + " to a PhysicsSpace will override its gravity."
+            );
         }
 
         long objectId = nativeId();
@@ -1114,7 +1144,14 @@ public class PhysicsRigidBody extends PhysicsBody {
 
         if (mass == this.mass) {
             return;
+
+        } else if (this.mass == massForStatic) {
+            // Static to non-static requires a rebuild.
+            this.mass = mass;
+            rebuildRigidBody();
+            return;
         }
+
         this.mass = mass;
         long objectId = nativeId();
         updateMassProps(objectId, shape.nativeId(), mass);
@@ -1163,7 +1200,8 @@ public class PhysicsRigidBody extends PhysicsBody {
      * @return true if the flags are equal, otherwise false
      */
     private boolean checkKinematicFlag() {
-        if (mass == massForStatic) {// don't invoke getCollisionFlags(long) TODO
+        if (mass == massForStatic) {
+            // don't invoke getCollisionFlags(long) TODO
             return true;
         }
 

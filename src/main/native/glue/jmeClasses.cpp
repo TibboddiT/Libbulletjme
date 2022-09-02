@@ -49,8 +49,9 @@ jmethodID jmeClasses::CollisionSpace_notifyCollisionGroupListeners;
 
 jmethodID jmeClasses::PhysicsSpace_preTick;
 jmethodID jmeClasses::PhysicsSpace_postTick;
-jmethodID jmeClasses::PhysicsSpace_addCollisionEvent;
-jmethodID jmeClasses::PhysicsSpace_addContactProcessed;
+jmethodID jmeClasses::PhysicsSpace_onContactEnded;
+jmethodID jmeClasses::PhysicsSpace_onContactProcessed;
+jmethodID jmeClasses::PhysicsSpace_onContactStarted;
 
 jmethodID jmeClasses::ProceduralCollisionShape_getTriangles;
 
@@ -115,10 +116,13 @@ jmethodID jmeClasses::Transform_rotation;
 jmethodID jmeClasses::Transform_translation;
 jmethodID jmeClasses::Transform_scale;
 
+jclass jmeClasses::Vhacd4;
+jmethodID jmeClasses::Vhacd4_addHull;
+jmethodID jmeClasses::Vhacd4_update;
+
 jclass jmeClasses::Vhacd;
 jmethodID jmeClasses::Vhacd_addHull;
 jmethodID jmeClasses::Vhacd_update;
-
 /*
  * global flag to enable/disable the initialization message
  *
@@ -232,16 +236,22 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;
     }
-    PhysicsSpace_addCollisionEvent = pEnv->GetMethodID(PhysicsSpace,
-            "addCollisionEvent_native",
-            "(Lcom/jme3/bullet/collision/PhysicsCollisionObject;Lcom/jme3/bullet/collision/PhysicsCollisionObject;J)V");
+    PhysicsSpace_onContactEnded = pEnv->GetMethodID(PhysicsSpace,
+            "onContactEnded", "(J)V");
     if (pEnv->ExceptionCheck()) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;
     }
-    PhysicsSpace_addContactProcessed = pEnv->GetMethodID(PhysicsSpace,
-            "addContactProcessed",
-            "(Lcom/jme3/bullet/collision/PhysicsCollisionObject;Lcom/jme3/bullet/collision/PhysicsCollisionObject;J)V");
+    PhysicsSpace_onContactProcessed = pEnv->GetMethodID(PhysicsSpace,
+            "onContactProcessed",
+            "(Lcom/jme3/bullet/collision/PhysicsCollisionObject;Lcom/jme3/bullet/collision/PhysicsCollisionObject;J)V"
+    );
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+    PhysicsSpace_onContactStarted = pEnv->GetMethodID(PhysicsSpace,
+            "onContactStarted", "(J)V");
     if (pEnv->ExceptionCheck()) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;
@@ -583,6 +593,25 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
 
     Transform_scale = pEnv->GetMethodID(Transform, "getScale",
             "()Lcom/jme3/math/Vector3f;");
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+
+    Vhacd4 = (jclass) pEnv->NewGlobalRef(pEnv->FindClass("vhacd4/Vhacd4"));
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+
+    Vhacd4_addHull = pEnv->GetStaticMethodID(Vhacd4, "addHull", "(J)V");
+    if (pEnv->ExceptionCheck()) {
+        pEnv->Throw(pEnv->ExceptionOccurred());
+        return;
+    }
+
+    Vhacd4_update = pEnv->GetStaticMethodID(Vhacd4, "update",
+            "(DDDLjava/lang/String;Ljava/lang/String;)V");
     if (pEnv->ExceptionCheck()) {
         pEnv->Throw(pEnv->ExceptionOccurred());
         return;

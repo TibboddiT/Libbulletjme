@@ -95,6 +95,7 @@ public class PhysicsGhostObject extends PhysicsCollisionObject {
 
     /**
      * Access an overlapping collision object by its position in the list.
+     * Important: {@link #getOverlappingObjects()} must be invoked first!
      *
      * @param index which list position (&ge;0, &lt;count)
      * @return the pre-existing object
@@ -218,9 +219,12 @@ public class PhysicsGhostObject extends PhysicsCollisionObject {
 
     native private static void setGhostFlags(long objectId);
 
-    native private static void setPhysicsLocation(long objectId, Vector3f location);
+    native private static void setPhysicsLocation(
+            long objectId, Vector3f location);
 
-    native private static void setPhysicsRotation(long objectId, Matrix3f rotation);
+    native private static void setPhysicsRotation(
+            long objectId, Matrix3f rotation);
 
-    native private static void setPhysicsRotation(long objectId, Quaternion rotation);
+    native private static void setPhysicsRotation(
+            long objectId, Quaternion rotation);
 }

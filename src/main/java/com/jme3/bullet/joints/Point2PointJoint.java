@@ -42,7 +42,7 @@ import jme3utilities.Validate;
  * <p>
  * <i>From the Bullet manual:</i><br>
  * Point to point constraint limits the translation so that the local pivot
- * points of 2 rigidbodies match in worldspace. A chain of rigidbodies can be
+ * points of 2 rigid bodies match in worldspace. A chain of rigid bodies can be
  * connected using this constraint.
  *
  * @author normenhansen
@@ -108,8 +108,8 @@ public class Point2PointJoint extends Constraint {
      * @param pivotInB the pivot location in B's scaled local coordinates (not
      * null, unaffected)
      */
-    public Point2PointJoint(PhysicsRigidBody rigidBodyA, PhysicsRigidBody rigidBodyB,
-            Vector3f pivotInA, Vector3f pivotInB) {
+    public Point2PointJoint(PhysicsRigidBody rigidBodyA,
+            PhysicsRigidBody rigidBodyB, Vector3f pivotInA, Vector3f pivotInB) {
         super(rigidBodyA, rigidBodyB, pivotInA, pivotInB);
         createJoint();
     }
@@ -197,6 +197,18 @@ public class Point2PointJoint extends Constraint {
     }
 
     /**
+     * Alter the joint's tau value.
+     *
+     * @param value the desired tau value (default=0.3)
+     */
+    public void setTau(float value) {
+        long constraintId = nativeId();
+        setTau(constraintId, value);
+    }
+    // *************************************************************************
+    // Constraint methods
+
+    /**
      * Alter the pivot location in A's scaled local coordinates.
      *
      * @param location the desired location (not null, unaffected)
@@ -227,16 +239,6 @@ public class Point2PointJoint extends Constraint {
         if (pivotB != null) {
             super.setPivotInB(location);
         }
-    }
-
-    /**
-     * Alter the joint's tau value.
-     *
-     * @param value the desired tau value (default=0.3)
-     */
-    public void setTau(float value) {
-        long constraintId = nativeId();
-        setTau(constraintId, value);
     }
     // *************************************************************************
     // Java private methods

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2021, Stephen Gold
+ Copyright (c) 2013-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -35,10 +35,14 @@ import jme3utilities.Validate;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class MyVector3f {
+public class MyVector3f { // TODO finalize the class
     // *************************************************************************
     // constants and loggers
 
+    /**
+     * index of the first (X) axis
+     */
+    final public static int firstAxis = 0;
     /**
      * number of axes in the coordinate system
      */
@@ -55,6 +59,10 @@ public class MyVector3f {
      * index of the Z axis
      */
     final public static int zAxis = 2;
+    /**
+     * index of the final (Z) axis
+     */
+    final public static int lastAxis = numAxes - 1;
     /**
      * message logger for this class
      */
@@ -110,6 +118,23 @@ public class MyVector3f {
     }
 
     /**
+     * Accumulate a linear combination of vectors.
+     *
+     * @param total sum of the scaled inputs so far (not null, modified)
+     * @param input the vector to scale and add (not null, unaffected)
+     * @param scale scale factor to apply to the input
+     */
+    public static void accumulateScaled(Vector3f total, Vector3f input,
+            float scale) {
+        assert Validate.nonNull(total, "total");
+        assert Validate.nonNull(input, "input");
+
+        total.x += input.x * scale;
+        total.y += input.y * scale;
+        total.z += input.z * scale;
+    }
+
+    /**
      * Determine the dot (scalar) product of 2 vectors. Unlike
      * {@link com.jme3.math.Vector3f#dot(Vector3f)}, this method returns a
      * double-precision value for precise calculation of angles.
@@ -136,7 +161,7 @@ public class MyVector3f {
      * @param in1 input direction for the first basis vector (not null, not
      * zero, modified)
      * @param store2 storage for the 2nd basis vector (not null, modified)
-     * @param store3 storage for the 3nd basis vector (not null, modified)
+     * @param store3 storage for the 3rd basis vector (not null, modified)
      */
     public static void generateBasis(Vector3f in1, Vector3f store2,
             Vector3f store3) {
@@ -279,6 +304,33 @@ public class MyVector3f {
         result.z = MyMath.lerp(t, v0.z, v1.z);
 
         return result;
+    }
+
+    /**
+     * Determine the midpoint between 2 locations.
+     *
+     * @param vector1 coordinates of the first location (not null, unaffected
+     * unless it's storeResult)
+     * @param vector2 coordinates of the 2nd location (not null, unaffected
+     * unless it's storeResult)
+     * @param storeResult storage for the result (modified if not null, may be
+     * vector1 or vector2)
+     * @return a coordinate vector (either storeResult or a new instance)
+     */
+    public static Vector3f midpoint(Vector3f vector1, Vector3f vector2,
+            Vector3f storeResult) {
+        assert Validate.finite(vector1, "first location");
+        assert Validate.finite(vector2, "2nd location");
+
+        float x = (vector1.x + vector2.x) / 2f;
+        float y = (vector1.y + vector2.y) / 2f;
+        float z = (vector1.z + vector2.z) / 2f;
+
+        if (storeResult == null) {
+            return new Vector3f(x, y, z);
+        } else {
+            return storeResult.set(x, y, z);
+        }
     }
 
     /**

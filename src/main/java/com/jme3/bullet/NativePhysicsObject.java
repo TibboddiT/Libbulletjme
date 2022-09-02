@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 jMonkeyEngine
+ * Copyright (c) 2020-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,15 @@ abstract public class NativePhysicsObject
     final static ReferenceQueue<NativePhysicsObject> weakReferenceQueue
             = new ReferenceQueue<>();
     // *************************************************************************
+    // constructors
+
+    /**
+     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     */
+    public NativePhysicsObject() {
+        // do nothing
+    }
+    // *************************************************************************
     // new methods exposed
 
     /**
@@ -85,7 +94,7 @@ abstract public class NativePhysicsObject
     }
 
     /**
-     * Dump all native-object trackers to System.out .
+     * Dump all native-object trackers to {@code System.out}.
      */
     final public static void dumpTrackers() {
         System.out.println("Active trackers:");
@@ -246,7 +255,10 @@ abstract public class NativePhysicsObject
     }
 
     /**
-     * Generate the hash code for this instance.
+     * Return the hash code for this instance.
+     * <p>
+     * Note: operations that alter the native ID are likely to affect the hash
+     * code as well!
      *
      * @return a 32-bit value for use in hashing
      */

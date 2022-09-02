@@ -46,6 +46,12 @@ import java.nio.ShortBuffer;
  * @version $Id: BufferUtils.java,v 1.16 2007/10/29 16:56:18 nca Exp $
  */
 public final class BufferUtils {
+    /**
+     * A private constructor to inhibit instantiation of this class.
+     */
+    private BufferUtils() {
+        // do nothing
+    }
 
     private static final BufferAllocator allocator = new PrimitiveAllocator();
 

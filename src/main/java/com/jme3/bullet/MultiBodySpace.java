@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 jMonkeyEngine
+ * Copyright (c) 2020-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@ import jme3utilities.Validate;
  * A PhysicsSpace that supports multibodies, with its own
  * btMultiBodyDynamicsWorld.
  *
- * @author Stephen Gold
+ * @author Stephen Gold sgold@sonic.net
  */
 public class MultiBodySpace extends PhysicsSpace {
     // *************************************************************************
@@ -115,8 +115,10 @@ public class MultiBodySpace extends PhysicsSpace {
         }
 
         multiBodyMap.put(multiBodyId, multiBody);
-        logger2.log(Level.FINE, "Adding {0} to {1}.",
-                new Object[]{multiBody, this});
+        if (logger2.isLoggable(Level.FINE)) {
+            logger2.log(Level.FINE, "Adding {0} to {1}.",
+                    new Object[]{multiBody, this});
+        }
 
         long spaceId = nativeId();
         addMultiBody(spaceId, multiBodyId);
@@ -169,8 +171,10 @@ public class MultiBodySpace extends PhysicsSpace {
                     new Object[]{multiBody, this});
             return;
         }
-        logger2.log(Level.FINE, "Removing {0} from {1}.",
-                new Object[]{multiBody, this});
+        if (logger2.isLoggable(Level.FINE)) {
+            logger2.log(Level.FINE, "Removing {0} from {1}.",
+                    new Object[]{multiBody, this});
+        }
         multiBodyMap.remove(multiBodyId);
         long spaceId = nativeId();
         removeMultiBody(spaceId, multiBodyId);

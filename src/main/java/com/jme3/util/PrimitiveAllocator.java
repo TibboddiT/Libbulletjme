@@ -33,22 +33,27 @@ package com.jme3.util;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
- * This class contains a primitive allocator with no special logic, should work
- * on any jvm
+ * Allocate direct buffers without special logic. This should work on any JVM.
  */
 public final class PrimitiveAllocator implements BufferAllocator {
     /**
-     * De-allocate a direct buffer.
+     * A no-argument constructor to avoid javadoc warnings from JDK 18.
+     */
+    public PrimitiveAllocator() {
+        // do nothing
+    }
+
+    /**
+     * De-allocate a direct buffer.  Not supported!
      *
      * @param toBeDestroyed ignored
      */
     @Override
     public void destroyDirectBuffer(Buffer toBeDestroyed) {
-        // no exception by intent, as this way naively written java7/8
-        // applications won't crash on 9 assuming they can dispose buffers
-        System.err.println("Warning destroyBuffer not supported");
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -59,6 +64,8 @@ public final class PrimitiveAllocator implements BufferAllocator {
      */
     @Override
     public ByteBuffer allocate(int size) {
-        return ByteBuffer.allocateDirect(size);
+        return ByteBuffer.allocateDirect(size)
+                .order(ByteOrder.nativeOrder());
+        // The order of a newly-created byte buffer is always BIG_ENDIAN! 
     }
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014-2021, Stephen Gold
+ Copyright (c) 2014-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,43 @@ final public class Validate {
     // new methods exposed
 
     /**
+     * Validate an axis index as a method argument.
+     *
+     * @param iValue the value to validate
+     * @param description a description of the argument
+     * @return true
+     * @throws IllegalArgumentException if the value is outside the range [0, 2]
+     */
+    public static boolean axisIndex(int iValue, String description) {
+        inRange(iValue, description, MyVector3f.firstAxis, MyVector3f.lastAxis);
+        return true;
+    }
+
+    /**
+     * Validate a finite single-precision value as a method argument.
+     *
+     * @param fValue the value to validate
+     * @param description a description of the argument
+     * @return true
+     * @throws IllegalArgumentException if the value is NaN or infinite
+     */
+    public static boolean finite(float fValue, String description) {
+        if (!Float.isFinite(fValue)) {
+            String what;
+            if (description == null) {
+                what = "float argument";
+            } else {
+                what = description;
+            }
+            logger.log(Level.SEVERE, "{0}={1}", new Object[]{what, fValue});
+            String message = what + " must be a finite number.";
+            throw new IllegalArgumentException(message);
+        }
+
+        return true;
+    }
+
+    /**
      * Validate a finite Vector3f as a method argument.
      *
      * @param vector the vector to validate (unaffected)
@@ -92,6 +129,7 @@ final public class Validate {
             } else {
                 what = description;
             }
+            logger.log(Level.SEVERE, "{0}={1}", new Object[]{what, vector});
             String message = what + " must have all components finite.";
             throw new IllegalArgumentException(message);
         }
@@ -331,6 +369,33 @@ final public class Validate {
     }
 
     /**
+     * Validate a non-null, non-empty string as a method argument.
+     *
+     * @param string the String to validate
+     * @param description a description of the argument
+     * @return true
+     * @throws NullPointerException or IllegalArgumentException if the String is
+     * null
+     * @throws IllegalArgumentException if the String has zero length
+     */
+    public static boolean nonEmpty(String string, String description) {
+        nonNull(string, description);
+
+        if (string.isEmpty()) {
+            String what;
+            if (description == null) {
+                what = "String argument";
+            } else {
+                what = description;
+            }
+            String message = what + " must not be empty.";
+            throw new IllegalArgumentException(message);
+        }
+
+        return true;
+    }
+
+    /**
      * Validate a non-negative integer as a method argument.
      *
      * @param iValue the value to validate
@@ -399,6 +464,7 @@ final public class Validate {
             } else {
                 what = description;
             }
+            logger.log(Level.SEVERE, "{0}={1}", new Object[]{what, vector});
             String message = what + " must not have a negative component.";
             throw new IllegalArgumentException(message);
         }
@@ -586,6 +652,7 @@ final public class Validate {
             } else {
                 what = description;
             }
+            logger.log(Level.SEVERE, "{0}={1}", new Object[]{what, vector});
             String message = what + " must have all components positive.";
             throw new IllegalArgumentException(message);
         }

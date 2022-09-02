@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020 jMonkeyEngine
+ * Copyright (c) 2019-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  */
 package com.jme3.bullet.joints;
 
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.RotationOrder;
 import com.jme3.bullet.joints.motors.MotorParam;
 import com.jme3.bullet.joints.motors.RotationMotor;
@@ -52,9 +51,9 @@ import jme3utilities.math.MyVector3f;
  * <i>From the Bullet manual:</i><br>
  * This generic constraint can emulate a variety of standard constraints, by
  * configuring each of the 6 degrees of freedom (dof). The first 3 dof axis are
- * linear axis, which represent translation of rigidbodies, and the latter 3 dof
- * axis represent the angular motion. Each axis can be either locked, free or
- * limited.
+ * linear axis, which represent translation of rigid bodies, and the latter 3
+ * dof axis represent the angular motion. Each axis can be either locked, free
+ * or limited.
  * <p>
  * For each axis:<ul>
  * <li>Lowerlimit = Upperlimit &rarr; axis is locked</li>
@@ -62,7 +61,7 @@ import jme3utilities.math.MyVector3f;
  * <li>Lowerlimit &lt; Upperlimit &rarr; axis is limited in that range</li>
  * </ul>
  *
- * @author sgold@sonic.net
+ * @author Stephen Gold sgold@sonic.net
  */
 public class New6Dof extends Constraint {
     // *************************************************************************
@@ -204,8 +203,7 @@ public class New6Dof extends Constraint {
      * storeResult or a new vector, not null)
      */
     public Vector3f getAxis(int axisIndex, Vector3f storeResult) {
-        Validate.inRange(axisIndex, "index", PhysicsSpace.AXIS_X,
-                PhysicsSpace.AXIS_Z);
+        Validate.axisIndex(axisIndex, "axis index");
         Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
 
         long constraintId = nativeId();
@@ -341,8 +339,7 @@ public class New6Dof extends Constraint {
      * @return the pre-existing instance
      */
     public RotationMotor getRotationMotor(int axisIndex) {
-        Validate.inRange(axisIndex, "index", PhysicsSpace.AXIS_X,
-                PhysicsSpace.AXIS_Z);
+        Validate.axisIndex(axisIndex, "axis index");
         return rotationMotor[axisIndex];
     }
 
@@ -601,6 +598,40 @@ public class New6Dof extends Constraint {
         setStiffness(constraintId, dofIndex, stiffness, limitIfNeeded);
     }
     // *************************************************************************
+    // Constraint methods
+
+    /**
+     * Alter the pivot location in A's scaled local coordinates.
+     *
+     * @param location the desired location (not null, unaffected)
+     */
+    @Override
+    public void setPivotInA(Vector3f location) {
+        Validate.nonNull(location, "location");
+
+        long constraintId = nativeId();
+        setPivotInA(constraintId, location);
+
+        if (pivotA != null) {
+            super.setPivotInA(location);
+        }
+    }
+
+    /**
+     * Alter the pivot location in B's scaled local coordinates.
+     *
+     * @param location the desired location (not null, unaffected)
+     */
+    @Override
+    public void setPivotInB(Vector3f location) {
+        Validate.nonNull(location, "location");
+
+        long constraintId = nativeId();
+        setPivotInB(constraintId, location);
+
+        super.setPivotInB(location);
+    }
+    // *************************************************************************
     // private methods
 
     /**
@@ -682,32 +713,32 @@ public class New6Dof extends Constraint {
             Vector3f pivotInA, Matrix3f rotInA, Vector3f pivotInB,
             Matrix3f rotInB, int rotOrder);
 
-    native private static long createSingleEnded(long bodyIdB,
-            Vector3f pivotInB, Matrix3f rotInB, int rotOrder);
+    native private static long createSingleEnded(
+            long bodyIdB, Vector3f pivotInB, Matrix3f rotInB, int rotOrder);
 
-    native private static void enableSpring(long constraintId, int dofIndex,
-            boolean enableFlag);
+    native private static void enableSpring(
+            long constraintId, int dofIndex, boolean enableFlag);
 
-    native private static void getAngles(long constraintId,
-            Vector3f storeVector);
+    native private static void getAngles(
+            long constraintId, Vector3f storeVector);
 
-    native private static void getAxis(long constraintId, int axisIndex,
-            Vector3f storeVector);
+    native private static void getAxis(
+            long constraintId, int axisIndex, Vector3f storeVector);
 
-    native private static void getCalculatedOriginA(long constraintId,
-            Vector3f storeVector);
+    native private static void getCalculatedOriginA(
+            long constraintId, Vector3f storeVector);
 
-    native private static void getCalculatedOriginB(long constraintId,
-            Vector3f storeVector);
+    native private static void getCalculatedOriginB(
+            long constraintId, Vector3f storeVector);
 
-    native private static void getFrameOffsetA(long constraintId,
-            Transform storeTransform);
+    native private static void getFrameOffsetA(
+            long constraintId, Transform storeTransform);
 
-    native private static void getFrameOffsetB(long constraintId,
-            Transform storeTransform);
+    native private static void getFrameOffsetB(
+            long constraintId, Transform storeTransform);
 
-    native private static void getPivotOffset(long constraintId,
-            Vector3f storeVector);
+    native private static void getPivotOffset(
+            long constraintId, Vector3f storeVector);
 
     native private static long getRotationalMotor(long constraintId, int index);
 
@@ -721,15 +752,18 @@ public class New6Dof extends Constraint {
     native private static void setDamping(long constraintId, int dofIndex,
             float damping, boolean limitIfNeeded);
 
-    native private static void setEquilibriumPoint(long constraintId,
-            int dofIndex,
-            float value);
+    native private static void setEquilibriumPoint(
+            long constraintId, int dofIndex, float value);
 
-    native private static void setEquilibriumPointToCurrent(long constraintId,
-            int dofIndex);
+    native private static void setEquilibriumPointToCurrent(
+            long constraintId, int dofIndex);
 
-    native private static void setRotationOrder(long constraintId,
-            int rotOrder);
+    native private static void setPivotInA(long jointId, Vector3f pivotInA);
+
+    native private static void setPivotInB(long jointId, Vector3f pivotInB);
+
+    native private static void setRotationOrder(
+            long constraintId, int rotOrder);
 
     native private static void setStiffness(long constraintId, int dofIndex,
             float stiffness, boolean limitIfNeeded);

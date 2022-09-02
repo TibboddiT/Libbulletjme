@@ -151,6 +151,15 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     private Object userObject = null;
     // *************************************************************************
+    // constructors
+
+    /**
+     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     */
+    public PhysicsCollisionObject() {
+        // do nothing
+    }
+    // *************************************************************************
     // new methods exposed
 
     /**
@@ -172,7 +181,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param collisionGroup the groups to add, ORed together (bitmask)
      */
     public void addCollideWithGroup(int collisionGroup) {
-        collideWithGroups |= collisionGroup;
+        this.collideWithGroups |= collisionGroup;
         if (hasAssignedNativeObject()) {
             long objectId = nativeId();
             setCollideWithGroups(objectId, collideWithGroups);
@@ -730,6 +739,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
         for (int listIndex = 0; listIndex < numIgnoredObjects; ++listIndex) {
             long otherId = getObjectWithoutCollision(objectId, listIndex);
+            assert otherId != 0L;
             result[listIndex] = otherId;
         }
 
@@ -777,7 +787,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param collisionGroup the groups to remove, ORed together (bitmask)
      */
     public void removeCollideWithGroup(int collisionGroup) {
-        collideWithGroups &= ~collisionGroup;
+        this.collideWithGroups &= ~collisionGroup;
         if (hasAssignedNativeObject()) {
             setCollideWithGroups(collideWithGroups);
         }
@@ -851,7 +861,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     public void setCollideWithGroups(int collisionGroups) {
         long objectId = nativeId();
-        collideWithGroups = collisionGroups;
+        this.collideWithGroups = collisionGroups;
         setCollideWithGroups(objectId, collideWithGroups);
     }
 
@@ -945,6 +955,22 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
+     * Alter the ignore list.
+     *
+     * @param idList the collision-object IDs to ignore (not null, may be empty,
+     * unaffected)
+     */
+    public void setIgnoreList(long[] idList) {
+        Validate.nonNull(idList, "ID list");
+        clearIgnoreList();
+
+        long thisId = nativeId();
+        for (long otherId : idList) {
+            setIgnoreCollisionCheck(thisId, otherId, true);
+        }
+    }
+
+    /**
      * Alter this object's restitution (bounciness) (native field:
      * m_restitution). For perfect elasticity, set restitution=1.
      *
@@ -985,7 +1011,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @see #getUserObject()
      */
     public void setUserObject(Object user) {
-        userObject = user;
+        this.userObject = user;
     }
 
     /**
@@ -1071,6 +1097,16 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     native protected static void setCollisionFlags(long objectId,
             int desiredFlags);
+
+    /**
+     * Alter the ignore list for collisions.
+     *
+     * @param object1Id the ID of the first btCollisionObject (not zero)
+     * @param object2Id the ID of the 2nd btCollisionObject (not zero)
+     * @param setting true to ignore, false to stop ignoring
+     */
+    native protected static void setIgnoreCollisionCheck(
+            long object1Id, long object2Id, boolean setting);
 
     /**
      * Directly alter this object's location and basis.
@@ -1212,9 +1248,6 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native private static void setDeactivationTime(long objectId, float time);
 
     native private static void setFriction(long objectId, float friction);
-
-    native private static void setIgnoreCollisionCheck(long object1Id,
-            long object2Id, boolean setting);
 
     native private static void setLocationAndBasis(long objectId,
             Vector3f location, Matrix3f basis);

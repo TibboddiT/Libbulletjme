@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -303,7 +302,7 @@ public class CollisionSpace extends NativePhysicsObject {
      * @return a new modifiable collection of pre-existing instances (not null)
      */
     public Collection<PhysicsCollisionObject> getPcoList() {
-        Set<PhysicsCollisionObject> result = new TreeSet<>();
+        Collection<PhysicsCollisionObject> result = new TreeSet<>();
         result.addAll(ghostMap.values());
 
         return result;
@@ -410,6 +409,22 @@ public class CollisionSpace extends NativePhysicsObject {
         boolean result = getDeterministicOverlappingPairs(spaceId);
 
         return result;
+    }
+
+    /**
+     * Callback to determine whether the specified objects should be allowed to
+     * collide. Invoked during broadphase, after axis-aligned bounding boxes,
+     * ignore lists, and collision groups have been checked. Override this
+     * method to implement dynamic collision filtering.
+     *
+     * @param pcoA the first collision object (not null)
+     * @param pcoB the 2nd collision object (not null)
+     * @return true to simulate collisions between pcoA and pcoB, false to
+     * ignore such collisions during this timestep
+     */
+    public boolean needsCollision(PhysicsCollisionObject pcoA,
+            PhysicsCollisionObject pcoB) {
+        return true;
     }
 
     /**
@@ -629,8 +644,10 @@ public class CollisionSpace extends NativePhysicsObject {
         }
         assert !ghost.isInWorld();
 
-        loggerC.log(Level.FINE, "Adding {0} to {1}.",
-                new Object[]{ghost, this});
+        if (loggerC.isLoggable(Level.FINE)) {
+            loggerC.log(Level.FINE, "Adding {0} to {1}.",
+                    new Object[]{ghost, this});
+        }
 
         long ghostId = ghost.nativeId();
         ghostMap.put(ghostId, ghost);
@@ -650,11 +667,19 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * This method is invoked by native code.
+     * This method is invoked by native code to determine whether the specified
+     * objects should be allowed to collide. Invoked during broadphase, after
+     * axis-aligned bounding boxes, ignore lists, and collision groups have been
+     * checked.
+     *
+     * @param pcoA the first collision object (not null)
+     * @param pcoB the 2nd collision object (not null)
+     * @return true to simulate collisions between pcoA and pcoB, false to
+     * ignore such collisions during this timestep
      */
     private boolean notifyCollisionGroupListeners_native(
             PhysicsCollisionObject pcoA, PhysicsCollisionObject pcoB) {
-        boolean result = true;
+        boolean result = needsCollision(pcoA, pcoB);
         return result;
     }
 
@@ -672,8 +697,10 @@ public class CollisionSpace extends NativePhysicsObject {
         }
 
         ghostMap.remove(ghostId);
-        loggerC.log(Level.FINE, "Removing {0} from {1}.",
-                new Object[]{ghost, this});
+        if (loggerC.isLoggable(Level.FINE)) {
+            loggerC.log(Level.FINE, "Removing {0} from {1}.",
+                    new Object[]{ghost, this});
+        }
 
         long spaceId = nativeId();
         removeCollisionObject(spaceId, ghostId);

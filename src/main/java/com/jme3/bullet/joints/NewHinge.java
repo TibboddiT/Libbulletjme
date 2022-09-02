@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 jMonkeyEngine
+ * Copyright (c) 2020-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * <p>
  * Inspired by Bullet's btHinge2Constraint.
  *
- * @author sgold@sonic.net
+ * @author Stephen Gold sgold@sonic.net
  */
 public class NewHinge extends New6Dof {
     // *************************************************************************
@@ -236,6 +236,11 @@ public class NewHinge extends New6Dof {
 
     /**
      * Determine the pivot location in a body's scaled local coordinates.
+     *
+     * @param body the body to use (not null, unaffected)
+     * @param anchor the location in physics-space coordinates (not null,
+     * unaffected)
+     * @return a new location vector (in scaled local coordinates)
      */
     private static Vector3f pivotInBody(PhysicsRigidBody body,
             Vector3f anchor) {
@@ -249,6 +254,11 @@ public class NewHinge extends New6Dof {
     /**
      * Determine the orientation of the constraint in a body's local
      * coordinates.
+     *
+     * @param body the body to use (not null, unaffected)
+     * @param axis1 (not null, unaffected)
+     * @param axis2 (not null, unaffected)
+     * @return a new rotation matrix (in local coordinates)
      */
     private static Matrix3f rotInBody(PhysicsRigidBody body, Vector3f axis1,
             Vector3f axis2) {

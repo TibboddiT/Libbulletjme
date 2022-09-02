@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 jMonkeyEngine
+ * Copyright (c) 2019-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,27 @@
 package com.jme3.bullet.util;
 
 import com.jme3.bullet.NativePhysicsObject;
+import com.jme3.math.Vector3f;
+import java.util.logging.Logger;
 
 /**
  * Static interface to the Libbulletjme native library.
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class NativeLibrary {
+final public class NativeLibrary {
+    // *************************************************************************
+    // constants and loggers
+
+    /**
+     * message logger for this class
+     */
+    final public static Logger logger
+            = Logger.getLogger(NativeLibrary.class.getName());
+    /**
+     * expected version of the native library
+     */
+    final public static String expectedVersion = "16.1.0";
     // *************************************************************************
     // constructors
 
@@ -104,6 +118,21 @@ public class NativeLibrary {
     native public static boolean isDoublePrecision();
 
     /**
+     * Test whether the specified point and triangle are within the specified
+     * distance of each other. Used for testing Bullet's
+     * btTriangleShape::isInside().
+     *
+     * @param testPoint the location of the test point (not null, unaffected)
+     * @param maxSeparation the maximum separation allowed
+     * @param v0 the first vertex of the triangle (not null, unaffected)
+     * @param v1 the 2nd vertex of the triangle (not null, unaffected)
+     * @param v2 the 3rd vertex of the triangle (not null, unaffected)
+     * @return true if within the specified distance, otherwise false
+     */
+    native public static boolean isInsideTriangle(Vector3f testPoint,
+            float maxSeparation, Vector3f v0, Vector3f v1, Vector3f v2);
+
+    /**
      * Test whether the native library includes Quickprof profiling.
      *
      * @return true if included, otherwise false
@@ -118,7 +147,7 @@ public class NativeLibrary {
     native public static boolean isThreadSafe();
 
     /**
-     * Reset a Quickprof. This feature is enabled only in native libraries built
+     * Reset Quickprof. This feature is enabled only in native libraries built
      * with the BT_ENABLE_PROFILE macro defined. Must be invoked on the
      * designated physics thread.
      */
@@ -157,6 +186,12 @@ public class NativeLibrary {
      * native library, to start the Physics Cleaner thread.
      */
     private static void postInitialization() {
+        String lbjVersion = versionNumber();
+        if (!lbjVersion.equals(expectedVersion)) {
+            logger.warning("Expected a v" + expectedVersion
+                    + " native library but loaded v" + lbjVersion + "!");
+        }
+
         Thread physicsCleaner = new Thread("Physics Cleaner") {
             @Override
             public void run() {

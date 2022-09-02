@@ -82,10 +82,6 @@ public class HeightfieldCollisionShape extends CollisionShape {
      */
     private boolean useZigzag = false;
     /**
-     * scale factor for Bullet to apply to the heightfield
-     */
-    final private float heightScale = 1f;
-    /**
      * highest sample in the heightfield or -minHeight, whichever is higher
      */
     private float maxHeight;
@@ -176,8 +172,7 @@ public class HeightfieldCollisionShape extends CollisionShape {
         Validate.nonEmpty(heightmap, "heightmap");
         assert heightmap.length >= stickLength * stickWidth : heightmap.length;
         Validate.nonNegative(scale, "scale");
-        Validate.inRange(upAxis, "up axis", PhysicsSpace.AXIS_X,
-                PhysicsSpace.AXIS_Z);
+        Validate.axisIndex(upAxis, "up axis");
 
         heightStickLength = stickLength;
         heightStickWidth = stickWidth;
@@ -247,6 +242,11 @@ public class HeightfieldCollisionShape extends CollisionShape {
 
     /**
      * Instantiate a square btHeightfieldTerrainShape.
+     *
+     * @param heightmap (not null, length&ge;4, length a perfect square,
+     * unaffected)
+     * @param worldScale the desired scale factor for each local axis (not null,
+     * no negative component, unaffected)
      */
     private void createCollisionHeightfield(float[] heightmap,
             Vector3f worldScale) {
@@ -274,6 +274,7 @@ public class HeightfieldCollisionShape extends CollisionShape {
             directBuffer.put(height);
         }
 
+        float heightScale = 1f;
         long shapeId = createShape2(heightStickWidth, heightStickLength,
                 directBuffer, heightScale, minHeight, maxHeight, upAxis,
                 flipQuadEdges, flipTriangleWinding, useDiamond, useZigzag);

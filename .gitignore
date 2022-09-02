@@ -1,7 +1,7 @@
 /.cxx/
 /.gradle/
-/.nb-gradle/
 /.idea/
+/.nb-gradle/
 /.vscode/
 /build/
 /private/

@@ -56,7 +56,7 @@ import jme3utilities.Validate;
  * uses a simplified model. This simplified model has many benefits, and is
  * widely used in commercial driving games.
  * <p>
- * The entire vehicle is represented as a single rigidbody, the chassis. The
+ * The entire vehicle is represented as a single rigid body, the chassis. The
  * collision detection of the wheels is approximated by ray casts, and the tire
  * friction is a basic anisotropic friction model.
  *
@@ -711,6 +711,11 @@ public class PhysicsVehicle extends PhysicsRigidBody {
     // *************************************************************************
     // PhysicsRigidBody methods
 
+    /**
+     * Invoked during a rebuild after the native object is created.
+     * <p>
+     * For use by subclasses.
+     */
     @Override
     protected void postRebuild() {
         super.postRebuild();

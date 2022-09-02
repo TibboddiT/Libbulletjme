@@ -31,6 +31,8 @@
  */
 package com.jme3.bullet;
 
+import com.jme3.bullet.collision.ContactListener;
+import com.jme3.bullet.collision.PersistentManifolds;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
@@ -48,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -61,7 +62,9 @@ import jme3utilities.Validate;
  *
  * @author normenhansen
  */
-public class PhysicsSpace extends CollisionSpace {
+public class PhysicsSpace
+        extends CollisionSpace
+        implements ContactListener {
     // *************************************************************************
     // enums
 
@@ -139,17 +142,17 @@ public class PhysicsSpace extends CollisionSpace {
     /**
      * list of registered listeners for ongoing contacts
      */
-    final private List<PhysicsCollisionListener> contactProcessedListeners
+    final private Collection<PhysicsCollisionListener> contactProcessedListeners
             = new ArrayList<>(4);
     /**
      * list of registered listeners for new contacts
      */
-    final private List<PhysicsCollisionListener> contactStartedListeners
+    final private Collection<PhysicsCollisionListener> contactStartedListeners
             = new ArrayList<>(4);
     /**
      * list of registered tick listeners
      */
-    final private List<PhysicsTickListener> tickListeners
+    final private Collection<PhysicsTickListener> tickListeners
             = new ArrayList<>(4);
     /**
      * map character IDs to added objects
@@ -287,7 +290,9 @@ public class PhysicsSpace extends CollisionSpace {
      * contacts since the previous distributeEvents().
      *
      * @param listener the listener to register (not null, alias created)
+     * @deprecated Override the ContactListener methods instead.
      */
+    @Deprecated
     public void addCollisionListener(PhysicsCollisionListener listener) {
         Validate.nonNull(listener, "listener");
         assert !contactStartedListeners.contains(listener);
@@ -325,7 +330,10 @@ public class PhysicsSpace extends CollisionSpace {
         }
         assert a != b : a;
 
-        logger.log(Level.FINE, "Adding {0} to {1}.", new Object[]{joint, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Adding {0} to {1}.",
+                    new Object[]{joint, this});
+        }
         long jointId = joint.nativeId();
         jointMap.put(jointId, joint);
         joint.setPhysicsSpace(this);
@@ -344,7 +352,9 @@ public class PhysicsSpace extends CollisionSpace {
      * ongoing contacts EXCEPT Sphere-Sphere contacts.
      *
      * @param listener the listener to register (not null, alias created)
+     * @deprecated Override the ContactListener methods instead.
      */
+    @Deprecated
     public void addOngoingCollisionListener(PhysicsCollisionListener listener) {
         Validate.nonNull(listener, "listener");
         assert !contactProcessedListeners.contains(listener);
@@ -355,9 +365,9 @@ public class PhysicsSpace extends CollisionSpace {
     /**
      * Register the specified tick listener with this space.
      * <p>
-     * Tick listeners are notified before and after each physics step. A physics
-     * step is not necessarily the same as a frame; it is more influenced by the
-     * accuracy of the PhysicsSpace.
+     * Tick listeners are notified before and after each simulation step. A
+     * simulation step is not necessarily the same as a frame; it is more
+     * influenced by the accuracy of the PhysicsSpace.
      *
      * @see #setAccuracy(float)
      *
@@ -408,6 +418,18 @@ public class PhysicsSpace extends CollisionSpace {
     }
 
     /**
+     * Count the collision manifolds in this space.
+     *
+     * @return the current number of btPersistentManifolds (&ge;0)
+     */
+    public int countManifolds() {
+        long spaceId = nativeId();
+        int result = countManifolds(spaceId);
+
+        return result;
+    }
+
+    /**
      * Count the rigid bodies in this space, including vehicles.
      *
      * @return count (&ge;0)
@@ -428,8 +450,11 @@ public class PhysicsSpace extends CollisionSpace {
     }
 
     /**
-     * Distribute each collision event to registered listeners.
+     * Distribute queued collision events to registered listeners.
+     *
+     * @deprecated Override the ContactListener methods instead.
      */
+    @Deprecated
     public void distributeEvents() {
         while (!contactStartedEvents.isEmpty()) {
             PhysicsCollisionEvent event = contactStartedEvents.pop();
@@ -440,7 +465,8 @@ public class PhysicsSpace extends CollisionSpace {
 
         while (!contactProcessedEvents.isEmpty()) {
             PhysicsCollisionEvent event = contactProcessedEvents.pop();
-            for (PhysicsCollisionListener listener : contactProcessedListeners) {
+            for (PhysicsCollisionListener listener
+                    : contactProcessedListeners) {
                 listener.collision(event);
             }
         }
@@ -560,6 +586,25 @@ public class PhysicsSpace extends CollisionSpace {
     }
 
     /**
+     * Enumerate the native IDs of all collision manifolds in this space.
+     *
+     * @return a new array (not null, may be empty)
+     * @see com.jme3.bullet.collision.PersistentManifolds
+     */
+    public long[] listManifoldIds() {
+        long spaceId = nativeId();
+        int numManifolds = countManifolds(spaceId);
+        long[] result = new long[numManifolds];
+
+        for (int index = 0; index < numManifolds; ++index) {
+            long manifoldId = getManifoldByIndex(spaceId, index);
+            result[index] = manifoldId;
+        }
+
+        return result;
+    }
+
+    /**
      * Read the maximum number of time steps per frame.
      *
      * @return number of steps (&gt;0) or 0 for a variable time step
@@ -585,7 +630,9 @@ public class PhysicsSpace extends CollisionSpace {
      * @see
      * #addCollisionListener(com.jme3.bullet.collision.PhysicsCollisionListener)
      * @param listener the listener to de-register (not null)
+     * @deprecated Override the ContactListener methods instead.
      */
+    @Deprecated
     public void removeCollisionListener(PhysicsCollisionListener listener) {
         Validate.nonNull(listener, "listener");
 
@@ -608,8 +655,10 @@ public class PhysicsSpace extends CollisionSpace {
         }
         assert joint.getPhysicsSpace() == this;
 
-        logger.log(Level.FINE, "Removing {0} from {1}.",
-                new Object[]{joint, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Removing {0} from {1}.",
+                    new Object[]{joint, this});
+        }
         jointMap.remove(jointId);
         joint.setPhysicsSpace(null);
 
@@ -622,11 +671,14 @@ public class PhysicsSpace extends CollisionSpace {
     /**
      * De-register the specified listener for ongoing contacts.
      *
-     * @see
-     * #addOngoingCollisionListener(com.jme3.bullet.collision.PhysicsCollisionListener)
+     * @see #addOngoingCollisionListener(
+     * com.jme3.bullet.collision.PhysicsCollisionListener)
      * @param listener the listener to de-register (not null)
+     * @deprecated Override the ContactListener methods instead.
      */
-    public void removeOngoingCollisionListener(PhysicsCollisionListener listener) {
+    @Deprecated
+    public void removeOngoingCollisionListener(
+            PhysicsCollisionListener listener) {
         Validate.nonNull(listener, "listener");
 
         boolean success = contactProcessedListeners.remove(listener);
@@ -676,11 +728,11 @@ public class PhysicsSpace extends CollisionSpace {
     }
 
     /**
-     * Alter the maximum number of time steps per frame.
+     * Alter the maximum number of simulation steps per frame.
      * <p>
-     * Extra physics steps help maintain determinism when the render fps drops
-     * below 1/accuracy. For example a value of 2 can compensate for frame rates
-     * as low as 30fps, assuming the physics has an accuracy of 1/60 sec.
+     * Extra simulation steps help maintain determinism when the render fps
+     * drops below 1/accuracy. For example a value of 2 can compensate for frame
+     * rates as low as 30fps, assuming the physics has an accuracy of 1/60 sec.
      * <p>
      * Setting this value too high can depress the frame rate.
      *
@@ -711,42 +763,60 @@ public class PhysicsSpace extends CollisionSpace {
      * maxSubSteps is set to 0 or 1.
      *
      * @see #setMaxSubSteps(int)
-     * @param timeInterval time-per-frame multiplied by speed (in seconds,
-     * &ge;0)
+     * @param timeInterval the time interval to simulate (in seconds, &ge;0)
      */
     public void update(float timeInterval) {
-        Validate.nonNegative(timeInterval, "time interval");
+        assert Validate.nonNegative(timeInterval, "time interval");
 
-        long spaceId = nativeId();
-        assert maxSubSteps >= 0 : maxSubSteps;
-        assert accuracy > 0f : accuracy;
-        float interval = timeInterval;
+        float interval;
         if (maxSubSteps == 0) {
-            interval = Math.min(interval, maxTimeStep);
+            interval = Math.min(timeInterval, maxTimeStep);
+        } else {
+            interval = timeInterval;
+            assert maxSubSteps > 0 : maxSubSteps;
         }
-        boolean doProcessed = !contactProcessedListeners.isEmpty();
-        boolean doStarted = !contactStartedListeners.isEmpty();
-        stepSimulation(spaceId, interval, maxSubSteps, accuracy, doProcessed,
-                doStarted);
+        update(interval, maxSubSteps);
     }
 
     /**
      * Update this space.
      *
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
-     * @param maxSteps the maximum number of steps of size accuracy (&ge;1) or 0
-     * for a single step of size timeInterval
+     * @param maxSteps the maximum number of steps of size {@code accuracy}
+     * (&ge;1) or 0 for a single step of size {@code timeInterval}
      */
     public void update(float timeInterval, int maxSteps) {
-        Validate.nonNegative(timeInterval, "time interval");
-        Validate.nonNegative(maxSteps, "max steps");
+        assert Validate.nonNegative(timeInterval, "time interval");
+        assert Validate.nonNegative(maxSteps, "max steps");
+
+        boolean doEnded = false;
+        boolean doProcessed = !contactProcessedListeners.isEmpty();
+        boolean doStarted = !contactStartedListeners.isEmpty();
+        update(timeInterval, maxSteps, doEnded, doProcessed, doStarted);
+    }
+
+    /**
+     * Update this space.
+     *
+     * @param timeInterval the time interval to simulate (in seconds, &ge;0)
+     * @param maxSteps the maximum number of steps of size {@code accuracy}
+     * (&ge;1) or 0 for a single step of size {@code timeInterval}
+     * @param doEnded true to enable {@code onContactEnded()} callbacks, false
+     * to skip them
+     * @param doProcessed true to enable {@code onContactProcessed()} callbacks,
+     * false to skip them
+     * @param doStarted true to enable {@code onContactStarted()} callbacks,
+     * false to skip them
+     */
+    public void update(float timeInterval, int maxSteps, boolean doEnded,
+            boolean doProcessed, boolean doStarted) {
+        assert Validate.nonNegative(timeInterval, "time interval");
+        assert Validate.nonNegative(maxSteps, "max steps");
 
         long spaceId = nativeId();
         assert accuracy > 0f : accuracy;
-        boolean doProcessed = !contactProcessedListeners.isEmpty();
-        boolean doStarted = !contactStartedListeners.isEmpty();
-        stepSimulation(spaceId, timeInterval, maxSteps, accuracy, doProcessed,
-                doStarted);
+        stepSimulation(spaceId, timeInterval, maxSteps, accuracy, doEnded,
+                doProcessed, doStarted);
     }
 
     /**
@@ -955,6 +1025,73 @@ public class PhysicsSpace extends CollisionSpace {
         }
     }
     // *************************************************************************
+    // ContactListener methods
+
+    /**
+     * Invoked by native code immediately after a contact manifold is removed.
+     * Skipped if stepSimulation() was invoked with doEnded=false.
+     * <p>
+     * Override this method to customize how contacts are handled.
+     *
+     * @param manifoldId the native ID of the btPersistentManifold (not 0)
+     */
+    @Override
+    public void onContactEnded(long manifoldId) {
+        // do nothing
+    }
+
+    /**
+     * Invoked by native code immediately after a contact point is refreshed
+     * without being removed. Skipped for Sphere-Sphere contacts. Skipped if
+     * stepSimulation() was invoked with doProcessed=false.
+     * <p>
+     * Override this method to customize how contacts are handled.
+     *
+     * @param pcoA the first involved object (not null)
+     * @param pcoB the 2nd involved object (not null)
+     * @param pointId the native ID of the btManifoldPoint (not 0)
+     */
+    @Override
+    public void onContactProcessed(PhysicsCollisionObject pcoA,
+            PhysicsCollisionObject pcoB, long pointId) {
+        PhysicsCollisionEvent event
+                = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
+        // Queue the event to be handled later by distributeEvents().
+        contactProcessedEvents.add(event);
+    }
+
+    /**
+     * Invoked by native code immediately after a contact manifold is created.
+     * Skipped if stepSimulation() was invoked with doStarted=false.
+     * <p>
+     * Override this method to customize how contacts are handled.
+     *
+     * @param manifoldId the native ID of the btPersistentManifold (not 0)
+     */
+    @Override
+    public void onContactStarted(long manifoldId) {
+        int numPoints = PersistentManifolds.countPoints(manifoldId);
+        if (numPoints == 0) {
+            return;
+        }
+
+        long bodyAId = PersistentManifolds.getBodyAId(manifoldId);
+        PhysicsCollisionObject pcoA
+                = PhysicsCollisionObject.findInstance(bodyAId);
+        long bodyBId = PersistentManifolds.getBodyBId(manifoldId);
+        PhysicsCollisionObject pcoB
+                = PhysicsCollisionObject.findInstance(bodyBId);
+
+        for (int i = 0; i < numPoints; ++i) {
+            long pointId = PersistentManifolds.getPointId(manifoldId, i);
+            PhysicsCollisionEvent event
+                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
+
+            // Queue the event to be handled later by distributeEvents().
+            contactStartedEvents.add(event);
+        }
+    }
+    // *************************************************************************
     // Java private methods
 
     /**
@@ -970,8 +1107,10 @@ public class PhysicsSpace extends CollisionSpace {
         }
         assert !character.isInWorld();
 
-        logger.log(Level.FINE, "Adding {0} to {1}.",
-                new Object[]{character, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Adding {0} to {1}.",
+                    new Object[]{character, this});
+        }
         long characterId = character.nativeId();
         characterMap.put(characterId, character);
 
@@ -980,30 +1119,6 @@ public class PhysicsSpace extends CollisionSpace {
 
         long actionId = character.getControllerId();
         addAction(spaceId, actionId);
-    }
-
-    /**
-     * This method is invoked by native code.
-     */
-    private void addCollisionEvent_native(PhysicsCollisionObject pcoA,
-            PhysicsCollisionObject pcoB, long manifoldPointId) {
-        if (!contactStartedListeners.isEmpty()) {
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, manifoldPointId);
-            contactStartedEvents.add(event);
-        }
-    }
-
-    /**
-     * This method is invoked by native code.
-     */
-    private void addContactProcessed(PhysicsCollisionObject pcoA,
-            PhysicsCollisionObject pcoB, long manifoldPointId) {
-        if (!contactProcessedListeners.isEmpty()) {
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, manifoldPointId);
-            contactProcessedEvents.add(event);
-        }
     }
 
     /**
@@ -1022,15 +1137,18 @@ public class PhysicsSpace extends CollisionSpace {
         }
         assert !rigidBody.isInWorld();
 
-        logger.log(Level.FINE, "Adding {0} to {1}.",
-                new Object[]{rigidBody, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Adding {0} to {1}.",
+                    new Object[]{rigidBody, this});
+        }
         long rigidBodyId = rigidBody.nativeId();
         rigidMap.put(rigidBodyId, rigidBody);
-
-        //Workaround
-        //It seems that adding a Kinematic RigidBody to the dynamicWorld
-        //prevents it from being dynamic again afterward.
-        //So we add it dynamic, then set it kinematic.
+        /*
+         * Workaround:
+         * It seems that adding a Kinematic RigidBody to the dynamicWorld
+         * prevents it from being dynamic again afterward.
+         * So we add it dynamic, then set it kinematic.
+         */
         boolean kinematic = false;
         if (rigidBody.isKinematic()) {
             kinematic = true;
@@ -1055,8 +1173,10 @@ public class PhysicsSpace extends CollisionSpace {
 
         if (rigidBody instanceof PhysicsVehicle) {
             PhysicsVehicle vehicle = (PhysicsVehicle) rigidBody;
-            logger.log(Level.FINE, "Adding action for {0} to {1}.",
-                    new Object[]{vehicle, this});
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.FINE, "Adding action for {0} to {1}.",
+                        new Object[]{vehicle, this});
+            }
 
             vehicle.createVehicle(this);
             long actionId = vehicle.getVehicleId();
@@ -1084,7 +1204,7 @@ public class PhysicsSpace extends CollisionSpace {
     /**
      * Callback invoked (by native code) just after the physics is stepped.
      *
-     * @param timeStep the time per physics step (in seconds, &ge;0)
+     * @param timeStep the time per simulation step (in seconds, &ge;0)
      */
     private void postTick_native(float timeStep) {
         for (PhysicsTickListener listener : tickListeners) {
@@ -1095,7 +1215,7 @@ public class PhysicsSpace extends CollisionSpace {
     /**
      * Callback invoked (by native code) just before the physics is stepped.
      *
-     * @param timeStep the time per physics step (in seconds, &ge;0)
+     * @param timeStep the time per simulation step (in seconds, &ge;0)
      */
     private void preTick_native(float timeStep) {
         for (PhysicsTickListener listener : tickListeners) {
@@ -1116,8 +1236,10 @@ public class PhysicsSpace extends CollisionSpace {
             return;
         }
 
-        logger.log(Level.FINE, "Removing {0} from {1}.",
-                new Object[]{character, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Removing {0} from {1}.",
+                    new Object[]{character, this});
+        }
         characterMap.remove(characterId);
 
         long spaceId = nativeId();
@@ -1143,8 +1265,10 @@ public class PhysicsSpace extends CollisionSpace {
         long spaceId = nativeId();
         if (rigidBody instanceof PhysicsVehicle) {
             PhysicsVehicle vehicle = (PhysicsVehicle) rigidBody;
-            logger.log(Level.FINE, "Removing action for {0} from {1}.",
-                    new Object[]{vehicle, this});
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.FINE, "Removing action for {0} from {1}.",
+                        new Object[]{vehicle, this});
+            }
 
             long actionId = vehicle.getVehicleId();
             vehicleMap.remove(actionId);
@@ -1152,8 +1276,10 @@ public class PhysicsSpace extends CollisionSpace {
             removeAction(spaceId, actionId);
         }
 
-        logger.log(Level.FINE, "Removing {0} from {1}.",
-                new Object[]{rigidBody, this});
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Removing {0} from {1}.",
+                    new Object[]{rigidBody, this});
+        }
         rigidMap.remove(rigidBodyId);
 
         removeRigidBody(spaceId, rigidBodyId);
@@ -1163,14 +1289,16 @@ public class PhysicsSpace extends CollisionSpace {
 
     native private static void addAction(long spaceId, long actionId);
 
-    native private static void addCharacterObject(long spaceId,
-            long characterId);
+    native private static void addCharacterObject(
+            long spaceId, long characterId);
 
-    native private static void addConstraintC(long spaceId, long constraintId,
-            boolean disableCollisions);
+    native private static void addConstraintC(
+            long spaceId, long constraintId, boolean disableCollisions);
 
-    native private static void addRigidBody(long spaceId, long rigidBodyId,
-            int proxyGroup, int proxyMask);
+    native private static void addRigidBody(
+            long spaceId, long rigidBodyId, int proxyGroup, int proxyMask);
+
+    native private static int countManifolds(long spaceId);
 
     native private static void addProceduralStaticRigidBody(long spaceId, long rigidBodyId, long shapeId,
             int proxyGroup, int proxyMask);
@@ -1180,6 +1308,9 @@ public class PhysicsSpace extends CollisionSpace {
 
     native private static void getGravity(long spaceId, Vector3f storeVector);
 
+    native private static long getManifoldByIndex(
+            long spaceId, int manifoldIndex);
+
     native private static int getNumConstraints(long spaceId);
 
     native private static long getSolverInfo(long spaceId);
@@ -1188,11 +1319,11 @@ public class PhysicsSpace extends CollisionSpace {
 
     native private static void removeAction(long spaceId, long actionId);
 
-    native private static void removeCharacterObject(long spaceId,
-            long characterId);
+    native private static void removeCharacterObject(
+            long spaceId, long characterId);
 
-    native private static void removeConstraint(long spaceId,
-            long constraintId);
+    native private static void removeConstraint(
+            long spaceId, long constraintId);
 
     native private static void removeRigidBody(long spaceId, long rigidBodyId);
 
@@ -1200,10 +1331,11 @@ public class PhysicsSpace extends CollisionSpace {
 
     native private static void setSolverType(long spaceId, int solverType);
 
-    native private static void setSpeculativeContactRestitution(long spaceId,
-            boolean apply);
+    native private static void setSpeculativeContactRestitution(
+            long spaceId, boolean apply);
 
     native private static void stepSimulation(long spaceId, float timeInterval,
-            int maxSubSteps, float accuracy, boolean doProcessed,
-            boolean doStarted);
+            int maxSubSteps, float accuracy, boolean enableContactEndedCallback,
+            boolean enableContactProcessedCallback,
+            boolean enableContactStartedCallback);
 }

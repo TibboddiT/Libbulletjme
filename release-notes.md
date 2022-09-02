@@ -1,30 +1,226 @@
 # Release log for the Libbulletjme project
 
+## Version 16.1.0 released on 12 August 2022
+
++ Bugfix:  I/O resources not safely closed in `VHACDParameters`.
++ Added V-HACD v4 without removing the classic version:
+  + Added the `Vhacd4`, `Vhacd4Hull`, and `Vhacd4Parameters` classes.
+  + Added the `FillMode` enum.
+  + Added a new constructor for `HullCollisionShape`.
++ Added the `setIgnoreList()` method to the `PhysicsCollisionObject` class.
++ Added a simpler constructor to `PhysicsSoftSpace`.
++ Overrode the `toString()` method of `VHACDParameters`.
++ Publicized the `rebuildRigidBody()` method of the `PhysicsRigidBody` class.
++ Created per-class loggers for `SoftBodyMaterial` and `SoftBodyWorldInfo`.
++ Upgraded the GCC compilers used to build Linux natives:
+  + Linux32 and Linux64 non-multithreaded, from v4.7.3 to v7.5.0
+  + Linux_ARM32hf and Linux_ARM64, from v5.4.0 to v6.5.0
+  + Linux64 multithreaded and Linux_ARM32 with software floating-point,
+    from v5.4.0 to v7.5.0
+
+## Version 16.0.0 released on 4 August 2022
+
++ Qualified 13 utility classes as `final`. (API changes)
++ Protected 2 constructors of `SoftPhysicsJoint`. (API changes)
++ Bugfix:  `PhysicsRigidBody.setInverseInertiaLocal()` and
+  `PhysicsRigidBody.updateMassProps()` don't update the world inertia tensor
++ Bugfix:  static rigid body isn't rebuilt when assigned a positive mass
++ Bugfix:  when rebuilding a rigid body, its ignore list is lost
++ De-privatized the `setIgnoreCollisionCheck()` method
+  in `PhysicsCollisionObject`.
+
+## Version 15.2.1 released on 6 July 2022
+
++ Bugfix:  values of 3 `ConfigFlag` constants are out-of-date
++ Bugfix:  Android native libraries are missing an object file
++ Bugfix:  `ConfigFlag.describe()` ignores 3 flags
++ Added the `DeformableSpace`, `MyShape`, and `ReducedDeformableBody` classes.
++ Added constants `SDF_MDF` and `SDF_RDN` to the `ConfigFlag` class.
++ Added the `tan()` method to the `FastMath` class.
++ Added the `isOdd()` method to the `MyMath` class.
++ Added the `removeSuffix()` method to the `MyString` class.
++ Added a warning when the native library version is unexpected.
++ Updated the Bullet sourcecode to match SHA1 ID=a1d96646
+  of the bullet3 project.
++ Added the "checkstyle" plugin to the build.
+
+## Version 15.1.0 released on 6 June 2022
+
++ Added accessors for global deactivation settings:
+  + `PhysicsBody.getDeactivationDeadline()`
+  + `PhysicsBody.isDeactivationEnabled()`
+  + `PhysicsBody.setDeactivationDeadline()`
+  + `PhysicsBody.setDeactivationEnabled()`
++ Added public setters for constraint pivots:
+  + `New6Dof.setPivotInA()`
+  + `New6Dof.setPivotInB()`
+
+## Version 15.0.0 released on 3 June 2022
+
++ Changed the arguments of `PhysicsSoftBody.appendFaces()`
+  and `PhysicsSoftBody.appendLinks()`. (API change)
++ Added the `Mesh` interface and `IndexBuffer` class to simplify the interface
+  between soft bodies and the SPORT graphics engine.
++ Added soft-body methods from Minie:
+  + `PhysicsSoftBody.appendTetras()`
+  + `PhysicsSoftBody.boundingBox()`
+  + `NativeSoftBodyUtils.appendFromLineMesh()`
+  + `NativeSoftBodyUtils.appendFromTriMesh()`
+  + `NativeSoftBodyUtils.appendTetras()`
+  + `NativeSoftBodyUtils.mapIndices()`
+  + `NativeSoftBodyUtils.updateClusterMesh()`
+  + `NativeSoftBodyUtils.updateMesh()`
+  + `NativeSoftBodyUtils.updatePinMesh()`
++ Added math methods from Heart:
+  + `MyMath.isIdentity(Transform)`
+  + `MyBuffer.rotate()`
+  + `MyBuffer.translate()`
++ Added the `phi` constant to the `MyMath` class
+
+## Version 14.5.0 released on 29 May 2022
+
++ Bugfix: `PhysicsCharacter.onGround()` is unreliable (issue #18)
++ Added math methods:
+  + `BoundingBox.getCenter()`
+  + `MyVector3f.midpoint()`
+
+## Version 14.4.0 released on 20 May 2022
+
++ When allocating direct buffers, specify *native* byte order.
++ Added math methods:
+  + `FastMath.pow(float, float)`
+  + `MyMath.modulo(float, float)`
+  + `MyMath.standardizeAngle(float)`
+  + `MyMath.toDegrees(float)`
+  + `MyMath.toRadians(float)`
+  + `MyVector3f.accumulateScaled(Vector3f, Vector3f, float)`
+  + `Transform.loadIdentity()`
+  + `Vector3f.divide(Vector3f)`
+  + `Vector3f.mult(float)`
++ Added math constants:
+  + `FastMath.TWO_PI`
+  + `MyMath.DEG_TO_RAD`
+  + `MyMath.RAD_TO_DEG`
+  + `MyMath.rootHalf`
+  + `MyVector3f.firstAxis`
+  + `MyVector3f.lastAxis`
++ Added string methods:
+  + `MyString.escape(CharSequence)`
+  + `MyString.quote(CharSequence)`
++ Added validation methods:
+  + `Validate.axisIndex(int, String)`
+  + `Validate.finite(float, String)`
+  + `Validate.nonEmpty(String, String)`
++ Log the filename passed to `System.load()` in order to simplify debugging.
+
+## Version 14.3.0 released on 11 April 2022
+
+Added the `GearJoint` class.
+
+## Version 14.2.0 released on 28 March 2022
+
++ Bugfix:  `EXCEPTION_ACCESS_VIOLATION` on Windows (Minie issue #23)
++ Added `add()`, `negate()`, `negateLocal()`, and `subtractLocal()` methods to
+  the `Vector3f` class.
+
+## Version 14.1.0 released on 13 March 2022
+
++ Added accessors for `m_erp` and `m_erp2` to the `SolverInfo` class.
++ Explicitly required Java v8 or higher.
+
+## Version 14.0.0 released on 2 March 2022
+
++ Redesigned the `ContactListener` interface for utility and efficiency.
+  (API changes)
++ Added the `PersistentManifolds` utility class.
++ Added the `countManifolds()` and `listManifolds()` methods
+  to the `PhysicsSpace` class.
++ Added a script to build native libraries for/on Apple Silicon.
++ Handle missing platform subdirectories in `NativeLibraryLoader`.
+
+## Version 13.0.0 released on 26 February 2022
+
++ Added the `ManifoldPoints` utility class, which provides getters and setters
+  for `btManifoldPoint` without the need to instantiate
+  a `PhysicsCollisionEvent`.
++ The `PhysicsCollisionEvent.setContactCalcArea3Points()` method was moved
+  to the `ManifoldPoints` class. (API change)
++ The 4 setters added to `PhysicsCollisionEvent` in v12.8.0
+  were deleted. (API change)
++ The `PhysicsSpace.onContactProcessed()` method (added in v12.8.0)
+  was deleted. (API change)
++ Defined the `ContactListener` interface for immediate processing
+  of rigid-body contacts.
+  Overriding this interface of `PhysicsSpace` is now the recommended way
+  to process rigid-body contacts.
++ Added a new `update()` method to `PhysicsSpace` to enable callbacks
+  to specific `ContactListener` methods.
++ Deprecated 5 `PhysicsSpace` methods associated with event queueing:
+  + `addCollisionListener()`
+  + `addOngoingCollisionListener()`
+  + `distributeEvents()`
+  + `removeCollisionListener()`
+  + `removeOngoingCollisionListener()`
+
+## Version 12.8.0 released on 25 February 2022
+
++ Bugfix:  btAssert from `HingeJoint.setAngularOnly(true)` (Minie issue 20)
++ Added a dynamic collision-filtering hook to the `CollisionSpace` class.
++ Added an immediate ongoing-contact handler to the `PhysicsSpace` class.
++ Added 4 native setters to the `PhysicsCollisionEvent` class.
++ Changed `PrimitiveAllocator` to throw an exception
+  on any destruction attempt.
++ Added a `Platform` mechanism to determine the generic name
+  of the operating system.
++ Built using Gradle v7.4 .
+
+## Version 12.7.1 released on 24 January 2022
+
++ Bugfix: continuous collision detection causes memory corruption in a
+  multithreaded world (bullet3 issue 4117)
++ Restored support for the MacOSX32 platform.
++ Added `divide(float, float, float)`, `divideLocal(float, float, float)`, and
+  `mult(float, float, float)` methods to the `Vector3f` class.
++ Updated the Bullet sourcecode.
+
+## Version 12.6.0 released on 4 December 2021
+
++ Bugfix: `btTriangleShape::isInside()` relies on the plane normal, which is
+  invalid for a degenerate triangle
++ Bugfix: unsafe `normalize()` is used in `btTriangleShape`
++ Bugfix: typo in `btTriangleShape::isInside()` ("distance" for "distance2")
++ Pending resolution of Travis CI ticket #34567:
+  + Upgraded MacOS64 build tools from Xcode 9.3 to Xcode 12.4 .
+  + Dropped support for the MacOSX32 platform.
++ Added the `isInsideTriangle()` method to the `NativeLibrary` class.
++ Updated the Bullet sourcecode to match SHA1 ID=10f72b9b5
+  of the bullet3 project.
+
 ## Version 12.5.0 released on 8 November 2021
 
- + Cached the methods that free native objects, to improve performance.
- + Implemented contact filtering for GImpact collision shapes.
- + Added the `setPivotInB()` method to the `Anchor` class.
- + Overrode the `toString()` method in the `IntPair` class.
++ Cached the methods that free native objects, to improve performance.
++ Implemented contact filtering for GImpact collision shapes.
++ Added the `setPivotInB()` method to the `Anchor` class.
++ Overrode the `toString()` method in the `IntPair` class.
 
 ## Version 12.4.1 released on 25 October 2021
 
- + Bugfix: `SphereTriangleDetector` doesn't account for the triangle's margin
- + NativePhysicsObject:  make all NPOs comparable (for use in collections)
++ Bugfix: `SphereTriangleDetector` doesn't account for the triangle's margin
++ NativePhysicsObject:  make all NPOs comparable (for use in collections)
 
 ## Version 12.3.1 released on 23 October 2021
 
-Bugfix: contact filtering is too agressive
+Bugfix: contact filtering is too aggressive
 
 ## Version 12.3.0 released on 22 October 2021
 
- + Bugfix: invalid contact points for heightfield/mesh shapes (Minie issue #18)
- + Bugfix: unsafe `normalize()` is used in `btRaycastVehicle`
- + Bugfix: logic errors in `btTriangleShape::isInside()`
- + Added a flag to the `CollisionShape` class to disable contact filtering.
- + Identified native libraries built with `DEBUG_PERSISTENCY` defined.
- + Added accessors to the `CollisionSpace` class
-   for deterministic overlapping pairs mode bit.
++ Bugfix: invalid contact points for heightfield/mesh shapes (Minie issue #18)
++ Bugfix: unsafe `normalize()` is used in `btRaycastVehicle`
++ Bugfix: logic errors in `btTriangleShape::isInside()`
++ Added a flag to the `CollisionShape` class to disable contact filtering.
++ Identified native libraries built with `DEBUG_PERSISTENCY` defined.
++ Added accessors to the `CollisionSpace` class
+  for the "deterministic overlapping pairs" mode bit.
 
 ## Version 12.2.2 released on 30 September 2021
 
@@ -32,36 +228,36 @@ Bugfix: vehicle wheels don't rotate in v12.2.1
 
 ## Version 12.2.1 released on 30 September 2021
 
- + Bugfix: the velocities used to calculate `deltaRotation` are inaccurate
- + Bugfix: wheel rotation grows without bound, leading to roundoff errors
- + Bugfix: damping is applied incorrectly to `deltaRotation`
- + Increased customization of the right/forward/up axes of a vehicle chassis.
- + Added double-precision accessors for the gravity vectors of rigid bodies.
- + Added the `Comparable` interface to the `IntPair` class.
- + Upgraded the Bullet sources to match SHA1 ID=ce2627192
-   of the bullet3 project.
++ Bugfix: the velocities used to calculate `deltaRotation` are inaccurate
++ Bugfix: wheel rotation grows without bound, leading to roundoff errors
++ Bugfix: damping is applied incorrectly to `deltaRotation`
++ Increased customization of the right/forward/up axes of a vehicle chassis.
++ Added double-precision accessors for the gravity vectors of rigid bodies.
++ Added the `Comparable` interface to the `IntPair` class.
++ Upgraded the Bullet sources to match SHA1 ID=ce2627192
+  of the bullet3 project.
 
 ## Version 12.1.1 released on 25 September 2021
 
- + Added double-precision getters for the locations and orientations
-   of collision objects.
- + Added double-precision accessors for the locations, orientations,
-   and velocities of rigid bodies.
- + Added the `Quatd` and `Vec3d` classes from SimMath.
- + Added the `isFinite()` method to the `MyMath` class.
- + Built using Gradle v6.9.1 .
++ Added double-precision getters for the locations and orientations
+  of collision objects.
++ Added double-precision accessors for the locations, orientations,
+  and velocities of rigid bodies.
++ Added the `Quatd` and `Vec3d` classes from SimMath.
++ Added the `isFinite()` method to the `MyMath` class.
++ Built using Gradle v6.9.1 .
 
 ## Version 12.0.0 released on 20 August 2021
 
- + Removed the `getX()` method from the `Vector3f` class. (API change)
- + Removed the deprecated `getAngularFactor()` method
-   from the `PhysicsRigidBody` class. (API change)
- + Renamed the `addContraintTorque()` native method
-   in the `MultiBodyLink` class. (API change)
- + Bugfix: "SpQuickprof" not recognized as a valid build flavor
- + Disabled contact callbacks when the space has no listeners. (API change)
- + In Mt builds, allocated 2 worker threads instead of the maximum number.
- + Added profiling points to the `jmePhysicsSpace` class.
++ Removed the `getX()` method from the `Vector3f` class. (API change)
++ Removed the deprecated `getAngularFactor()` method
+  from the `PhysicsRigidBody` class. (API change)
++ Renamed the `addContraintTorque()` native method
+  in the `MultiBodyLink` class. (API change)
++ Bugfix: "SpQuickprof" not recognized as a valid build flavor
++ Disabled contact callbacks when the space has no listeners. (API change)
++ In Mt builds, allocated 2 worker threads instead of the maximum number.
++ Added profiling points to the `jmePhysicsSpace` class.
 
 ## Version 11.2.1 released on 14 August 2021
 
@@ -69,114 +265,114 @@ Optimized Release-type builds that use Microsoft's Visual C++ compiler.
 
 ## Version 11.2.0 released on 13 August 2021
 
- + Bugfix: pure virtual call by btGImpactMeshShape destructor (Minie issue #17)
- + Bugfix: Quickprof reset at the start of every timestep
- + Bugfix: BT_PROFILE() macro never invokes CProfileManager
- + Added access to Quickprof profiling.
++ Bugfix: pure virtual call by btGImpactMeshShape destructor (Minie issue #17)
++ Bugfix: Quickprof reset at the start of every timestep
++ Bugfix: BT_PROFILE() macro never invokes CProfileManager
++ Added access to Quickprof profiling.
 
 ## Version 11.1.0 released on 9 August 2021
 
- + Bugfix: missing the cppCompiler arguments to activate OpenMP extensions
- + Added the copy constructor and `multLocal(x,y,z,w)` method
-   to the `Quaternion` class.
- + Added the copy constructor and `multLocal(x,y,z)` method
-   to the `Vector3f` class.
- + Deprecated the `Vector3f.getX()` and `PhysicsRigidBody.getAngularFactor()`
-   methods.
++ Bugfix: missing the cppCompiler arguments to activate OpenMP extensions
++ Added the copy constructor and `multLocal(x,y,z,w)` method
+  to the `Quaternion` class.
++ Added the copy constructor and `multLocal(x,y,z)` method
+  to the `Vector3f` class.
++ Deprecated the `Vector3f.getX()` and `PhysicsRigidBody.getAngularFactor()`
+  methods.
 
 ## Version 11.0.0 released on 8 August 2021
 
- + Bugfix: contact tests report events with positive separation distance
- + Tweaked the behavior of `PhysicsRigidBody.setKinematic()`.
- + Added OpenMP-based multithreading for Linux64 and Windows64 platforms:
-   + Added the `countThreads()` and `isThreadSafe()` methods
-     to the `NativeLibrary` class.
-   + Added 2 build flavors: "SpMt" and "DpMt".
-   + In Mt builds, added a pool of contact-and-constraint solvers
-     to every `PhysicsSpace`.
- + Added the `destroy()` method to all physics spaces.
- + Added the `add(float, float, float)` and `subtract(float, float, float)`
-   methods to the `Vector3f` class.
- + Added the `MyString` utility class.
- + Built using Gradle v6.9 .
++ Bugfix: contact tests report events with positive separation distance
++ Tweaked the behavior of `PhysicsRigidBody.setKinematic()`.
++ Added OpenMP-based multithreading for Linux64 and Windows64 platforms:
+  + Added the `countThreads()` and `isThreadSafe()` methods
+    to the `NativeLibrary` class.
+  + Added 2 build flavors: "SpMt" and "DpMt".
+  + In Mt builds, added a pool of contact-and-constraint solvers
+    to every `PhysicsSpace`.
++ Added the `destroy()` method to all physics spaces.
++ Added the `add(float, float, float)` and `subtract(float, float, float)`
+  methods to the `Vector3f` class.
++ Added the `MyString` utility class.
++ Built using Gradle v6.9 .
 
 ## Version 10.5.0 released on 23 June 2021
 
- + Bugfix: GImpact contact tests always fail (issue #7)
- + Added `hasClosest()` and `hasContact()` methods
-   to the `CollisionSpace` class.
- + Added a public `getShapeType()` method to the `CollisionShape` class.
++ Bugfix: GImpact contact tests always fail (issue #7)
++ Added `hasClosest()` and `hasContact()` methods
+  to the `CollisionSpace` class.
++ Added a public `getShapeType()` method to the `CollisionShape` class.
 
 ## Version 10.4.0 released on 9 June 2021
 
- + Implemented tick listeners for the `PhysicsSpace` class.
- + Distinguished ARM macOS/Windows from other platforms.
- + Eliminated all build dependencies on JCenter.
- + Upgraded the Bullet sources to match SHA1 ID=0e124cb2
-   of the bullet3 project.
++ Implemented tick listeners for the `PhysicsSpace` class.
++ Distinguished ARM macOS/Windows from other platforms.
++ Eliminated all build dependencies on JCenter.
++ Upgraded the Bullet sources to match SHA1 ID=0e124cb2
+  of the bullet3 project.
 
 ## Version 10.3.1 released on 21 April 2021
 
- + Bugfix: `NullPointerException` in `Point2PointJoint.setPivotInB()`
- + Upgraded the Bullet sources to match SHA1 ID=00dcc7788
-   of the bullet3 project.
++ Bugfix: `NullPointerException` in `Point2PointJoint.setPivotInB()`
++ Upgraded the Bullet sources to match SHA1 ID=00dcc7788
+  of the bullet3 project.
 
 ## Version 10.3.0 released on 24 February 2021
 
- + Bugfix: Java copies of `Point2PointJoint` pivot locations
-   not updated by setters
- + Bugfix: overflow/underflow in `Vector3f.length()`
- + Added the `setRotation()` method to the `Transform` class.
- + Added the `set(int, int, float)` method to the `Matrix3f` class.
- + Added `lerp()` methods to the `MyMath` and `MyVector3f` classes.
- + Increased use of double-precision arithmetic in the `MyMath` class.
- + Built using Gradle v6.8.3 .
++ Bugfix: Java copies of `Point2PointJoint` pivot locations
+  not updated by setters
++ Bugfix: overflow/underflow in `Vector3f.length()`
++ Added the `setRotation()` method to the `Transform` class.
++ Added the `set(int, int, float)` method to the `Matrix3f` class.
++ Added `lerp()` methods to the `MyMath` and `MyVector3f` classes.
++ Increased use of double-precision arithmetic in the `MyMath` class.
++ Built using Gradle v6.8.3 .
 
 ## Version 10.2.0 released on 20 February 2021
 
- + Added getters and setters for the pivot locations of a `Point2PointJoint`.
- + Tested using JUnit v4.13.2 .
++ Added getters and setters for the pivot locations of a `Point2PointJoint`.
++ Tested using JUnit v4.13.2 .
 
 ## Version 10.1.0 released on 10 February 2021
 
- + Bugfix: suspension lengths of a `PhysicsVehicle` are not initialized.
- + Eliminated all `finalize()` methods by implementing a cleaner thread and
-   adding an `NpoTracker` class.
- + Published to MavenCentral instead of JCenter.
- + Built using Gradle v6.8.2 .
++ Bugfix: suspension lengths of a `PhysicsVehicle` are not initialized.
++ Eliminated all `finalize()` methods by implementing a cleaner thread and
+  adding an `NpoTracker` class.
++ Published to MavenCentral instead of JCenter.
++ Built using Gradle v6.8.2 .
 
 ## Version 10.0.0 released on 24 January 2021
 
- + Removed the `angularMomentum()` and `kineticEnergy()` methods
-   from the `MultiBody` class. (API change)
- + Upgraded the Bullet sources to match SHA1 ID=537ccb220
-   of the bullet3 project.
- + Added a return value to `MyQuaternion.validateUnit()`.
- + Reduced argument validation when assertions are disabled.
- + Added an option to `Validate` to configure the type of exception
-   thrown for a `null` argument.
- + Publicized some loggers.
- + Built using Gradle v6.8.1 .
++ Removed the `angularMomentum()` and `kineticEnergy()` methods
+  from the `MultiBody` class. (API change)
++ Upgraded the Bullet sources to match SHA1 ID=537ccb220
+  of the bullet3 project.
++ Added a return value to `MyQuaternion.validateUnit()`.
++ Reduced argument validation when assertions are disabled.
++ Added an option to `Validate` to configure the type of exception
+  thrown for a `null` argument.
++ Publicized some loggers.
++ Built using Gradle v6.8.1 .
 
 ## Version 9.3.2 released on 8 January 2021
 
- + Bugfix: a vehicle's acceleration depends on its location (Minie issue #13).
- + Cleared the user pointer of each `PhysicsCollisionObject` removed
-   during `jmeCollisionSpace` destruction.
- + Reverted the null check added to `btAlignedObjectArray::findLinearSearch()`.
- + Built using Gradle v6.8 .
++ Bugfix: a vehicle's acceleration depends on its location (Minie issue #13).
++ Cleared the user pointer of each `PhysicsCollisionObject` removed
+  during `jmeCollisionSpace` destruction.
++ Reverted the null check added to `btAlignedObjectArray::findLinearSearch()`.
++ Built using Gradle v6.8 .
 
 ## Version 9.3.1 released on 6 January 2021
 
- + Build Linux_ARM32hf libraries at Travis-CI.
- + Added a NULL check to `btAlignedObjectArray::findLinearSearch()`.
++ Build Linux_ARM32hf libraries at Travis-CI.
++ Added a NULL check to `btAlignedObjectArray::findLinearSearch()`.
 
 ## Version 9.3.0 released on 5 January 2021
 
- + Build Linux_ARM32 libraries at Travis-CI.
- + Publicized 2 methods in `MultiBodySpace`.
- + Bugfix: off-by-one in validation of wheel indices
- + Built using Gradle v6.7.1 .
++ Build Linux_ARM32 libraries at Travis-CI.
++ Publicized 2 methods in `MultiBodySpace`.
++ Bugfix: off-by-one in validation of wheel indices
++ Built using Gradle v6.7.1 .
 
 ## Version 9.2.4 released on 14 November 2020
 

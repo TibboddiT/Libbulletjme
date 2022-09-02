@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020 jMonkeyEngine
+ * Copyright (c) 2009-2021 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,9 +50,21 @@ final public class FastMath {
      */
     public static final float PI = (float) Math.PI;
     /**
+     * The value 2PI as a float. (360 degrees)
+     */
+    public static final float TWO_PI = 2.0f * PI;
+    /**
      * The value PI/2 as a float. (90 degrees)
      */
     public static final float HALF_PI = 0.5f * PI;
+    /**
+     * A value to multiply a degree value by, to convert it to radians.
+     */
+    public static final float DEG_TO_RAD = PI / 180.0f;
+    /**
+     * A value to multiply a radian value by, to convert it to degrees.
+     */
+    public static final float RAD_TO_DEG = 180.0f / PI;
 
     /**
      * A direct call to Math.atan2.
@@ -103,6 +115,18 @@ final public class FastMath {
     }
 
     /**
+     * Returns a number raised to an exponent power. fBase^fExponent
+     *
+     * @param fBase The base value (IE 2)
+     * @param fExponent The exponent value (IE 3)
+     * @return base raised to exponent (IE 8)
+     * @see java.lang.Math#pow(double, double)
+     */
+    public static float pow(float fBase, float fExponent) {
+        return (float) Math.pow(fBase, fExponent);
+    }
+
+    /**
      * Returns the square root of a given value.
      *
      * @param fValue The value to sqrt.
@@ -111,6 +135,17 @@ final public class FastMath {
      */
     public static float sqrt(float fValue) {
         return (float) Math.sqrt(fValue);
+    }
+
+    /**
+     * Returns the tangent of the specified angle.
+     *
+     * @param fValue The value to tangent, in radians.
+     * @return The tangent of fValue.
+     * @see java.lang.Math#tan(double)
+     */
+    public static float tan(float fValue) {
+        return (float) Math.tan(fValue);
     }
 
     /**

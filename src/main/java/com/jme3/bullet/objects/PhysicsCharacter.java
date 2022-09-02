@@ -391,8 +391,7 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
      * "up" vector.
      *
      * @param downwardAcceleration the desired downward acceleration (in
-     * physics-space units per second squared, not null, unaffected,
-     * default=29.4)
+     * physics-space units per second squared, default=29.4)
      */
     public void setGravity(float downwardAcceleration) {
         Vector3f gVector = threadTmpVector.get();
@@ -510,7 +509,7 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
      * Alter this character's walk offset. The offset must be perpendicular to
      * the "up" direction. It will continue to be applied until altered again.
      *
-     * @param offset the desired location increment for each physics tick (in
+     * @param offset the desired location increment for each simulation step (in
      * physics-space coordinates, not null, unaffected, default=(0,0,0))
      */
     public void setWalkDirection(Vector3f offset) {

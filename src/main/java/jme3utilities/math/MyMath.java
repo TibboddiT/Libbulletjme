@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2021, Stephen Gold
+ Copyright (c) 2013-2022, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,30 @@
  */
 package jme3utilities.math;
 
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
+import jme3utilities.Validate;
 
 /**
  * Mathematical utility methods. TODO method to combine 2 transforms
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class MyMath {
+public class MyMath { // TODO finalize the class
     // *************************************************************************
     // constants and loggers
 
+    /**
+     * golden ratio = 1.618...
+     */
+    final public static float phi = (1f + FastMath.sqrt(5f)) / 2f;
+    /**
+     * square root of 1/2
+     */
+    final public static float rootHalf = FastMath.sqrt(0.5f);
     /**
      * message logger for this class
      */
@@ -128,6 +141,37 @@ public class MyMath {
     }
 
     /**
+     * Test the specified transform for exact identity.
+     *
+     * @param transform which transform to test (not null, unaffected)
+     * @return true if exact identity, otherwise false
+     */
+    public static boolean isIdentity(Transform transform) {
+        boolean result = false;
+        Vector3f translation = transform.getTranslation();
+        if (MyVector3f.isZero(translation)) {
+            Quaternion rotation = transform.getRotation();
+            if (MyQuaternion.isRotationIdentity(rotation)) {
+                Vector3f scale = transform.getScale();
+                result = MyVector3f.isScaleIdentity(scale);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Test whether an integer value is odd.
+     *
+     * @param iValue input value to be tested
+     * @return true if x is odd, false if it's even
+     */
+    public static boolean isOdd(int iValue) {
+        boolean result = (iValue % 2) != 0;
+        return result;
+    }
+
+    /**
      * Interpolate between (or extrapolate from) 2 single-precision values using
      * linear (Lerp) *polation. No rounding error is introduced when y0==y1.
      *
@@ -149,6 +193,32 @@ public class MyMath {
     }
 
     /**
+     * Compute the least non-negative value congruent with a single-precision
+     * value with respect to the specified modulus. modulo() differs from
+     * remainder for negative values of the first argument. For instance,
+     * modulo(-1f, 4f) == 3f, while -1f % 4f == -1f.
+     *
+     * @param fValue input value
+     * @param modulus (&gt;0)
+     * @return fValue MOD modulus (&lt;modulus, &ge;0)
+     */
+    public static float modulo(float fValue, float modulus) {
+        assert Validate.positive(modulus, "modulus");
+
+        float remainder = fValue % modulus;
+        float result;
+        if (fValue >= 0) {
+            result = remainder;
+        } else {
+            result = (remainder + modulus) % modulus;
+        }
+
+        assert result >= 0f : result;
+        assert result < modulus : result;
+        return result;
+    }
+
+    /**
      * Standardize a single-precision value in preparation for hashing.
      *
      * @param fValue input value
@@ -160,6 +230,25 @@ public class MyMath {
             result = 0f;
         }
 
+        return result;
+    }
+
+    /**
+     * Standardize a rotation angle to the range [-Pi, Pi).
+     *
+     * @param angle input (in radians)
+     * @return standardized angle (in radians, &lt;Pi, &ge;-Pi)
+     */
+    public static float standardizeAngle(float angle) {
+        Validate.finite(angle, "angle");
+
+        float result = modulo(angle, FastMath.TWO_PI);
+        if (result >= FastMath.PI) {
+            result -= FastMath.TWO_PI;
+        }
+
+        assert result >= -FastMath.PI : result;
+        assert result < FastMath.PI : result;
         return result;
     }
 
@@ -178,6 +267,30 @@ public class MyMath {
         }
 
         assert result >= 0.0 : result;
+        return result;
+    }
+
+    /**
+     * Convert an angle from radians to degrees.
+     *
+     * @param radians input angle
+     * @return equivalent in degrees
+     * @see java.lang.Math#toDegrees(double)
+     */
+    public static float toDegrees(float radians) {
+        float result = radians * FastMath.RAD_TO_DEG;
+        return result;
+    }
+
+    /**
+     * Convert an angle from degrees to radians.
+     *
+     * @param degrees input angle
+     * @return equivalent in radians
+     * @see java.lang.Math#toRadians(double)
+     */
+    public static float toRadians(float degrees) {
+        float result = degrees * FastMath.DEG_TO_RAD;
         return result;
     }
 }

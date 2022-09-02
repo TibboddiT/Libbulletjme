@@ -636,6 +636,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsRigidBody_setInverseI
     jmeBulletUtil::convert(pEnv, invInertiaVector, &vec);
 
     pBody->setInvInertiaDiagLocal(vec);
+    pBody->updateInertiaTensor();
 }
 
 /*
@@ -886,4 +887,5 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsRigidBody_updateMassP
         pShape->calculateLocalInertia(mass, localInertia);
     }
     pBody->setMassProps(mass, localInertia);
+    pBody->updateInertiaTensor();
 }
