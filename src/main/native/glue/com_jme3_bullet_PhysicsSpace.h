@@ -55,19 +55,19 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addRigidBody
 
 /*
  * Class:     com_jme3_bullet_PhysicsSpace
- * Method:    addProceduralStaticRigidBody
- * Signature: (JJJII)V
- */
-JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addProceduralStaticRigidBody
-  (JNIEnv *, jclass, jlong, jlong, jlong, jint, jint);
-
-/*
- * Class:     com_jme3_bullet_PhysicsSpace
  * Method:    countManifolds
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL Java_com_jme3_bullet_PhysicsSpace_countManifolds
   (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_PhysicsSpace
+ * Method:    addProceduralStaticRigidBody
+ * Signature: (JJJII)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addProceduralStaticRigidBody
+  (JNIEnv *, jclass, jlong, jlong, jlong, jint, jint);
 
 /*
  * Class:     com_jme3_bullet_PhysicsSpace
