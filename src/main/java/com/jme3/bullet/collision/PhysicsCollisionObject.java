@@ -47,7 +47,7 @@ import jme3utilities.Validate;
 
 /**
  * The abstract base class for collision objects based on Bullet's
- * btCollisionObject.
+ * {@code btCollisionObject}.
  * <p>
  * Subclasses include MultiBodyCollider, PhysicsBody, PhysicsCharacter, and
  * PhysicsGhostObject.
@@ -164,6 +164,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Reactivate this object if it has been deactivated due to lack of motion.
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param forceFlag true to force activation
      */
@@ -174,7 +176,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Add collision groups to the set with which this object can collide.
-     *
+     * <p>
      * Two objects can collide only if one of them has the collisionGroup of the
      * other in its collideWithGroups set.
      *
@@ -243,7 +245,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Copy common properties from another PhysicsCollisionObject.
+     * Copy common properties from another collision object.
      *
      * @param old (not null, unaffected)
      */
@@ -263,11 +265,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
         setSpinningFriction(old.getSpinningFriction());
 
         if (old.hasAnisotropicFriction(AfMode.basic)) {
-            setAnisotropicFriction(old.getAnisotropicFriction(null),
-                    AfMode.basic);
+            setAnisotropicFriction(
+                    old.getAnisotropicFriction(null), AfMode.basic);
         } else if (old.hasAnisotropicFriction(AfMode.rolling)) {
-            setAnisotropicFriction(old.getAnisotropicFriction(null),
-                    AfMode.rolling);
+            setAnisotropicFriction(
+                    old.getAnisotropicFriction(null), AfMode.rolling);
         }
     }
 
@@ -294,7 +296,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native public static PhysicsCollisionObject findInstance(long pcoId);
 
     /**
-     * Read this object's activation state (native field: m_activationState1).
+     * Return this object's activation state (native field: m_activationState1).
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the state (1=active tag, 2=island sleeping, 3=wants deactivation,
      * 4=disable deactivation, 5=disable simulation)
@@ -312,6 +316,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Copy this object's anisotropic friction components (native field:
      * m_anisotropicFriction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the components of the friction (either storeResult or a new
@@ -327,8 +333,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the continuous collision detection (CCD) motion threshold (native
+     * Return the continuous collision detection (CCD) motion threshold (native
      * field: m_ccdMotionThreshold).
+     * <p>
+     * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the minimum distance per timestep to trigger CCD (in
      * physics-space units, &ge;0)
@@ -342,7 +350,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the squared motion threshold.
+     * Return the squared motion threshold.
+     * <p>
+     * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the minimum distance squared (in physics-space units, &ge;0)
      */
@@ -354,8 +364,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the radius of the sphere used for continuous collision detection
+     * Return the radius of the sphere used for continuous collision detection
      * (CCD) (native field: m_ccdSweptSphereRadius).
+     * <p>
+     * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the radius (in physics-space units, &ge;0)
      */
@@ -368,7 +380,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the set of collision groups with which this object can collide.
+     * Return the set of collision groups with which this object can collide.
      *
      * @return the bitmask
      */
@@ -378,7 +390,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the collision group of this object.
+     * Return the collision group of this object.
      *
      * @return the collision group (bitmask with exactly one bit set)
      */
@@ -389,7 +401,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Access the CollisionShape of this object.
+     * Access the shape of this object.
      *
      * @return the pre-existing instance, or null if none
      */
@@ -398,7 +410,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Access the CollisionSpace where this object is added.
+     * Access the space where this object is added.
      *
      * @return the pre-existing instance, or null if none
      */
@@ -413,7 +425,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the contact damping (native field: m_contactDamping).
+     * Return the contact damping (native field: m_contactDamping).
+     * <p>
+     * Contact damping doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the damping
      */
@@ -425,8 +439,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the contact processing threshold (native field:
+     * Return the contact-processing threshold (native field:
      * m_contactProcessingThreshold).
+     * <p>
+     * Contact processing doesn't affect a PhysicsCharacter or
+     * PhysicsGhostObject.
      *
      * @return the threshold distance (in physics-space units)
      */
@@ -438,7 +455,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the contact stiffness (native field: m_contactStiffness).
+     * Return the contact stiffness (native field: m_contactStiffness).
+     * <p>
+     * Contact stiffness doesn't affect a PhysicsCharacter or
+     * PhysicsGhostObject.
      *
      * @return the stiffness
      */
@@ -450,7 +470,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read the deactivation time (native field: m_deactivationTime).
+     * Return the deactivation time (native field: m_deactivationTime).
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the time (in seconds)
      */
@@ -462,7 +484,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read this object's friction parameter (native field: m_friction).
+     * Return this object's friction parameter (native field: m_friction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return the parameter value (&ge;0)
      */
@@ -557,8 +581,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read this object's restitution (bounciness) (native field:
+     * Return this object's restitution (bounciness) (native field:
      * m_restitution).
+     * <p>
+     * Restitution doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return restitution value
      */
@@ -570,7 +596,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read this object's rolling friction (native field: m_rollingFriction).
+     * Return this object's rolling friction (native field: m_rollingFriction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return friction value
      */
@@ -582,7 +610,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Determine the scale of this object.
+     * Copy the scale of this object.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the scale factor for each local axis (either storeResult or a new
@@ -594,7 +622,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Read this object's spinning friction (native field: m_spinningFriction).
+     * Return this object's spinning friction (native field:
+     * m_spinningFriction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return friction value
      */
@@ -606,8 +637,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Determine the coordinate transform of this object, including the scale of
-     * its shape.
+     * Copy the coordinate transform of this object, including the scale of its
+     * shape.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return a coordinate transform (in physics-space coordinates, either
@@ -636,6 +667,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Test whether this object has anisotropic friction.
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param mode the mode(s) to test for: 1=basic anisotropic friction,
      * 2=anisotropic rolling friction, 3=either one
@@ -678,6 +711,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Test whether this object has been deactivated due to lack of motion.
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @return true if object still active, false if deactivated
      */
@@ -701,7 +736,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this object is added to a CollisionSpace.
+     * Test whether this object is added to a space.
      *
      * @return true&rarr;added to a space, false&rarr;not added to a space
      */
@@ -747,9 +782,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Determine the collision group of this object's broadphase proxy. A proxy
-     * is created when the object is added to a CollisionSpace, and its group is
-     * 32 for a PhysicsCharacter, 2 for a static object, or 1 for anything else.
+     * Return the collision group of this object's broadphase proxy. A proxy is
+     * created when the object is added to a space, and its group is 32 for a
+     * PhysicsCharacter, 2 for a static object, or 1 for anything else.
      *
      * @return the proxy's collision group (a bitmask with exactly one bit set)
      * or null if this object has no proxy
@@ -765,9 +800,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Determine the collision mask of this object's broadphase proxy. A proxy
-     * is created when the object is added to a CollisionSpace, and its mask is
-     * -3 for a static object or -1 for anything else.
+     * Return the collision mask of this object's broadphase proxy. A proxy is
+     * created when the object is added to a space, and its mask is -3 for a
+     * static object or -1 for anything else.
      *
      * @return the proxy's bitmask, or null if this object has no proxy
      */
@@ -813,6 +848,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Alter this object's anisotropic friction (native field:
      * m_anisotropicFriction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param components the desired friction components (not null, unaffected,
      * default=(1,1,1))
@@ -833,6 +870,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * <p>
      * CCD addresses the issue of fast objects passing through other objects
      * with no collision detected.
+     * <p>
+     * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param threshold the desired minimum distance per timestep to trigger CCD
      * (in physics-space units, &gt;0) or zero to disable CCD (default=0)
@@ -845,6 +884,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Alter the continuous collision detection (CCD) swept-sphere radius for
      * this object (native field: m_ccdSweptSphereRadius).
+     * <p>
+     * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param radius (in physics-space units, &ge;0, default=0)
      */
@@ -878,8 +919,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * one bit set, default=COLLISION_GROUP_01)
      */
     public void setCollisionGroup(int collisionGroup) {
-        Validate.require(Integer.bitCount(collisionGroup) == 1,
-                "exactly one bit set");
+        Validate.require(
+                Integer.bitCount(collisionGroup) == 1, "exactly one bit set");
 
         this.collisionGroup = collisionGroup;
         long objectId = nativeId();
@@ -887,8 +928,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Apply the specified CollisionShape to this object. Meant to be
-     * overridden.
+     * Apply the specified shape to this object. Meant to be overridden.
      *
      * @param collisionShape the shape to apply (not null, alias created)
      */
@@ -899,6 +939,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Alter the contact damping (native field: m_contactDamping).
+     * <p>
+     * Contact damping doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param damping the desired damping (default=0.1)
      */
@@ -911,6 +953,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Alter the contact-processing threshold (native field:
      * m_contactProcessingThreshold).
+     * <p>
+     * Contact processing doesn't affect a PhysicsCharacter or
+     * PhysicsGhostObject.
      *
      * @param distance the desired threshold distance (in physics-space units,
      * default=1e18 with SP library or 1e30 with DP library)
@@ -922,6 +967,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Alter the contact stiffness (native field: m_contactStiffness).
+     * <p>
+     * Contact stiffness doesn't affect a PhysicsCharacter or
+     * PhysicsGhostObject.
      *
      * @param stiffness the desired stiffness (default=1e18 with SP library or
      * 1e30 with DP library)
@@ -934,6 +982,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Alter the deactivation time (native field: m_deactivationTime).
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param time the desired time (in seconds, default=0)
      */
@@ -944,6 +994,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Alter this object's friction (native field: m_friction).
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param friction the desired friction value (&ge;0, default=0.5)
      */
@@ -973,6 +1025,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Alter this object's restitution (bounciness) (native field:
      * m_restitution). For perfect elasticity, set restitution=1.
+     * <p>
+     * Restitution doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param restitution the desired value (default=0)
      */
@@ -985,6 +1039,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * Alter this object's rolling friction: torsional friction orthogonal to
      * the contact normal (native field: m_rollingFriction). Use this to stop
      * bodies from rolling.
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param friction the desired friction value (default=0)
      */
@@ -996,6 +1052,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Alter this object's spinning friction: torsional friction around the
      * contact normal (native field: m_spinningFriction). Use for grasping.
+     * <p>
+     * Friction doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param friction the desired friction value (default=0)
      */
@@ -1015,7 +1073,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Determine the ID of the CollisionSpace where this object is added.
+     * Return the ID of the space where this object is added.
      *
      * @return the ID, or zero if not added to any space
      */
@@ -1035,8 +1093,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param objectId the identifier of the btCollisionObject (not zero)
      * @param collisionShapeId the identifier of the btCollisionShape (not zero)
      */
-    native protected static void attachCollisionShape(long objectId,
-            long collisionShapeId);
+    native protected static void
+            attachCollisionShape(long objectId, long collisionShapeId);
 
     /**
      * Finalize the identified btCollisionObject. Native method.
@@ -1046,7 +1104,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native protected static void finalizeNative(long objectId);
 
     /**
-     * Read the collision flags of this object. Flag values are defined in
+     * Return the collision flags of this object. Flag values are defined in
      * {@link com.jme3.bullet.collision.CollisionFlag}. Native method.
      *
      * @param objectId the ID of the btCollisionObject (not zero)
@@ -1055,7 +1113,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native protected static int getCollisionFlags(long objectId);
 
     /**
-     * Read the type of this object. Native method.
+     * Return the type of this object. Native method.
      *
      * @param objectId the ID of the btCollisionObject (not zero)
      * @return the type value
@@ -1080,12 +1138,14 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Alter the activation state of this object. Native method.
+     * <p>
+     * Deactivation doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
      * @param objectId the ID of the btCollisionObject (not zero)
      * @param desiredState the desired state
      */
-    native protected static void setActivationState(long objectId,
-            int desiredState);
+    native protected static void
+            setActivationState(long objectId, int desiredState);
 
     /**
      * Alter the collision flags of this object (native field:
@@ -1095,8 +1155,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param objectId the ID of the btCollisionObject (not zero)
      * @param desiredFlags the desired collision flags, ORed together
      */
-    native protected static void setCollisionFlags(long objectId,
-            int desiredFlags);
+    native protected static void
+            setCollisionFlags(long objectId, int desiredFlags);
 
     /**
      * Alter the ignore list for collisions.
@@ -1116,8 +1176,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param orientation the desired orientation for this object (rotation
      * matrix in physics-space coordinates, not null, unaffected)
      */
-    protected void setLocationAndBasis(Vector3f centerLocation,
-            Matrix3f orientation) {
+    protected void
+            setLocationAndBasis(Vector3f centerLocation, Matrix3f orientation) {
         Validate.finite(centerLocation, "center location");
         Validate.nonNull(orientation, "orientation");
 
@@ -1161,8 +1221,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static int getActivationState(long objectId);
 
-    native private static void getAnisotropicFriction(long objectId,
-            Vector3f storeResult);
+    native private static void
+            getAnisotropicFriction(long objectId, Vector3f storeResult);
 
     native private static void getBasis(long objectId, Matrix3f storeResult);
 
@@ -1192,14 +1252,14 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static int getNumObjectsWithoutCollision(long objectId);
 
-    native private static long getObjectWithoutCollision(long objectId,
-            int listIndex);
+    native private static long
+            getObjectWithoutCollision(long objectId, int listIndex);
 
-    native private static void getOrientation(long objectId,
-            Quaternion storeResult);
+    native private static void
+            getOrientation(long objectId, Quaternion storeResult);
 
-    native private static void getOrientationDp(long objectId,
-            Quatd storeResult);
+    native private static void
+            getOrientationDp(long objectId, Quatd storeResult);
 
     native private static int getProxyFilterGroup(long objectId);
 
@@ -1213,8 +1273,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static float getSpinningFriction(long objectId);
 
-    native private static boolean hasAnisotropicFriction(long objectId,
-            int mode);
+    native private static boolean
+            hasAnisotropicFriction(long objectId, int mode);
 
     native private static boolean hasBroadphaseProxy(long objectId);
 
@@ -1224,39 +1284,39 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static boolean isInWorld(long objectId);
 
-    native private static void setAnisotropicFriction(long objectId,
-            Vector3f components, int mode);
+    native private static void setAnisotropicFriction(
+            long objectId, Vector3f components, int mode);
 
-    native private static void setCcdMotionThreshold(long objectId,
-            float threshold);
+    native private static void
+            setCcdMotionThreshold(long objectId, float threshold);
 
-    native private static void setCcdSweptSphereRadius(long objectId,
-            float radius);
+    native private static void
+            setCcdSweptSphereRadius(long objectId, float radius);
 
-    native private static void setCollideWithGroups(long objectId,
-            int collisionGroups);
+    native private static void
+            setCollideWithGroups(long objectId, int collisionGroups);
 
-    native private static void setCollisionGroup(long objectId,
-            int collisionGroup);
+    native private static void
+            setCollisionGroup(long objectId, int collisionGroup);
 
-    native private static void setContactProcessingThreshold(long objectId,
-            float thresholdDistance);
+    native private static void setContactProcessingThreshold(
+            long objectId, float thresholdDistance);
 
-    native private static void setContactStiffnessAndDamping(long objectId,
-            float stiffness, float damping);
+    native private static void setContactStiffnessAndDamping(
+            long objectId, float stiffness, float damping);
 
     native private static void setDeactivationTime(long objectId, float time);
 
     native private static void setFriction(long objectId, float friction);
 
-    native private static void setLocationAndBasis(long objectId,
-            Vector3f location, Matrix3f basis);
+    native private static void setLocationAndBasis(
+            long objectId, Vector3f location, Matrix3f basis);
 
     native private static void setRestitution(long objectId, float restitution);
 
-    native private static void setRollingFriction(long objectId,
-            float friction);
+    native private static void
+            setRollingFriction(long objectId, float friction);
 
-    native private static void setSpinningFriction(long objectId,
-            float friction);
+    native private static void
+            setSpinningFriction(long objectId, float friction);
 }

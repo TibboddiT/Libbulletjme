@@ -50,7 +50,7 @@ public class VHACDHull {
     // fields
 
     /**
-     * vertex locations (not empty, length a multiple of 3)
+     * vertex locations (length a multiple of 3)
      */
     final private float[] positions;
     // *************************************************************************
@@ -59,13 +59,12 @@ public class VHACDHull {
     /**
      * Instantiate a hull based on the identified ConvexHull.
      *
-     * @param hullId the native ID of a ConvexHull (not zero)
+     * @param hullId the native ID of a classic V-HACD ConvexHull (not zero)
      */
     VHACDHull(long hullId) {
         assert hullId != 0L;
 
         int numFloats = getNumFloats(hullId);
-        assert numFloats > 0 : numFloats;
         assert numFloats % MyVector3f.numAxes == 0 : numFloats;
 
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(numFloats);
@@ -85,7 +84,6 @@ public class VHACDHull {
      */
     public float[] clonePositions() {
         int numFloats = positions.length;
-        assert numFloats > 0 : numFloats;
         assert numFloats % MyVector3f.numAxes == 0 : numFloats;
 
         float[] result = new float[numFloats];
@@ -98,6 +96,6 @@ public class VHACDHull {
 
     native private static int getNumFloats(long hullId);
 
-    native private static void getPositions(long hullId,
-            FloatBuffer storeBuffer);
+    native private static void
+            getPositions(long hullId, FloatBuffer storeBuffer);
 }

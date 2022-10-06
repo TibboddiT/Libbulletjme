@@ -38,7 +38,7 @@
 
 #include <jni.h>
 
-#define LIBBULLETJME_VERSION "16.1.0"
+#define LIBBULLETJME_VERSION "16.3.0"
 
 #ifdef _DEBUG
 #define NULL_CHK(pEnv, pointer, message, retval) \
@@ -56,7 +56,7 @@ public:
 
     static jclass IllegalArgumentException;
 
-    static jmethodID List_addmethod;
+    static jmethodID List_addMethod;
 
     static jmethodID CollisionSpace_notifyCollisionGroupListeners;
 

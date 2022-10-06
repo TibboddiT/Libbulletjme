@@ -36,8 +36,8 @@ import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
 
 /**
- * A planar CollisionShape based on Bullet's btStaticPlaneShape. Not for use in
- * dynamic bodies. Collisions between HeightfieldCollisionShape,
+ * A planar collision shape based on Bullet's {@code btStaticPlaneShape}. Not
+ * for use in dynamic bodies. Collisions between HeightfieldCollisionShape,
  * MeshCollisionShape, and PlaneCollisionShape objects are never detected.
  *
  * @author normenhansen
@@ -97,7 +97,7 @@ public class PlaneCollisionShape extends CollisionShape {
     // Java private methods
 
     /**
-     * Instantiate the configured btStaticPlaneShape.
+     * Instantiate the configured {@code btStaticPlaneShape}.
      */
     private void createShape() {
         long shapeId = createShape(plane.getNormal(), plane.getConstant());

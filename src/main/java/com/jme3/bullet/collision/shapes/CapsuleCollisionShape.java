@@ -32,18 +32,22 @@
 package com.jme3.bullet.collision.shapes;
 
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.Vector3f;
+import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.MyVector3f;
+import jme3utilities.math.MyVolume;
 
 /**
- * A capsule CollisionShape based on Bullet's btCapsuleShapeX, btCapsuleShape,
- * or btCapsuleShapeZ. These shapes have no margin and can only be scaled
- * uniformly.
+ * A capsule collision shape based on Bullet's {@code btCapsuleShapeX},
+ * {@code btCapsuleShape}, or {@code btCapsuleShapeZ}. These shapes have no
+ * margin and can only be scaled uniformly.
  *
  * @author normenhansen
+ * @see MultiSphere
  */
 public class CapsuleCollisionShape extends ConvexShape {
     // *************************************************************************
@@ -58,11 +62,12 @@ public class CapsuleCollisionShape extends ConvexShape {
     // fields
 
     /**
-     * copy of the unscaled height of the cylindrical portion (&ge;0)
+     * copy of the unscaled height of the cylindrical portion (in shape units,
+     * &ge;0)
      */
     final private float height;
     /**
-     * copy of the unscaled radius (&ge;0)
+     * copy of the unscaled radius (in shape units, &ge;0)
      */
     final private float radius;
     /**
@@ -76,9 +81,9 @@ public class CapsuleCollisionShape extends ConvexShape {
     /**
      * Instantiate a Y-axis capsule shape with the specified radius and height.
      *
-     * @param radius the desired unscaled radius (&ge;0)
-     * @param height the desired unscaled height of the cylindrical portion
-     * (&ge;0)
+     * @param radius the desired radius (in shape units, &ge;0)
+     * @param height the desired height of the cylindrical portion (in shape
+     * units, &ge;0)
      */
     public CapsuleCollisionShape(float radius, float height) {
         Validate.nonNegative(radius, "radius");
@@ -93,9 +98,9 @@ public class CapsuleCollisionShape extends ConvexShape {
     /**
      * Instantiate a capsule shape around the specified main (height) axis.
      *
-     * @param radius the desired unscaled radius (&ge;0)
-     * @param height the desired unscaled height of the cylindrical portion
-     * (&ge;0)
+     * @param radius the desired radius (in shape units, &ge;0)
+     * @param height the desired height of the cylindrical portion (in shape
+     * units, &ge;0)
      * @param axisIndex which local axis to use for the height: 0&rarr;X,
      * 1&rarr;Y, 2&rarr;Z
      */
@@ -113,7 +118,7 @@ public class CapsuleCollisionShape extends ConvexShape {
     // new methods exposed
 
     /**
-     * Read the main (height) axis of the capsule.
+     * Return the main (height) axis of the capsule.
      *
      * @return the axis index: 0&rarr;X, 1&rarr;Y, 2&rarr;Z
      */
@@ -125,9 +130,9 @@ public class CapsuleCollisionShape extends ConvexShape {
     }
 
     /**
-     * Read the height of the cylindrical portion.
+     * Return the height of the cylindrical portion.
      *
-     * @return the unscaled height (&ge;0)
+     * @return the unscaled height (in shape units, &ge;0)
      */
     public float getHeight() {
         assert height >= 0f : height;
@@ -135,16 +140,28 @@ public class CapsuleCollisionShape extends ConvexShape {
     }
 
     /**
-     * Read the radius of the capsule.
+     * Return the radius of the capsule.
      *
-     * @return the unscaled radius (&ge;0)
+     * @return the unscaled radius (in shape units, &ge;0)
      */
     public float getRadius() {
         assert radius >= 0f : radius;
         return radius;
     }
+
+    /**
+     * Return the unscaled volume of the capsule.
+     *
+     * @return the volume (in shape units cubed, &ge;0)
+     */
+    public float unscaledVolume() {
+        float result = MyVolume.capsuleVolume(radius, height);
+
+        assert result >= 0f : result;
+        return result;
+    }
     // *************************************************************************
-    // CollisionShape methods
+    // ConvexShape methods
 
     /**
      * Test whether the specified scale factors can be applied to this shape.
@@ -162,7 +179,7 @@ public class CapsuleCollisionShape extends ConvexShape {
     }
 
     /**
-     * Determine the collision margin for this shape.
+     * Return the collision margin for this shape.
      *
      * @return the margin distance (in physics-space units, &ge;0)
      */
@@ -183,6 +200,17 @@ public class CapsuleCollisionShape extends ConvexShape {
     }
 
     /**
+     * Estimate the volume of this shape, including scale and margin.
+     *
+     * @return the volume (in physics-space units cubed, &ge;0)
+     */
+    @Override
+    public float scaledVolume() {
+        float result = unscaledVolume() * scale.x * scale.y * scale.z;
+        return result;
+    }
+
+    /**
      * Alter the collision margin of this shape. This feature is disabled for
      * capsule shapes.
      *
@@ -193,11 +221,50 @@ public class CapsuleCollisionShape extends ConvexShape {
         logger2.log(Level.WARNING,
                 "Cannot alter the margin of a CapsuleCollisionShape.");
     }
+
+    /**
+     * Approximate this shape with a HullCollisionShape.
+     *
+     * @return a new shape
+     */
+    @Override
+    public HullCollisionShape toHullShape() {
+        float defaultMargin = getDefaultMargin();
+        float effectiveRadius = scale.x * radius; // in physics-space units
+
+        HullCollisionShape result;
+        if (effectiveRadius > defaultMargin) {
+            // Use 42 vertices with the default margin.
+            CapsuleCollisionShape shrunkenCapsule = new CapsuleCollisionShape(
+                    effectiveRadius - defaultMargin, height, axis);
+            FloatBuffer buffer = DebugShapeFactory.debugVertices(
+                    shrunkenCapsule, DebugShapeFactory.lowResolution);
+
+            // Flip the buffer.
+            buffer.rewind();
+            buffer.limit(buffer.capacity());
+
+            result = new HullCollisionShape(buffer);
+
+        } else { // Use 2 vertices with a reduced margin.
+            Vector3f v1 = new Vector3f();
+            v1.set(axis, height / 2f);
+            Vector3f v2 = v1.negate();
+            result = new HullCollisionShape(v1, v2);
+            if (effectiveRadius <= 1e-9f) {
+                result.setMargin(1e-9f);
+            } else {
+                result.setMargin(effectiveRadius);
+            }
+        }
+
+        return result;
+    }
     // *************************************************************************
     // Java private methods
 
     /**
-     * Instantiate the configured btCollisionShape.
+     * Instantiate the configured shape.
      */
     private void createShape() {
         assert axis == PhysicsSpace.AXIS_X
@@ -211,11 +278,11 @@ public class CapsuleCollisionShape extends ConvexShape {
 
         setContactFilterEnabled(enableContactFilter);
         setScale(scale);
-        margin = 0f;
+        this.margin = 0f;
     }
     // *************************************************************************
     // native private methods
 
-    native private static long createShape(int axisIndex, float radius,
-            float height);
+    native private static long
+            createShape(int axisIndex, float radius, float height);
 }

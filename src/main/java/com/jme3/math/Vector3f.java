@@ -282,6 +282,24 @@ public final class Vector3f implements Cloneable, java.io.Serializable {
     }
 
     /**
+     * Right multiplies by the specified components (cross product) and returns
+     * the (modified) current instance.
+     *
+     * @param otherX the X component of the right factor
+     * @param otherY the Y component of the right factor
+     * @param otherZ the Z component of the right factor
+     * @return the (modified) current instance (for chaining)
+     */
+    public Vector3f crossLocal(float otherX, float otherY, float otherZ) {
+        float tempx = (y * otherZ) - (z * otherY);
+        float tempy = (z * otherX) - (x * otherZ);
+        z = (x * otherY) - (y * otherX);
+        x = tempx;
+        y = tempy;
+        return this;
+    }
+
+    /**
      * Tests for a unit vector, with 1% tolerance. The current instance is
      * unaffected.
      *
@@ -323,6 +341,28 @@ public final class Vector3f implements Cloneable, java.io.Serializable {
     }
 
     /**
+     * Returns the distance between this vector and the argument. The current
+     * instance is unaffected.
+     *
+     * @param v the vector to compare (not null, unaffected)
+     * @return the Euclidean distance (not negative)
+     */
+    public float distance(Vector3f v) {
+        /*
+         * Use double-precision arithmetic to reduce the chance of overflow
+         * (when distanceSquared > Float.MAX_VALUE) or underflow (when
+         * distanceSquared is < Float.MIN_VALUE).
+         */
+        double dx = x - v.x;
+        double dy = y - v.y;
+        double dz = z - v.z;
+        double distanceSquared = dx * dx + dy * dy + dz * dz;
+        float result = (float) Math.sqrt(distanceSquared);
+
+        return result;
+    }
+
+    /**
      * Multiplies with the argument and returns the product as a new instance.
      * The current instance is unaffected.
      *
@@ -331,6 +371,26 @@ public final class Vector3f implements Cloneable, java.io.Serializable {
      */
     public Vector3f mult(float scalar) {
         return new Vector3f(x * scalar, y * scalar, z * scalar);
+    }
+
+    /**
+     * Multiplies with the specified scalar and returns the product in the
+     * specified vector. The current instance is unaffected, unless it's
+     * <code>product</code>.
+     *
+     * @param scalar the scaling factor
+     * @param product storage for the product, or null for a new Vector3f
+     * @return either <code>product</code> or a new Vector3f
+     */
+    public Vector3f mult(float scalar, Vector3f product) {
+        if (null == product) {
+            product = new Vector3f();
+        }
+
+        product.x = x * scalar;
+        product.y = y * scalar;
+        product.z = z * scalar;
+        return product;
     }
 
     /**
@@ -379,6 +439,22 @@ public final class Vector3f implements Cloneable, java.io.Serializable {
         this.y *= y;
         this.z *= z;
         return this;
+    }
+
+    /**
+     * Multiplies component-wise with the argument and returns the product as a
+     * new instance. If the argument is null, null is returned. Either way, the
+     * current instance is unaffected.
+     *
+     * @param vec the scale vector (unaffected) or null for none
+     * @return a new Vector3f or null
+     */
+    public Vector3f mult(Vector3f vec) {
+        if (null == vec) {
+            logger.warning("Provided vector is null, null returned.");
+            return null;
+        }
+        return mult(vec, null);
     }
 
     /**

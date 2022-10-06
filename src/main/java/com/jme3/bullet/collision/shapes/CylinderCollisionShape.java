@@ -32,16 +32,19 @@
 package com.jme3.bullet.collision.shapes;
 
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.Vector3f;
 import java.nio.FloatBuffer;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.MyBuffer;
+import jme3utilities.math.MyMath;
 import jme3utilities.math.MyVector3f;
+import jme3utilities.math.MyVolume;
 
 /**
- * A cylindrical CollisionShape based on Bullet's btCylinderShapeX,
- * btCylinderShape, or btCylinderShapeZ.
+ * A cylindrical collision shape based on Bullet's {@code btCylinderShapeX},
+ * {@code btCylinderShape}, or {@code btCylinderShapeZ}.
  *
  * @author normenhansen
  */
@@ -75,14 +78,14 @@ public class CylinderCollisionShape extends ConvexShape {
      * @param radius the desired unscaled radius (&ge;0)
      * @param height the desired unscaled height (&ge;0)
      * @param axisIndex which local axis to use for the height: 0&rarr;X,
-     * 1&rarr;Y, 2&rarr;Z
+     * 1&rarr;Y, 2&rarr;Z (default=2)
      */
     public CylinderCollisionShape(float radius, float height, int axisIndex) {
         Validate.nonNegative(radius, "radius");
         Validate.nonNegative(height, "height");
         Validate.axisIndex(axisIndex, "axis index");
 
-        axis = axisIndex;
+        this.axis = axisIndex;
         halfExtents.set(radius, radius, radius);
         halfExtents.set(axisIndex, height / 2f);
         createShape();
@@ -105,16 +108,16 @@ public class CylinderCollisionShape extends ConvexShape {
             int endPosition, int axisIndex) {
         Validate.nonNull(buffer, "buffer");
         Validate.inRange(startPosition, "start position", 0, endPosition);
-        Validate.inRange(endPosition, "end position", startPosition,
-                buffer.capacity());
+        Validate.inRange(
+                endPosition, "end position", startPosition, buffer.capacity());
         Validate.axisIndex(axisIndex, "axis index");
 
-        axis = axisIndex;
+        this.axis = axisIndex;
         MyBuffer.maxAbs(buffer, startPosition, endPosition, halfExtents);
         float halfHeight = halfExtents.get(axisIndex);
 
-        float radius = MyBuffer.cylinderRadius(buffer, startPosition,
-                endPosition, axisIndex);
+        float radius = MyBuffer
+                .cylinderRadius(buffer, startPosition, endPosition, axisIndex);
         halfExtents.set(radius, radius, radius);
         halfExtents.set(axisIndex, halfHeight);
         createShape();
@@ -130,7 +133,7 @@ public class CylinderCollisionShape extends ConvexShape {
         Validate.nonNegative(halfExtents, "half extents");
 
         this.halfExtents.set(halfExtents);
-        axis = PhysicsSpace.AXIS_Z;
+        this.axis = PhysicsSpace.AXIS_Z;
         createShape();
     }
 
@@ -154,7 +157,7 @@ public class CylinderCollisionShape extends ConvexShape {
     // new methods exposed
 
     /**
-     * Read the main (height) axis of the cylinder.
+     * Return the main (height) axis of the cylinder.
      *
      * @return the axis index: 0&rarr;X, 1&rarr;Y, 2&rarr;Z
      */
@@ -182,7 +185,7 @@ public class CylinderCollisionShape extends ConvexShape {
     }
 
     /**
-     * Determine the height of the cylinder.
+     * Return the height of the cylinder.
      *
      * @return the unscaled height (&ge;0)
      */
@@ -192,8 +195,20 @@ public class CylinderCollisionShape extends ConvexShape {
         assert result >= 0f : result;
         return result;
     }
+
+    /**
+     * Return the unscaled volume of the cylinder.
+     *
+     * @return the volume (in shape units cubed, &ge;0)
+     */
+    public float unscaledVolume() {
+        float result = MyVolume.cylinderVolume(halfExtents);
+
+        assert result >= 0f : result;
+        return result;
+    }
     // *************************************************************************
-    // CollisionShape methods
+    // ConvexShape methods
 
     /**
      * Test whether the specified scale factors can be applied to this shape.
@@ -249,6 +264,38 @@ public class CylinderCollisionShape extends ConvexShape {
                 throw new IllegalStateException("axis = " + axis);
         }
         float result = (float) Math.hypot(halfHeight, bigRadius);
+
+        return result;
+    }
+
+    /**
+     * Approximate this shape with a HullCollisionShape.
+     *
+     * @return a new shape
+     */
+    @Override
+    public HullCollisionShape toHullShape() {
+        Vector3f hes = halfExtents.mult(scale);
+        float minHalfExtent = MyMath.min(hes.x, hes.y, hes.z); // in PSU
+        float defaultMargin = getDefaultMargin();
+        float hullMargin = Math.min(defaultMargin, minHalfExtent);
+        /*
+         * Construct a copy of this shape with its half extents reduced
+         * to compensate for the hull's collision margin.
+         */
+        hes.subtractLocal(hullMargin, hullMargin, hullMargin);
+        MyVector3f.accumulateMaxima(hes, new Vector3f(1e-6f, 1e-6f, 1e-6f));
+        CylinderCollisionShape reducedShape
+                = new CylinderCollisionShape(hes, axis);
+        FloatBuffer buffer = DebugShapeFactory
+                .debugVertices(reducedShape, DebugShapeFactory.lowResolution);
+
+        // Flip the buffer.
+        buffer.rewind();
+        buffer.limit(buffer.capacity());
+
+        HullCollisionShape result = new HullCollisionShape(buffer);
+        result.setMargin(hullMargin);
 
         return result;
     }

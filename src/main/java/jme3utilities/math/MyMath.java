@@ -27,8 +27,10 @@
 package jme3utilities.math;
 
 import com.jme3.math.FastMath;
+import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
+import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -46,6 +48,10 @@ public class MyMath { // TODO finalize the class
      * golden ratio = 1.618...
      */
     final public static float phi = (1f + FastMath.sqrt(5f)) / 2f;
+    /**
+     * square root of 2
+     */
+    final public static float root2 = FastMath.sqrt(2f);
     /**
      * square root of 1/2
      */
@@ -88,6 +94,59 @@ public class MyMath { // TODO finalize the class
     }
 
     /**
+     * Cube the specified single-precision value. Logs a warning in case of
+     * overflow.
+     *
+     * @param fValue input value to be cubed
+     * @return fValue raised to the third power
+     */
+    public static float cube(float fValue) {
+        float result = fValue * fValue * fValue;
+
+        if (Float.isInfinite(result)) {
+            String message = String.format("Overflow from cubing %g.", fValue);
+            logger.warning(message);
+        }
+        return result;
+    }
+
+    /**
+     * Sets a rotation matrix from the specified Tait-Bryan angles, applying the
+     * rotations in x-z-y extrinsic order or y-z'-x" intrinsic order.
+     *
+     * @param xAngle the X angle (in radians)
+     * @param yAngle the Y angle (in radians)
+     * @param zAngle the Z angle (in radians)
+     * @param storeResult storage for the result (modified if not null)
+     * @return a rotation matrix (either storeResult or a new instance)
+     */
+    public static Matrix3f fromAngles(
+            float xAngle, float yAngle, float zAngle, Matrix3f storeResult) {
+        Matrix3f result = (storeResult == null) ? new Matrix3f() : storeResult;
+
+        float c1 = FastMath.cos(yAngle);
+        float c2 = FastMath.cos(zAngle);
+        float c3 = FastMath.cos(xAngle);
+        float s1 = FastMath.sin(yAngle);
+        float s2 = FastMath.sin(zAngle);
+        float s3 = FastMath.sin(xAngle);
+
+        result.set(0, 0, c1 * c2);
+        result.set(0, 1, s1 * s3 - c1 * c3 * s2);
+        result.set(0, 2, c3 * s1 + c1 * s2 * s3);
+
+        result.set(1, 0, s2);
+        result.set(1, 1, c2 * c3);
+        result.set(1, 2, -c2 * s3);
+
+        result.set(2, 0, -c2 * s1);
+        result.set(2, 1, c1 * s3 + c3 * s1 * s2);
+        result.set(2, 2, c1 * c3 - s1 * s2 * s3);
+
+        return result;
+    }
+
+    /**
      * Determine the root sum of squares of some single-precision values.
      * Double-precision arithmetic is used to reduce the risk of overflow.
      *
@@ -121,6 +180,27 @@ public class MyMath { // TODO finalize the class
         double result = Math.sqrt(sum);
         assert result >= 0.0 : result;
         return result;
+    }
+
+    /**
+     * Test whether b is between a and c.
+     *
+     * @param a the first input value
+     * @param b the 2nd input value
+     * @param c the 3rd input value
+     * @return true if b is between a and c (inclusive), otherwise false
+     */
+    public static boolean isBetween(float a, float b, float c) {
+        if (a > c) {
+            return a >= b && b >= c;
+        } else if (a < c) {
+            return a <= b && b <= c;
+        } else if (a == c) {
+            return a == b;
+        } else {
+            String message = "a = " + a + " c = " + c;
+            throw new IllegalArgumentException(message);
+        }
     }
 
     /**
@@ -189,6 +269,94 @@ public class MyMath { // TODO finalize the class
             result = u * y0 + t * y1;
         }
 
+        return result;
+    }
+
+    /**
+     * Find the maximum of some single-precision values.
+     *
+     * @param fValues the input values
+     * @return the most positive value
+     * @see java.lang.Math#max(float, float)
+     */
+    public static float max(float... fValues) {
+        float result = Float.NEGATIVE_INFINITY;
+        for (float value : fValues) {
+            if (value > result) {
+                result = value;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Find the median of 3 single-precision values.
+     *
+     * @param a the first input value
+     * @param b the 2nd input value
+     * @param c the 3rd input value
+     * @return the median of the 3 values
+     */
+    public static float mid(float a, float b, float c) {
+        if (a >= b) {
+            if (b >= c) {
+                return b; // a >= b >= c
+            } else if (a >= c) {
+                return c; // a >= c > b
+            } else {
+                return a; // c > a >= b
+            }
+        } else if (a >= c) {
+            return a; // b > a >= c
+        } else if (b >= c) {
+            return c; // b >= c > a
+        } else {
+            return b; // c > b > a
+        }
+    }
+
+    /**
+     * Find the minimum of some single-precision values.
+     *
+     * @param fValues the input values
+     * @return the most negative value
+     * @see java.lang.Math#min(float, float)
+     */
+    public static float min(float... fValues) {
+        float result = Float.POSITIVE_INFINITY;
+        for (float value : fValues) {
+            if (value < result) {
+                result = value;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Compute the least non-negative value congruent with an integer value with
+     * respect to the specified modulus. modulo() differs from remainder for
+     * negative values of the first argument. For instance, modulo(-1, 4) == 3,
+     * while -1 % 4 == -1.
+     *
+     * @param iValue input value
+     * @param modulus (&gt;0)
+     * @return iValue MOD modulus (&lt;modulus, &ge;0)
+     */
+    public static int modulo(int iValue, int modulus) {
+        assert Validate.positive(modulus, "modulus");
+
+        int remainder = iValue % modulus;
+        int result;
+        if (iValue >= 0) {
+            result = remainder;
+        } else {
+            result = (remainder + modulus) % modulus;
+        }
+
+        assert result >= 0f : result;
+        assert result < modulus : result;
         return result;
     }
 
@@ -291,6 +459,29 @@ public class MyMath { // TODO finalize the class
      */
     public static float toRadians(float degrees) {
         float result = degrees * FastMath.DEG_TO_RAD;
+        return result;
+    }
+
+    /**
+     * Apply the inverse of the specified transform to each vertex of a
+     * Triangle.
+     *
+     * @param transform the transform to use (not null, unaffected)
+     * @param input the input triangle (not null, unaffected unless it's
+     * {@code storeResult}
+     * @param storeResult storage for the result (modified if not null)
+     * @return the transformed triangle (either storeResult or a new instance)
+     */
+    public static Triangle transformInverse(
+            Transform transform, Triangle input, Triangle storeResult) {
+        Triangle result = (storeResult == null) ? new Triangle() : storeResult;
+        Vector3f tmpVector = new Vector3f();
+        for (int vertexIndex = 0; vertexIndex < 3; ++vertexIndex) {
+            Vector3f inputVector = input.get(vertexIndex); // alias
+            transform.transformInverseVector(inputVector, tmpVector);
+            result.set(vertexIndex, tmpVector);
+        }
+
         return result;
     }
 }

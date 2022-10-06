@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020 jMonkeyEngine
+ * Copyright (c) 2009-2021 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,6 +79,16 @@ public class Plane implements Cloneable, java.io.Serializable {
     }
 
     /**
+     * Constructor instantiates a new <code>Plane</code> object.
+     *
+     * @param normal      The normal of the plane.
+     * @param displacement A vector representing a point on the plane.
+     */
+    public Plane(Vector3f normal, Vector3f displacement) {
+        this(normal, displacement.dot(normal));
+    }
+
+    /**
      * <code>getNormal</code> retrieves the normal of the plane.
      *
      * @return the normal of the plane.
@@ -108,6 +118,20 @@ public class Plane implements Cloneable, java.io.Serializable {
 //        return store.set(normal).multLocal(t).addLocal(point);
         float t = (constant - normal.dot(point)) / normal.dot(normal);
         return store.set(normal).multLocal(t).addLocal(point);
+    }
+
+    /**
+     * <code>pseudoDistance</code> calculates the distance from this plane to
+     * a provided point. If the point is on the negative side of the plane the
+     * distance returned is negative, otherwise it is positive. If the point is
+     * on the plane, it is zero.
+     *
+     * @param point
+     *            the point to check.
+     * @return the signed distance from the plane to a point.
+     */
+    public float pseudoDistance(Vector3f point) {
+        return normal.dot(point) - constant;
     }
 
     /**

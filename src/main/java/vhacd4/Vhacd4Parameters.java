@@ -350,7 +350,7 @@ public class Vhacd4Parameters
      * @param limit default = 32, min = 4, max = 2_048)
      */
     public void setMaxVerticesPerHull(int limit) {
-        Validate.inRange(limit, "limit", 4, 2048);
+        Validate.inRange(limit, "limit", 4, 2_048);
 
         long objectId = nativeId();
         setMaxNumVerticesPerCH(objectId, limit);
@@ -621,6 +621,6 @@ public class Vhacd4Parameters
 
     native private static void setShrinkWrap(long objectId, boolean setting);
 
-    native private static void setVolumePercentError(
-            long objectId, double percentage);
+    native private static void
+            setVolumePercentError(long objectId, double percentage);
 }

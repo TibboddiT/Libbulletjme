@@ -58,7 +58,7 @@ import jme3utilities.Validate;
 
 /**
  * A CollisionSpace to simulate dynamic physics, with its own
- * btDiscreteDynamicsWorld.
+ * {@code btDiscreteDynamicsWorld}.
  *
  * @author normenhansen
  */
@@ -1033,7 +1033,8 @@ public class PhysicsSpace
      * <p>
      * Override this method to customize how contacts are handled.
      *
-     * @param manifoldId the native ID of the btPersistentManifold (not 0)
+     * @param manifoldId the native ID of the {@code btPersistentManifold} (not
+     * zero)
      */
     @Override
     public void onContactEnded(long manifoldId) {
@@ -1049,7 +1050,7 @@ public class PhysicsSpace
      *
      * @param pcoA the first involved object (not null)
      * @param pcoB the 2nd involved object (not null)
-     * @param pointId the native ID of the btManifoldPoint (not 0)
+     * @param pointId the native ID of the {@code btManifoldPoint} (not zero)
      */
     @Override
     public void onContactProcessed(PhysicsCollisionObject pcoA,
@@ -1066,7 +1067,8 @@ public class PhysicsSpace
      * <p>
      * Override this method to customize how contacts are handled.
      *
-     * @param manifoldId the native ID of the btPersistentManifold (not 0)
+     * @param manifoldId the native ID of the {@code btPersistentManifold} (not
+     * zero)
      */
     @Override
     public void onContactStarted(long manifoldId) {
@@ -1290,8 +1292,8 @@ public class PhysicsSpace
 
     native private static void addAction(long spaceId, long actionId);
 
-    native private static void addCharacterObject(
-            long spaceId, long characterId);
+    native private static void
+            addCharacterObject(long spaceId, long characterId);
 
     native private static void addConstraintC(
             long spaceId, long constraintId, boolean disableCollisions);
@@ -1309,8 +1311,8 @@ public class PhysicsSpace
 
     native private static void getGravity(long spaceId, Vector3f storeVector);
 
-    native private static long getManifoldByIndex(
-            long spaceId, int manifoldIndex);
+    native private static long
+            getManifoldByIndex(long spaceId, int manifoldIndex);
 
     native private static int getNumConstraints(long spaceId);
 
@@ -1320,11 +1322,11 @@ public class PhysicsSpace
 
     native private static void removeAction(long spaceId, long actionId);
 
-    native private static void removeCharacterObject(
-            long spaceId, long characterId);
+    native private static void
+            removeCharacterObject(long spaceId, long characterId);
 
-    native private static void removeConstraint(
-            long spaceId, long constraintId);
+    native private static void
+            removeConstraint(long spaceId, long constraintId);
 
     native private static void removeRigidBody(long spaceId, long rigidBodyId);
 
@@ -1332,8 +1334,8 @@ public class PhysicsSpace
 
     native private static void setSolverType(long spaceId, int solverType);
 
-    native private static void setSpeculativeContactRestitution(
-            long spaceId, boolean apply);
+    native private static void
+            setSpeculativeContactRestitution(long spaceId, boolean apply);
 
     native private static void stepSimulation(long spaceId, float timeInterval,
             int maxSubSteps, float accuracy, boolean enableContactEndedCallback,

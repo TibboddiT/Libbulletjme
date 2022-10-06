@@ -90,8 +90,8 @@ abstract public class Constraint extends PhysicsJoint {
      * @param pivotInBody the pivot location in the body's scaled local
      * coordinates (not null, unaffected)
      */
-    protected Constraint(PhysicsRigidBody body, JointEnd bodyEnd,
-            Vector3f pivotInBody) {
+    protected Constraint(
+            PhysicsRigidBody body, JointEnd bodyEnd, Vector3f pivotInBody) {
         Validate.nonNull(body, "body");
         Validate.nonNull(bodyEnd, "body end");
         Validate.nonNull(pivotInBody, "pivot in body");
@@ -392,7 +392,8 @@ abstract public class Constraint extends PhysicsJoint {
     /**
      * Read the constraint type.
      *
-     * @param constraintId identifier of the btTypedConstraint (not 0)
+     * @param constraintId identifier of the {@code btTypedConstraint} (not
+     * zero)
      * @return a btTypedConstraintType ordinal value (&ge;3)
      */
     final native protected static int getConstraintType(long constraintId);
@@ -482,8 +483,8 @@ abstract public class Constraint extends PhysicsJoint {
     // *************************************************************************
     // native private methods
 
-    native private static void enableFeedback(long constraintId,
-            boolean enable);
+    native private static void
+            enableFeedback(long constraintId, boolean enable);
 
     native private static void finalizeNative(long constraintId);
 
@@ -497,11 +498,11 @@ abstract public class Constraint extends PhysicsJoint {
 
     native private static boolean needsFeedback(long constraintId);
 
-    native private static void overrideIterations(long constraintId,
-            int numIterations);
+    native private static void
+            overrideIterations(long constraintId, int numIterations);
 
-    native private static void setBreakingImpulseThreshold(long constraintId,
-            float desiredThreshold);
+    native private static void setBreakingImpulseThreshold(
+            long constraintId, float desiredThreshold);
 
     native private static void setEnabled(long constraintId, boolean enable);
 }

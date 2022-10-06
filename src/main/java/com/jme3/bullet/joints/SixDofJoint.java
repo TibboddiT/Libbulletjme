@@ -355,8 +355,8 @@ public class SixDofJoint extends Constraint {
      */
     public void setAngularLowerLimit(Vector3f limits) {
         Validate.inRange(limits.x, "limits.x", -FastMath.PI, FastMath.PI);
-        Validate.inRange(limits.y, "limits.y",
-                -FastMath.HALF_PI, FastMath.HALF_PI);
+        Validate.inRange(
+                limits.y, "limits.y", -FastMath.HALF_PI, FastMath.HALF_PI);
         Validate.inRange(limits.z, "limits.z", -FastMath.PI, FastMath.PI);
 
         angularLowerLimit.set(limits);
@@ -371,8 +371,8 @@ public class SixDofJoint extends Constraint {
      */
     public void setAngularUpperLimit(Vector3f limits) {
         Validate.inRange(limits.x, "limits.x", -FastMath.PI, FastMath.PI);
-        Validate.inRange(limits.y,
-                "limits.y", -FastMath.HALF_PI, FastMath.HALF_PI);
+        Validate.inRange(
+                limits.y, "limits.y", -FastMath.HALF_PI, FastMath.HALF_PI);
         Validate.inRange(limits.z, "limits.z", -FastMath.PI, FastMath.PI);
 
         angularUpperLimit.set(limits);
@@ -405,10 +405,10 @@ public class SixDofJoint extends Constraint {
     // new protected methods
 
     /**
-     * Create a new, double-ended btGeneric6DofConstraint.
+     * Create a double-ended {@code btGeneric6DofConstraint}.
      *
-     * @param bodyIdA the ID of the body for the A end (not 0)
-     * @param bodyIdB the ID of the body for the B end (not 0)
+     * @param bodyIdA the ID of the body for the A end (not zero)
+     * @param bodyIdB the ID of the body for the B end (not zero)
      * @param pivotInA the pivot location in A's scaled local coordinates (not
      * null, unaffected)
      * @param rotInA the orientation of the joint in A's local coordinates (not
@@ -426,9 +426,9 @@ public class SixDofJoint extends Constraint {
             Matrix3f rotInB, boolean useLinearReferenceFrameA);
 
     /**
-     * Create a new, single-ended btGeneric6DofConstraint.
+     * Create a single-ended {@code btGeneric6DofConstraint}.
      *
-     * @param bodyIdB the ID of the body for the B end (not 0)
+     * @param bodyIdB the ID of the body for the B end (not zero)
      * @param pivotInB the pivot location in B's scaled local coordinates (not
      * null, unaffected)
      * @param rotInB the orientation of the joint in B's local coordinates (not
@@ -479,8 +479,8 @@ public class SixDofJoint extends Constraint {
             b.setPhysicsRotation(bToWorld.getRotation());
 
             boolean useLinearReferenceFrameB = !useLinearReferenceFrameA;
-            constraintId = createJoint1(bId, pivotB, rotB,
-                    useLinearReferenceFrameB);
+            constraintId
+                    = createJoint1(bId, pivotB, rotB, useLinearReferenceFrameB);
 
             b.setPhysicsLocation(saveLocation);
             b.setPhysicsRotation(saveRotation);
@@ -521,28 +521,28 @@ public class SixDofJoint extends Constraint {
 
     native private static void getAngles(long jointId, Vector3f storeVector);
 
-    native private static void getFrameOffsetA(long jointId,
-            Transform frameInA);
+    native private static void
+            getFrameOffsetA(long jointId, Transform frameInA);
 
-    native private static void getFrameOffsetB(long jointId,
-            Transform frameInB);
+    native private static void
+            getFrameOffsetB(long jointId, Transform frameInB);
 
-    native private static void getPivotOffset(long jointId,
-            Vector3f storeVector);
+    native private static void
+            getPivotOffset(long jointId, Vector3f storeVector);
 
     native private static long getRotationalLimitMotor(long jointId, int index);
 
     native private static long getTranslationalLimitMotor(long jointId);
 
-    native private static void setAngularLowerLimit(long jointId,
-            Vector3f limits);
+    native private static void
+            setAngularLowerLimit(long jointId, Vector3f limits);
 
-    native private static void setAngularUpperLimit(long jointId,
-            Vector3f limits);
+    native private static void
+            setAngularUpperLimit(long jointId, Vector3f limits);
 
-    native private static void setLinearLowerLimit(long jointId,
-            Vector3f limits);
+    native private static void
+            setLinearLowerLimit(long jointId, Vector3f limits);
 
-    native private static void setLinearUpperLimit(long jointId,
-            Vector3f limits);
+    native private static void
+            setLinearUpperLimit(long jointId, Vector3f limits);
 }

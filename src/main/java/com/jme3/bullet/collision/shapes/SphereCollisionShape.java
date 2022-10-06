@@ -31,6 +31,7 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.Vector3f;
 import java.nio.FloatBuffer;
 import java.util.logging.Level;
@@ -38,10 +39,11 @@ import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.MyBuffer;
 import jme3utilities.math.MyVector3f;
+import jme3utilities.math.MyVolume;
 
 /**
- * A spherical CollisionShape based on Bullet's btSphereShape. These shapes have
- * no margin and can only be scaled uniformly.
+ * A spherical collision shape based on Bullet's {@code btSphereShape}. These
+ * shapes have no margin and can only be scaled uniformly.
  *
  * @author normenhansen
  * @see MultiSphere
@@ -59,7 +61,7 @@ public class SphereCollisionShape extends ConvexShape {
     // fields
 
     /**
-     * copy of the unscaled radius (&ge;0)
+     * copy of the unscaled radius (in shape units, &ge;0)
      */
     final private float radius;
     // *************************************************************************
@@ -76,21 +78,21 @@ public class SphereCollisionShape extends ConvexShape {
      * @param endPosition the position at which the sample locations end
      * (&ge;startPosition, &le;capacity)
      */
-    public SphereCollisionShape(FloatBuffer buffer, int startPosition,
-            int endPosition) {
+    public SphereCollisionShape(
+            FloatBuffer buffer, int startPosition, int endPosition) {
         Validate.nonNull(buffer, "buffer");
         Validate.inRange(startPosition, "start position", 0, endPosition);
         Validate.inRange(endPosition, "end position", startPosition,
                 buffer.capacity());
 
-        radius = MyBuffer.maxLength(buffer, startPosition, endPosition);
+        this.radius = MyBuffer.maxLength(buffer, startPosition, endPosition);
         createShape();
     }
 
     /**
      * Instantiate a sphere shape with the specified radius.
      *
-     * @param radius the desired unscaled radius (&ge;0)
+     * @param radius the desired unscaled radius (in shape units, &ge;0)
      */
     public SphereCollisionShape(float radius) {
         Validate.nonNegative(radius, "radius");
@@ -102,26 +104,28 @@ public class SphereCollisionShape extends ConvexShape {
     // new methods exposed
 
     /**
-     * Determine the collision margin for this shape.
+     * Return the radius of the sphere.
      *
-     * @return the margin distance (in physics-space units, &ge;0)
-     */
-    @Override
-    public float getMargin() {
-        return 0f;
-    }
-
-    /**
-     * Read the radius of the sphere.
-     *
-     * @return the unscaled radius (&ge;0)
+     * @return the unscaled radius (in shape units, &ge;0)
      */
     public float getRadius() {
         assert radius >= 0f : radius;
         return radius;
     }
+
+    /**
+     * Return the unscaled volume of the sphere.
+     *
+     * @return the volume (in shape units cubed, &ge;0)
+     */
+    public float unscaledVolume() {
+        float result = MyVolume.sphereVolume(radius);
+
+        assert result >= 0f : result;
+        return result;
+    }
     // *************************************************************************
-    // CollisionShape methods
+    // ConvexShape methods
 
     /**
      * Test whether the specified scale factors can be applied to this shape.
@@ -139,6 +143,16 @@ public class SphereCollisionShape extends ConvexShape {
     }
 
     /**
+     * Return the collision margin for this shape.
+     *
+     * @return the margin distance (in physics-space units, &ge;0)
+     */
+    @Override
+    public float getMargin() {
+        return 0f;
+    }
+
+    /**
      * Calculate how far the sphere extends from its center.
      *
      * @return the distance (in physics-space units, &ge;0)
@@ -146,6 +160,17 @@ public class SphereCollisionShape extends ConvexShape {
     @Override
     public float maxRadius() {
         float result = scale.x * radius;
+        return result;
+    }
+
+    /**
+     * Estimate the volume of this shape, including scale and margin.
+     *
+     * @return the volume (in physics-space units cubed, &ge;0)
+     */
+    @Override
+    public float scaledVolume() {
+        float result = unscaledVolume() * scale.x * scale.y * scale.z;
         return result;
     }
 
@@ -160,11 +185,47 @@ public class SphereCollisionShape extends ConvexShape {
         logger2.log(Level.WARNING,
                 "Cannot alter the margin of a SphereCollisionShape.");
     }
+
+    /**
+     * Approximate this shape with a HullCollisionShape.
+     *
+     * @return a new shape
+     */
+    @Override
+    public HullCollisionShape toHullShape() {
+        float defaultMargin = getDefaultMargin();
+        float effectiveRadius = scale.x * radius; // in physics-space units
+
+        HullCollisionShape result;
+        if (effectiveRadius > defaultMargin) {
+            // Use 42 vertices with the default margin.
+            SphereCollisionShape shrunkenSphere
+                    = new SphereCollisionShape(effectiveRadius - defaultMargin);
+            FloatBuffer buffer = DebugShapeFactory.debugVertices(
+                    shrunkenSphere, DebugShapeFactory.lowResolution);
+
+            // Flip the buffer.
+            buffer.rewind();
+            buffer.limit(buffer.capacity());
+
+            result = new HullCollisionShape(buffer);
+
+        } else { // Use a single vertex with a reduced margin.
+            result = new HullCollisionShape(0f, 0f, 0f);
+            if (effectiveRadius <= 1e-9f) {
+                result.setMargin(1e-9f);
+            } else {
+                result.setMargin(effectiveRadius);
+            }
+        }
+
+        return result;
+    }
     // *************************************************************************
     // Java private methods
 
     /**
-     * Instantiate the configured btSphereShape.
+     * Instantiate the configured {@code btSphereShape}.
      */
     private void createShape() {
         assert radius >= 0f : radius;
@@ -174,7 +235,7 @@ public class SphereCollisionShape extends ConvexShape {
 
         setContactFilterEnabled(enableContactFilter);
         setScale(scale);
-        margin = 0f;
+        this.margin = 0f;
     }
     // *************************************************************************
     // native private methods

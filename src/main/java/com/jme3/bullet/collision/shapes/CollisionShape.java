@@ -46,11 +46,11 @@ import jme3utilities.minie.MyShape;
 
 /**
  * The abstract base class for collision shapes based on Bullet's
- * btCollisionShape.
+ * {@code btCollisionShape}.
  * <p>
  * Subclasses include ConvexShape and MeshCollisionShape. As suggested in the
- * Bullet manual, a single CollisionShape can be shared among multiple collision
- * objects.
+ * Bullet manual, a single collision shape can be shared among multiple
+ * collision objects.
  *
  * @author normenhansen
  */
@@ -64,9 +64,17 @@ abstract public class CollisionShape extends NativePhysicsObject {
     final public static Logger logger
             = Logger.getLogger(CollisionShape.class.getName());
     /**
+     * local copy of {@link com.jme3.math.Quaternion#IDENTITY}
+     */
+    final private static Quaternion rotateIdentity = new Quaternion();
+    /**
      * local copy of {@link com.jme3.math.Transform#IDENTITY}
      */
     final private static Transform transformIdentity = new Transform();
+    /**
+     * local copy of {@link com.jme3.math.Vector3f#ZERO}
+     */
+    final private static Vector3f translateIdentity = new Vector3f(0f, 0f, 0f);
     // *************************************************************************
     // fields
 
@@ -98,6 +106,22 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
     // *************************************************************************
     // new methods exposed
+
+    /**
+     * Return the center of the shape's axis-aligned bounding box in local
+     * coordinates.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return a location in the local coordinate system (either
+     * {@code storeResult} or a new vector)
+     */
+    public Vector3f aabbCenter(Vector3f storeResult) {
+        Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
+        BoundingBox aabb = boundingBox(translateIdentity, rotateIdentity, null);
+        aabb.getCenter(result);
+
+        return result;
+    }
 
     /**
      * Calculate an axis-aligned bounding box for this shape with the specified
@@ -176,7 +200,17 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Read the default margin for new shapes that are neither capsules nor
+     * Test whether this shape can be split by an arbitrary plane. Meant to be
+     * overridden.
+     *
+     * @return true if splittable, false otherwise
+     */
+    public boolean canSplit() {
+        return false;
+    }
+
+    /**
+     * Return the default margin for new shapes that are neither capsules nor
      * spheres.
      *
      * @return the margin distance (in physics-space units, &gt;0)
@@ -187,7 +221,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Read the collision margin for this shape.
+     * Return the collision margin for this shape.
      *
      * @return the margin distance (in physics-space units, &ge;0)
      */
@@ -214,9 +248,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Read the type of this shape.
+     * Return the type of this shape.
      *
-     * @return the type value (from enum BroadphaseNativeTypes)
+     * @return the type value (from Bullet's {@code enum BroadphaseNativeTypes})
      */
     public int getShapeType() {
         long shapeId = nativeId();
@@ -321,9 +355,19 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * infinite)
      */
     public float maxRadius() {
-        float result = DebugShapeFactory.maxDistance(this, transformIdentity,
-                DebugShapeFactory.lowResolution);
+        float result = DebugShapeFactory.maxDistance(
+                this, transformIdentity, DebugShapeFactory.lowResolution);
         return result;
+    }
+
+    /**
+     * Estimate the volume of this shape, including scale and margin. Meant to
+     * be overridden.
+     *
+     * @return the volume (in physics-space units cubed, &ge;0)
+     */
+    public float scaledVolume() {
+        throw new UnsupportedOperationException("Not implemented for: " + this);
     }
 
     /**
@@ -417,14 +461,27 @@ abstract public class CollisionShape extends NativePhysicsObject {
         logger.log(Level.FINE, "Scaling {0}.", this);
         this.scale.set(scale);
     }
+
+    /**
+     * Approximate this shape with a splittable shape. Meant to be overridden.
+     *
+     * @return a new splittable shape
+     */
+    public CollisionShape toSplittableShape() {
+        if (canSplit()) {
+            return this;
+        } else {
+            throw new IllegalArgumentException("this = " + this);
+        }
+    }
     // *************************************************************************
     // new protected methods
 
     /**
-     * Read the type of this shape.
+     * Return the type of this shape.
      *
-     * @param shapeId the ID of the btCollisionShape (not zero)
-     * @return the type value (from enum BroadphaseNativeTypes)
+     * @param shapeId the ID of the {@code btCollisionShape} (not zero)
+     * @return the type value (from Bullet's {@code enum BroadphaseNativeTypes})
      */
     final native protected static int getShapeType(long shapeId);
 
@@ -437,7 +494,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Synchronize the copied scale factors with the btCollisionShape.
+     * Synchronize the copied scale factors with the {@code btCollisionShape}.
      */
     protected void updateScale() {
         long shapeId = nativeId();
@@ -449,7 +506,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * Initialize the native ID.
      *
-     * @param shapeId the identifier of the btCollisionShape (not zero)
+     * @param shapeId the identifier of the {@code btCollisionShape} (not zero)
      */
     @Override
     protected void setNativeId(long shapeId) {
@@ -511,8 +568,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
     native private static void getAabb(long shapeId, Vector3f location,
             Matrix3f basisMatrix, Vector3f storeMinima, Vector3f storeMaxima);
 
-    native private static void getLocalScaling(long shapeId,
-            Vector3f storeVector);
+    native private static void
+            getLocalScaling(long shapeId, Vector3f storeVector);
 
     native private static float getMargin(long shapeId);
 
@@ -528,8 +585,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
 
     native private static boolean isPolyhedral(long shapeId);
 
-    native private static void setContactFilterEnabled(long shapeId,
-            boolean setting);
+    native private static void
+            setContactFilterEnabled(long shapeId, boolean setting);
 
     native private static void setLocalScaling(long shapeId, Vector3f scale);
 

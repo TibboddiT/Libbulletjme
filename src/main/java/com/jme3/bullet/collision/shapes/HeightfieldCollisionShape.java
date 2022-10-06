@@ -32,6 +32,8 @@
 package com.jme3.bullet.collision.shapes;
 
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.infos.IndexedMesh;
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.util.BufferUtils;
@@ -41,8 +43,8 @@ import jme3utilities.Validate;
 import jme3utilities.math.MyMath;
 
 /**
- * A CollisionShape for terrain defined by a matrix of height values, based on
- * Bullet's btHeightfieldTerrainShape. Should be more efficient than an
+ * A collision shape for terrain defined by a matrix of height values, based on
+ * Bullet's {@code btHeightfieldTerrainShape}. Should be more efficient than an
  * equivalent MeshCollisionShape. Not for use in dynamic bodies. Collisions
  * between HeightfieldCollisionShape, MeshCollisionShape, and
  * PlaneCollisionShape objects are never detected.
@@ -174,9 +176,9 @@ public class HeightfieldCollisionShape extends CollisionShape {
         Validate.nonNegative(scale, "scale");
         Validate.axisIndex(upAxis, "up axis");
 
-        heightStickLength = stickLength;
-        heightStickWidth = stickWidth;
-        heightfieldData = heightmap.clone();
+        this.heightStickLength = stickLength;
+        this.heightStickWidth = stickWidth;
+        this.heightfieldData = heightmap.clone();
         this.scale.set(scale);
         this.upAxis = upAxis;
         this.flipQuadEdges = flipQuadEdges;
@@ -200,6 +202,24 @@ public class HeightfieldCollisionShape extends CollisionShape {
 
         assert count > 0 : count;
         return count;
+    }
+    // *************************************************************************
+    // CollisionShape methods
+
+    /**
+     * Approximate this shape with a splittable shape.
+     *
+     * @return a new splittable shape
+     */
+    @Override
+    public CollisionShape toSplittableShape() {
+        // Generate debug triangles.
+        FloatBuffer buffer = DebugShapeFactory
+                .getDebugTriangles(this, DebugShapeFactory.lowResolution);
+        IndexedMesh nativeMesh = new IndexedMesh(buffer);
+        MeshCollisionShape result = new MeshCollisionShape(true, nativeMesh);
+
+        return result;
     }
     // *************************************************************************
     // Java private methods
@@ -236,37 +256,38 @@ public class HeightfieldCollisionShape extends CollisionShape {
         } else {
             max = -min;
         }
-        minHeight = min;
-        maxHeight = max;
+        this.minHeight = min;
+        this.maxHeight = max;
     }
 
     /**
-     * Instantiate a square btHeightfieldTerrainShape.
+     * Instantiate a square {@code btHeightfieldTerrainShape}.
      *
      * @param heightmap (not null, length&ge;4, length a perfect square,
      * unaffected)
      * @param worldScale the desired scale factor for each local axis (not null,
      * no negative component, unaffected)
      */
-    private void createCollisionHeightfield(float[] heightmap,
-            Vector3f worldScale) {
+    private void
+            createCollisionHeightfield(float[] heightmap, Vector3f worldScale) {
         scale.set(worldScale);
 
-        heightfieldData = heightmap.clone();
-        heightStickWidth = (int) FastMath.sqrt(heightfieldData.length);
+        this.heightfieldData = heightmap.clone();
+        this.heightStickWidth = (int) FastMath.sqrt(heightfieldData.length);
         assert heightStickWidth > 1 : heightStickWidth;
 
-        heightStickLength = heightStickWidth;
+        this.heightStickLength = heightStickWidth;
 
         calculateMinAndMax();
         createShape();
     }
 
     /**
-     * Instantiate the configured btHeightfieldTerrainShape.
+     * Instantiate the configured {@code btHeightfieldTerrainShape}.
      */
     private void createShape() {
-        directBuffer = BufferUtils.createFloatBuffer(heightfieldData.length);
+        this.directBuffer
+                = BufferUtils.createFloatBuffer(heightfieldData.length);
         for (float height : heightfieldData) {
             if (!MyMath.isFinite(height)) {
                 throw new IllegalArgumentException("illegal height: " + height);

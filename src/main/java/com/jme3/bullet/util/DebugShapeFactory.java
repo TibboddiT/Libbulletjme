@@ -33,6 +33,7 @@ package com.jme3.bullet.util;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.collision.shapes.ConvexShape;
 import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
 import com.jme3.bullet.collision.shapes.infos.ChildCollisionShape;
 import com.jme3.math.Plane;
@@ -182,6 +183,28 @@ final public class DebugShapeFactory {
 
         return result;
     }
+
+    /**
+     * Calculate the volume of a debug mesh for the specified convex shape. The
+     * shape's scale and margin are taken into account, but not its debug-mesh
+     * resolution.
+     *
+     * @param shape (not null, convex, unaffected)
+     * @param meshResolution (0=low, 1=high)
+     * @return the scaled volume (in physics-space units cubed, &ge;0)
+     */
+    public static float volumeConvex(ConvexShape shape, int meshResolution) {
+        Validate.inRange(meshResolution, "mesh resolution", lowResolution,
+                highResolution);
+
+        long shapeId = shape.nativeId();
+        DebugMeshCallback callback = new DebugMeshCallback();
+        getTriangles(shapeId, meshResolution, callback);
+        float volume = callback.volumeConvex();
+
+        assert volume >= 0f : volume;
+        return volume;
+    }
     // *************************************************************************
     // private methods
 
@@ -205,10 +228,10 @@ final public class DebugShapeFactory {
         int totalFloats = 0;
 
         for (int childIndex = 0; childIndex < numChildren; ++childIndex) {
-            ChildCollisionShape childShape = children[childIndex];
-            CollisionShape shape = childShape.getShape();
-            childShape.copyTransform(tmpTransform);
-            FloatBuffer buffer = getDebugTriangles(shape, meshResolution);
+            ChildCollisionShape child = children[childIndex];
+            CollisionShape baseShape = child.getShape();
+            child.copyTransform(tmpTransform);
+            FloatBuffer buffer = getDebugTriangles(baseShape, meshResolution);
 
             int numFloats = buffer.capacity();
             MyBuffer.transform(buffer, 0, numFloats, tmpTransform);
@@ -247,10 +270,10 @@ final public class DebugShapeFactory {
         int totalFloats = 0;
 
         for (int childIndex = 0; childIndex < numChildren; ++childIndex) {
-            ChildCollisionShape childShape = children[childIndex];
-            CollisionShape shape = childShape.getShape();
-            childShape.copyTransform(tmpTransform);
-            FloatBuffer buffer = debugVertices(shape, meshResolution);
+            ChildCollisionShape child = children[childIndex];
+            CollisionShape baseShape = child.getShape();
+            child.copyTransform(tmpTransform);
+            FloatBuffer buffer = debugVertices(baseShape, meshResolution);
 
             int numFloats = buffer.capacity();
             MyBuffer.transform(buffer, 0, numFloats, tmpTransform);
@@ -280,8 +303,8 @@ final public class DebugShapeFactory {
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 9)
      */
-    private static FloatBuffer createPlaneTriangles(PlaneCollisionShape shape,
-            float halfExtent) {
+    private static FloatBuffer
+            createPlaneTriangles(PlaneCollisionShape shape, float halfExtent) {
         assert shape != null;
         assert halfExtent > 0f : halfExtent;
         /*
@@ -315,8 +338,8 @@ final public class DebugShapeFactory {
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 3)
      */
-    private static FloatBuffer createPlaneVertices(PlaneCollisionShape shape,
-            float halfExtent) {
+    private static FloatBuffer
+            createPlaneVertices(PlaneCollisionShape shape, float halfExtent) {
         assert shape != null;
         assert halfExtent > 0f : halfExtent;
         /*
@@ -363,9 +386,9 @@ final public class DebugShapeFactory {
     // *************************************************************************
     // native private methods
 
-    native private static void getTriangles(long shapeId, int meshResolution,
-            DebugMeshCallback buffer);
+    native private static void getTriangles(
+            long shapeId, int meshResolution, DebugMeshCallback buffer);
 
-    native private static void getVertices(long shapeId, int meshResolution,
-            DebugMeshCallback buffer);
+    native private static void getVertices(
+            long shapeId, int meshResolution, DebugMeshCallback buffer);
 }

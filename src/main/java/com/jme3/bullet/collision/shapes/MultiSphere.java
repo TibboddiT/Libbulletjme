@@ -32,14 +32,20 @@
 package com.jme3.bullet.collision.shapes;
 
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.Vector3f;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
+import jme3utilities.math.MyMath;
+import jme3utilities.math.MyVolume;
+import jme3utilities.math.RectangularSolid;
 
 /**
- * A convex CollisionShape based on Bullet's btMultiSphereShape. Unlike a
- * CapsuleCollisionShape or a SphereCollisionShape, these shapes have margins
+ * A convex collision shape based on Bullet's {@code btMultiSphereShape}. Unlike
+ * a CapsuleCollisionShape or a SphereCollisionShape, these shapes have margins
  * and can be scaled non-uniformly.
  *
  * @author Stephen Gold sgold@sonic.net
@@ -57,11 +63,11 @@ public class MultiSphere extends ConvexShape {
     // fields
 
     /**
-     * copies of the unscaled radii (each &ge;0)
+     * copies of the unscaled radii (in shape units, each &ge;0)
      */
     final private float[] radii;
     /**
-     * copies of center locations
+     * copies of the center locations (in shape coordinates)
      */
     final private Vector3f[] centers;
     // *************************************************************************
@@ -70,16 +76,14 @@ public class MultiSphere extends ConvexShape {
     /**
      * Instantiate a centered sphere shape with the specified radius.
      *
-     * @param radius the desired unscaled radius (&ge;0)
+     * @param radius the desired radius (in shape units, &ge;0)
      */
     public MultiSphere(float radius) {
         Validate.nonNegative(radius, "radius");
 
-        centers = new Vector3f[1];
+        this.centers = new Vector3f[1];
         centers[0] = new Vector3f(0f, 0f, 0f);
-
-        radii = new float[1];
-        radii[0] = radius;
+        this.radii = new float[]{radius};
 
         createShape();
     }
@@ -88,23 +92,20 @@ public class MultiSphere extends ConvexShape {
      * Instantiate a centered Y-axis capsule shape with the specified radius and
      * height.
      *
-     * @param radius the desired unscaled radius (&ge;0)
-     * @param height the desired unscaled height of the cylindrical portion
-     * (&ge;0)
+     * @param radius the desired radius (in shape units, &ge;0)
+     * @param height the desired height of the cylindrical portion (in shape
+     * units, &ge;0)
      */
     public MultiSphere(float radius, float height) {
         Validate.nonNegative(radius, "radius");
         Validate.nonNegative(height, "height");
 
         float halfHeight = height / 2f;
-
-        centers = new Vector3f[2];
+        this.centers = new Vector3f[2];
         centers[0] = new Vector3f(0f, halfHeight, 0f);
         centers[1] = new Vector3f(0f, -halfHeight, 0f);
 
-        radii = new float[2];
-        radii[0] = radius;
-        radii[1] = radius;
+        this.radii = new float[]{radius, radius};
 
         createShape();
     }
@@ -113,9 +114,9 @@ public class MultiSphere extends ConvexShape {
      * Instantiate a centered capsule shape with the specified radius, height,
      * and axis.
      *
-     * @param radius the desired unscaled radius (&ge;0)
-     * @param height the desired unscaled height of the cylindrical portion
-     * (&ge;0)
+     * @param radius the desired radius (in shape units, &ge;0)
+     * @param height the desired height of the cylindrical portion (in shape
+     * units, &ge;0)
      * @param axisIndex which local axis to use for the height: 0&rarr;X,
      * 1&rarr;Y, 2&rarr;Z
      */
@@ -125,7 +126,7 @@ public class MultiSphere extends ConvexShape {
 
         float halfHeight = height / 2f;
 
-        centers = new Vector3f[2];
+        this.centers = new Vector3f[2];
         switch (axisIndex) {
             case PhysicsSpace.AXIS_X:
                 centers[0] = new Vector3f(halfHeight, 0f, 0f);
@@ -143,9 +144,7 @@ public class MultiSphere extends ConvexShape {
                 throw new IllegalArgumentException("axisIndex = " + axisIndex);
         }
 
-        radii = new float[2];
-        radii[0] = radius;
-        radii[1] = radius;
+        this.radii = new float[]{radius, radius};
 
         createShape();
     }
@@ -153,8 +152,10 @@ public class MultiSphere extends ConvexShape {
     /**
      * Instantiate a multi-sphere shape with the specified centers and radii.
      *
-     * @param centers the list of center offsets (not null, not empty)
-     * @param radii the list of radii (not null, not empty, each &ge;0)
+     * @param centers the list of center locations (in shape coordinates, not
+     * null, not empty)
+     * @param radii the list of radii (in shape units, not null, not empty, each
+     * &ge;0)
      */
     public MultiSphere(List<Vector3f> centers, List<Float> radii) {
         Validate.nonEmpty(centers, "centers");
@@ -167,6 +168,7 @@ public class MultiSphere extends ConvexShape {
         this.radii = new float[numSpheres];
         for (int i = 0; i < numSpheres; ++i) {
             this.centers[i] = centers.get(i).clone();
+
             float radius = radii.get(i);
             assert radius >= 0f : radius;
             this.radii[i] = radius;
@@ -176,21 +178,98 @@ public class MultiSphere extends ConvexShape {
     }
 
     /**
+     * Instantiate a 4-sphere shape to fill the specified RectangularSolid. The
+     * spheres will be of equal size, arranged in a rectangle.
+     *
+     * @param rectangularSolid the solid on which to base the shape (not null)
+     */
+    public MultiSphere(RectangularSolid rectangularSolid) {
+        Vector3f halfExtents = rectangularSolid.halfExtents(null);
+        float radius = MyMath.min(halfExtents.x, halfExtents.y, halfExtents.z);
+
+        // Enumerate the local coordinates of the centers of the 4 spheres.
+        Vector3f max = rectangularSolid.maxima(null);
+        max.subtractLocal(radius, radius, radius);
+        Vector3f min = rectangularSolid.minima(null);
+        min.addLocal(radius, radius, radius);
+        List<Vector3f> centerLocations = new ArrayList<>(4);
+        if (radius == halfExtents.x) {
+            float x = max.x;
+            centerLocations.add(new Vector3f(x, max.y, max.z));
+            centerLocations.add(new Vector3f(x, max.y, min.z));
+            centerLocations.add(new Vector3f(x, min.y, max.z));
+            centerLocations.add(new Vector3f(x, min.y, min.z));
+        } else if (radius == halfExtents.y) {
+            float y = max.y;
+            centerLocations.add(new Vector3f(max.x, y, max.z));
+            centerLocations.add(new Vector3f(max.x, y, min.z));
+            centerLocations.add(new Vector3f(min.x, y, max.z));
+            centerLocations.add(new Vector3f(min.x, y, min.z));
+        } else {
+            assert radius == halfExtents.z;
+            float z = max.z;
+            centerLocations.add(new Vector3f(max.x, max.y, z));
+            centerLocations.add(new Vector3f(max.x, min.y, z));
+            centerLocations.add(new Vector3f(min.x, max.y, z));
+            centerLocations.add(new Vector3f(min.x, min.y, z));
+        }
+
+        // Transform centers to shape coordinates.
+        this.centers = new Vector3f[4];
+        this.radii = new float[]{radius, radius, radius, radius};
+        for (int sphereI = 0; sphereI < 4; ++sphereI) {
+            Vector3f localCenter = centerLocations.get(sphereI);
+            centers[sphereI] = rectangularSolid.localToWorld(localCenter, null);
+        }
+
+        createShape();
+    }
+
+    /**
      * Instantiate an eccentric sphere shape with the specified center and
      * radius.
      *
-     * @param center the offset of the center (not null, unaffected)
-     * @param radius the desired unscaled radius (&ge;0)
+     * @param center the location of the center (in shape coordinates, not null,
+     * unaffected)
+     * @param radius the desired radius (in shape units, &ge;0)
      */
     public MultiSphere(Vector3f center, float radius) {
         Validate.finite(center, "center");
         Validate.nonNegative(radius, "radius");
 
-        centers = new Vector3f[1];
+        this.centers = new Vector3f[1];
         centers[0] = center.clone();
 
-        radii = new float[1];
-        radii[0] = radius;
+        this.radii = new float[]{radius};
+
+        createShape();
+    }
+
+    /**
+     * Instantiate a multi-sphere shape with the specified centers and radii.
+     *
+     * @param centers the array of center locations (in shape coordinates, not
+     * null, not empty)
+     * @param radii the array of radii (in shape units, not null, not empty,
+     * each &ge;0)
+     */
+    public MultiSphere(Vector3f[] centers, float... radii) {
+        Validate.nonEmpty(centers, "centers");
+        Validate.nonEmpty(radii, "radii");
+
+        int numSpheres = radii.length;
+        Validate.require(
+                centers.length == numSpheres, "arrays of equal length");
+
+        this.centers = new Vector3f[numSpheres];
+        this.radii = new float[numSpheres];
+        for (int i = 0; i < numSpheres; ++i) {
+            this.centers[i] = centers[i].clone();
+
+            float radius = radii[i];
+            assert radius >= 0f : radius;
+            this.radii[i] = radius;
+        }
 
         createShape();
     }
@@ -198,12 +277,12 @@ public class MultiSphere extends ConvexShape {
     // new methods exposed
 
     /**
-     * Copy the offset of the center of the indexed sphere.
+     * Copy the location of the center of the indexed sphere.
      *
      * @param sphereIndex which sphere to read (&ge;0)
      * @param storeResult storage for the result (modified if not null)
-     * @return the center offset (either storeResult or a new instance, not
-     * null)
+     * @return the center location (in shape coordinates, either
+     * {@code storeResult} or a new instance, not null)
      */
     public Vector3f copyCenter(int sphereIndex, Vector3f storeResult) {
         Validate.inRange(sphereIndex, "sphere index", 0, radii.length - 1);
@@ -226,7 +305,7 @@ public class MultiSphere extends ConvexShape {
     }
 
     /**
-     * Read the radius of the indexed sphere.
+     * Return the radius of the indexed sphere.
      *
      * @param sphereIndex which sphere to read (&ge;0)
      * @return the unscaled radius (&ge;0)
@@ -239,7 +318,7 @@ public class MultiSphere extends ConvexShape {
         return radius;
     }
     // *************************************************************************
-    // CollisionShape methods
+    // ConvexShape methods
 
     /**
      * Recalculate this shape's bounding box if necessary.
@@ -248,6 +327,74 @@ public class MultiSphere extends ConvexShape {
     protected void recalculateAabb() {
         long shapeId = nativeId();
         recalcAabb(shapeId);
+    }
+
+    /**
+     * Estimate the volume of the shape, including scale and margin.
+     *
+     * @return the volume (in physics-space units cubed, &ge;0)
+     */
+    @Override
+    public float scaledVolume() {
+        float volume;
+        int numSpheres = radii.length;
+        if (numSpheres == 1) {
+            float radius = radii[0];
+            float unscaledVolume = MyVolume.sphereVolume(radius);
+            volume = unscaledVolume * scale.x * scale.y * scale.z;
+
+        } else if (numSpheres == 2 && radii[0] == radii[1]) { // capsule
+            float radius = radii[0];
+            float height = centers[0].distance(centers[1]);
+            float unscaledVolume = MyVolume.capsuleVolume(radius, height);
+            volume = unscaledVolume * scale.x * scale.y * scale.z;
+
+        } else { // use the debug mesh
+            volume = super.scaledVolume();
+        }
+
+        assert volume >= 0f : volume;
+        return volume;
+    }
+
+    /**
+     * Approximate this shape with a HullCollisionShape.
+     *
+     * @return a new shape
+     */
+    @Override
+    public HullCollisionShape toHullShape() {
+        float medianScale = MyMath.mid(scale.x, scale.y, scale.z);
+        assert medianScale > 0f : medianScale;
+        float minRadius = MyMath.min(radii);
+        float defaultMargin = getDefaultMargin();
+        float hullMargin = Math.min(defaultMargin, minRadius * medianScale);
+        /*
+         * Construct a copy of this shape with its radii reduced
+         * to compensate for the hull's collision margin.
+         */
+        int numSpheres = radii.length;
+        float[] reducedRadii = new float[numSpheres];
+        for (int sphereIndex = 0; sphereIndex < numSpheres; ++sphereIndex) {
+            float rr = radii[sphereIndex] - hullMargin / medianScale;
+            if (rr < 1e-6f) {
+                rr = 1e-6f;
+            }
+            reducedRadii[sphereIndex] = rr;
+        }
+        MultiSphere reducedShape = new MultiSphere(centers, reducedRadii);
+        reducedShape.setScale(scale);
+        FloatBuffer buffer = DebugShapeFactory
+                .debugVertices(reducedShape, DebugShapeFactory.lowResolution);
+
+        // Flip the buffer.
+        buffer.rewind();
+        buffer.limit(buffer.capacity());
+
+        HullCollisionShape result = new HullCollisionShape(buffer);
+        result.setMargin(hullMargin);
+
+        return result;
     }
     // *************************************************************************
     // Java private methods
@@ -269,8 +416,8 @@ public class MultiSphere extends ConvexShape {
     // *************************************************************************
     // native private methods
 
-    native private static long createShape(Vector3f[] centers, float[] radii,
-            int numSpheres);
+    native private static long
+            createShape(Vector3f[] centers, float[] radii, int numSpheres);
 
     native private static void recalcAabb(long shapeId);
 }

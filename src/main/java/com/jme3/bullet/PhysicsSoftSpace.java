@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 
 /**
  * A PhysicsSpace that supports soft bodies, with its own
- * btSoftRigidDynamicsWorld.
+ * {@code btSoftRigidDynamicsWorld}.
  *
  * @author dokthar
  */
@@ -353,6 +353,6 @@ public class PhysicsSoftSpace extends PhysicsSpace {
 
     native private static long getWorldInfo(long softSpaceId);
 
-    native private static void removeSoftBody(long softSpaceId,
-            long softBodyId);
+    native private static void
+            removeSoftBody(long softSpaceId, long softBodyId);
 }

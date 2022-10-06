@@ -61,7 +61,7 @@ public class RigidBodySnapshot {
      */
     final private static Vector3f scaleIdentity = new Vector3f(1f, 1f, 1f);
     // *************************************************************************
-    // fields
+    // fields TODO privatize
 
     /**
      * contact-response flag
@@ -131,7 +131,7 @@ public class RigidBodySnapshot {
     /**
      * anisotropic friction modes (bitmask)
      */
-    final protected int anisotopicFrictionModes;
+    final protected int anisotopicFrictionModes; // TODO rename
     /**
      * native IDs of all collision objects in the ignore list
      */
@@ -159,7 +159,7 @@ public class RigidBodySnapshot {
     /**
      * anisotropic friction components
      */
-    final protected Vector3f anisotopicFrictionComponents;
+    final protected Vector3f anisotopicFrictionComponents; // TODO rename
     /**
      * linear factors
      */

@@ -264,10 +264,10 @@ public class SixDofSpringJoint extends SixDofJoint {
     // SixDofJoint methods
 
     /**
-     * Create a new, double-ended btGeneric6DofSpringConstraint.
+     * Create a double-ended {@code btGeneric6DofSpringConstraint}.
      *
-     * @param bodyIdA the ID of the body for the A end (not 0)
-     * @param bodyIdB the ID of the body for the B end (not 0)
+     * @param bodyIdA the ID of the body for the A end (not zero)
+     * @param bodyIdB the ID of the body for the B end (not zero)
      * @param pivotInA the pivot location in A's scaled local coordinates (not
      * null, unaffected)
      * @param rotInA the orientation of the joint in A's local coordinates (not
@@ -286,9 +286,9 @@ public class SixDofSpringJoint extends SixDofJoint {
             Matrix3f rotInB, boolean useLinearReferenceFrameA);
 
     /**
-     * Create a new, single-ended btGeneric6DofSpringConstraint.
+     * Create a single-ended {@code btGeneric6DofSpringConstraint}.
      *
-     * @param bodyIdB the ID of the body for the B end (not 0)
+     * @param bodyIdB the ID of the body for the B end (not zero)
      * @param pivotInB the pivot location in B's scaled local coordinates (not
      * null, unaffected)
      * @param rotInB the orientation of the joint in B's local coordinates (not
@@ -303,8 +303,8 @@ public class SixDofSpringJoint extends SixDofJoint {
     // *************************************************************************
     // native private methods
 
-    native private static void enableSpring(long jointId, int dofIndex,
-            boolean onOff);
+    native private static void
+            enableSpring(long jointId, int dofIndex, boolean onOff);
 
     native private static float getDamping(long jointId, int dofIndex);
 
@@ -314,13 +314,13 @@ public class SixDofSpringJoint extends SixDofJoint {
 
     native private static boolean isSpringEnabled(long jointId, int dofIndex);
 
-    native private static void setDamping(long jointId, int dofIndex,
-            float damping);
+    native private static void
+            setDamping(long jointId, int dofIndex, float damping);
 
     native private static void setEquilibriumPoint(long jointId);
 
     native private static void setEquilibriumPoint(long jointId, int dofIndex);
 
-    native private static void setStiffness(long jointId, int dofIndex,
-            float stiffness);
+    native private static void
+            setStiffness(long jointId, int dofIndex, float stiffness);
 }

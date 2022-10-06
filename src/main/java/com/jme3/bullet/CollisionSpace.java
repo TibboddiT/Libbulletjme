@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 import jme3utilities.Validate;
 
 /**
- * A Bullet-JME collision space with its own btCollisionWorld.
+ * A Bullet-JME collision space with its own {@code btCollisionWorld}.
  *
  * @author normenhansen
  */
@@ -202,10 +202,8 @@ public class CollisionSpace extends NativePhysicsObject {
      * @return the number of times the listener was invoked, or would have been
      * if it weren't null (&ge;0)
      */
-    public int contactTest(PhysicsCollisionObject pco,
-            PhysicsCollisionListener listener) {
-        Validate.nonNull(pco, "collision object");
-
+    public int contactTest(
+            PhysicsCollisionObject pco, PhysicsCollisionListener listener) {
         long spaceId = nativeId();
         long pcoId = pco.nativeId();
         int result = contactTest(spaceId, pcoId, listener);
@@ -357,9 +355,6 @@ public class CollisionSpace extends NativePhysicsObject {
      * @return true if registered, otherwise false
      */
     public boolean hasClosest(CollisionShape shape0, CollisionShape shape1) {
-        Validate.nonNull(shape0, "shape 0");
-        Validate.nonNull(shape1, "shape 1");
-
         long spaceId = nativeId();
         int shape0Type = shape0.getShapeType();
         int shape1Type = shape1.getShapeType();
@@ -377,9 +372,6 @@ public class CollisionSpace extends NativePhysicsObject {
      * @return true if registered, otherwise false
      */
     public boolean hasContact(CollisionShape shape0, CollisionShape shape1) {
-        Validate.nonNull(shape0, "shape 0");
-        Validate.nonNull(shape1, "shape 1");
-
         long spaceId = nativeId();
         int shape0Type = shape0.getShapeType();
         int shape1Type = shape1.getShapeType();
@@ -422,9 +414,29 @@ public class CollisionSpace extends NativePhysicsObject {
      * @return true to simulate collisions between pcoA and pcoB, false to
      * ignore such collisions during this timestep
      */
-    public boolean needsCollision(PhysicsCollisionObject pcoA,
-            PhysicsCollisionObject pcoB) {
+    public boolean needsCollision(
+            PhysicsCollisionObject pcoA, PhysicsCollisionObject pcoB) {
         return true;
+    }
+
+    /**
+     * Perform a pair test. The collision objects need not be added to the
+     * space.
+     *
+     * @param pcoA the first collision object to test (not null, unaffected)
+     * @param pcoB the 2nd collision object to test (not null, unaffected)
+     * @param listener the callback for reporting contacts (may be null)
+     * @return the number of times the listener was invoked, or would have been
+     * if it weren't null (&ge;0)
+     */
+    public int pairTest(PhysicsCollisionObject pcoA,
+            PhysicsCollisionObject pcoB, PhysicsCollisionListener listener) {
+        long spaceId = nativeId();
+        long aId = pcoA.nativeId();
+        long bId = pcoB.nativeId();
+        int result = pairTest(spaceId, aId, bId, listener);
+
+        return result;
     }
 
     /**
@@ -554,7 +566,7 @@ public class CollisionSpace extends NativePhysicsObject {
      * @see com.jme3.bullet.RayTestFlag
      */
     public void setRayTestFlags(int flags) {
-        rayTestFlags = flags;
+        this.rayTestFlags = flags;
     }
 
     /**
@@ -710,24 +722,27 @@ public class CollisionSpace extends NativePhysicsObject {
 
     native private static void addCollisionObject(long spaceId, long pcoId);
 
-    native private static int contactTest(long spaceId, long pcoId,
-            PhysicsCollisionListener listener);
+    native private static int contactTest(
+            long spaceId, long pcoId, PhysicsCollisionListener listener);
 
     native private long createCollisionSpace(float minX, float minY, float minZ,
             float maxX, float maxY, float maxZ, int broadphaseType);
 
     native private static void finalizeNative(long spaceId);
 
-    native private static boolean getDeterministicOverlappingPairs(
-            long spaceId);
+    native private static boolean
+            getDeterministicOverlappingPairs(long spaceId);
 
     native private static int getNumCollisionObjects(long spaceId);
 
-    native private static boolean hasClosest(long spaceId, int shape0Type,
-            int shape1Type);
+    native private static boolean
+            hasClosest(long spaceId, int shape0Type, int shape1Type);
 
-    native private static boolean hasContact(long spaceId, int shape0Type,
-            int shape1Type);
+    native private static boolean
+            hasContact(long spaceId, int shape0Type, int shape1Type);
+
+    native private static int pairTest(long spaceId, long aId, long bId,
+            PhysicsCollisionListener listener);
 
     native private static void rayTest_native(Vector3f fromLocation,
             Vector3f toLocation, long spaceId,
@@ -735,8 +750,8 @@ public class CollisionSpace extends NativePhysicsObject {
 
     native private static void removeCollisionObject(long spaceId, long pcoId);
 
-    native private static void setDeterministicOverlappingPairs(long spaceId,
-            boolean desiredSetting);
+    native private static void setDeterministicOverlappingPairs(
+            long spaceId, boolean desiredSetting);
 
     native private static void sweepTest_native(long shapeId, Transform from,
             Transform to, long spaceId, List<PhysicsSweepTestResult> addToList,

@@ -39,7 +39,8 @@ import java.util.logging.Logger;
 import jme3utilities.Validate;
 
 /**
- * Information about one wheel of a vehicle, based on Bullet's btWheelInfo.
+ * Information about one wheel of a vehicle, based on Bullet's
+ * {@code btWheelInfo}.
  *
  * @author normenhansen
  */
@@ -501,7 +502,7 @@ public class VehicleWheel {
      * @param frontWheel true&rarr;front wheel, false&rarr;non-front wheel
      */
     public void setFrontWheel(boolean frontWheel) {
-        isFront = frontWheel;
+        this.isFront = frontWheel;
         applyInfo();
     }
 
@@ -701,14 +702,14 @@ public class VehicleWheel {
 
     native private static float getBrake(long vehicleId, int wheelIndex);
 
-    native private static void getCollisionLocation(long vehicleId,
-            int wheelIndex, Vector3f vector);
+    native private static void getCollisionLocation(
+            long vehicleId, int wheelIndex, Vector3f vector);
 
-    native private static void getCollisionNormal(long vehicleId,
-            int wheelIndex, Vector3f vector);
+    native private static void
+            getCollisionNormal(long vehicleId, int wheelIndex, Vector3f vector);
 
-    native private static float getDeltaRotation(long vehicleId,
-            int wheelIndex);
+    native private static float
+            getDeltaRotation(long vehicleId, int wheelIndex);
 
     native private static float getEngineForce(long vehicleId, int wheelIndex);
 
@@ -716,30 +717,30 @@ public class VehicleWheel {
 
     native private static float getRestLength(long vehicleId, int wheelIndex);
 
-    native private static float getRollInfluence(long vehicleId,
-            int wheelIndex);
+    native private static float
+            getRollInfluence(long vehicleId, int wheelIndex);
 
-    native private static float getRotationAngle(long vehicleId,
-            int wheelIndex);
+    native private static float
+            getRotationAngle(long vehicleId, int wheelIndex);
 
     native private static float getSkidInfo(long vehicleId, int wheelIndex);
 
     native private static float getSteerAngle(long vehicleId, int wheelIndex);
 
-    native private static float getSuspensionLength(long vehicleId,
-            int wheelIndex);
+    native private static float
+            getSuspensionLength(long vehicleId, int wheelIndex);
 
-    native private static void getWheelLocation(long vehicleId, int wheelIndex,
-            Vector3f vector);
+    native private static void
+            getWheelLocation(long vehicleId, int wheelIndex, Vector3f vector);
 
-    native private static void getWheelRotation(long vehicleId, int wheelIndex,
-            Matrix3f matrix);
+    native private static void
+            getWheelRotation(long vehicleId, int wheelIndex, Matrix3f matrix);
 
     native private static boolean isFront(long vehicleId, int wheelIndex);
 
-    native private static void setRotationAngle(long vehicleId, int wheelIndex,
-            float angle);
+    native private static void
+            setRotationAngle(long vehicleId, int wheelIndex, float angle);
 
-    native private static void setSuspensionLength(long vehicleId,
-            int wheelIndex, float length);
+    native private static void
+            setSuspensionLength(long vehicleId, int wheelIndex, float length);
 }

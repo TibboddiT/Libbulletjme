@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 jMonkeyEngine
+ * Copyright (c) 2019-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,8 +38,8 @@ import jme3utilities.Validate;
 import jme3utilities.math.MyVector3f;
 
 /**
- * A convex CollisionShape optimized for 2-D, based on Bullet's btConvex2dShape.
- * For a rectangle, use Box2dShape instead.
+ * A convex collision shape optimized for 2-D, based on Bullet's
+ * {@code btConvex2dShape}. For a rectangle, use Box2dShape instead.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -102,7 +102,7 @@ public class Convex2dShape extends ConvexShape {
         return base;
     }
     // *************************************************************************
-    // CollisionShape methods
+    // ConvexShape methods
 
     /**
      * Test whether the specified scale factors can be applied to this shape.
@@ -140,7 +140,7 @@ public class Convex2dShape extends ConvexShape {
     // Java private methods
 
     /**
-     * Instantiate an empty btConvex2dShape.
+     * Instantiate an empty {@code btConvex2dShape}.
      */
     private void createShape() {
         long childId = base.nativeId();
