@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="package-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -76,12 +80,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Miscellaneous reusable classes for use with jMonkeyEngine3.</div>
 </div>
-<div class="col-first odd-row-color"><a href="../lbj/package-summary.html">jme3utilities.lbj</a></div>
+<div class="col-first odd-row-color"><a href="noise/package-summary.html">jme3utilities.math.noise</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Reusable classes and interfaces for implementing noise and pseudo-random
+ number generation in jMonkeyEngine3.</div>
+</div>
+<div class="col-first even-row-color"><a href="../lbj/package-summary.html">jme3utilities.lbj</a></div>
+<div class="col-last even-row-color">
 <div class="block">Generic objects for visualizing soft bodies.</div>
 </div>
-<div class="col-first even-row-color"><a href="../minie/package-summary.html">jme3utilities.minie</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="../minie/package-summary.html">jme3utilities.minie</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Bullet physics support for jMonkeyEngine3.</div>
 </div>
 </div>
@@ -89,30 +98,52 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IntPair.html" title="class in jme3utilities.math">IntPair</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DistinctVectorValues.html" title="class in jme3utilities.math">DistinctVectorValues</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Analyze a FloatBuffer to identify all of its distinct Vector3f values.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="IntPair.html" title="class in jme3utilities.math">IntPair</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Represent a pair of distinct integers.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MyBuffer.html" title="class in jme3utilities.math">MyBuffer</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MyBuffer.html" title="class in jme3utilities.math">MyBuffer</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Utility methods that operate on buffers, especially float buffers containing
  3-D vectors.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MyMath.html" title="class in jme3utilities.math">MyMath</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Mathematical utility methods.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MyQuaternion.html" title="class in jme3utilities.math">MyQuaternion</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MyMath.html" title="class in jme3utilities.math">MyMath</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Mathematical utility methods.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MyVector3f.html" title="class in jme3utilities.math">MyVector3f</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MyQuaternion.html" title="class in jme3utilities.math">MyQuaternion</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Mathematical utility methods.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MyVector3f.html" title="class in jme3utilities.math">MyVector3f</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Utility methods for 3-D vectors.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MyVolume.html" title="class in jme3utilities.math">MyVolume</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Utility methods for computing volumes of shapes.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RectangularSolid.html" title="class in jme3utilities.math">RectangularSolid</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A rectangular solid whose axes might not be aligned with the world axes.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="VectorSet.html" title="interface in jme3utilities.math">VectorSet</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">A collection of Vector3f values without duplicates.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VectorSetUsingBuffer.html" title="class in jme3utilities.math">VectorSetUsingBuffer</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A VectorSet implemented using FloatBuffer.</div>
+</div>
 </div>
 </div>
 </div>

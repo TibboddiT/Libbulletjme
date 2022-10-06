@@ -89,11 +89,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CollisionShape</span>
 <span class="extends-implements">extends <a href="../../NativePhysicsObject.html" title="class in com.jme3.bullet">NativePhysicsObject</a></span></div>
 <div class="block">The abstract base class for collision shapes based on Bullet's
- btCollisionShape.
+ <code>btCollisionShape</code>.
  <p>
  Subclasses include ConvexShape and MeshCollisionShape. As suggested in the
- Bullet manual, a single CollisionShape can be shared among multiple collision
- objects.</div>
+ Bullet manual, a single collision shape can be shared among multiple
+ collision objects.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -158,37 +158,48 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;translation,
- <a href="../../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;rotation,
- <a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a>&nbsp;storeResult)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aabbCenter(com.jme3.math.Vector3f)" class="member-name-link">aabbCenter</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Calculate an axis-aligned bounding box for this shape with the specified
- translation and rotation applied to it.</div>
+<div class="block">Return the center of the shape's axis-aligned bounding box in local
+ coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;translation,
- <a href="../../../math/Quaternion.html" title="class in com.jme3.math">Quaternion</a>&nbsp;rotation,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;translation,
+ <a href="../../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;rotation,
  <a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Calculate an axis-aligned bounding box for this shape with the specified
  translation and rotation applied to it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;scale)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;translation,
+ <a href="../../../math/Quaternion.html" title="class in com.jme3.math">Quaternion</a>&nbsp;rotation,
+ <a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate an axis-aligned bounding box for this shape with the specified
+ translation and rotation applied to it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;scale)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canSplit()" class="member-name-link">canSplit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Test whether this shape can be split by an arbitrary plane.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDefaultMargin()" class="member-name-link">getDefaultMargin</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Read the default margin for new shapes that are neither capsules nor
+<div class="block">Return the default margin for new shapes that are neither capsules nor
  spheres.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMargin()" class="member-name-link">getMargin</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Read the collision margin for this shape.</div>
+<div class="block">Return the collision margin for this shape.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScale(com.jme3.math.Vector3f)" class="member-name-link">getScale</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
@@ -198,12 +209,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShapeType()" class="member-name-link">getShapeType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Read the type of this shape.</div>
+<div class="block">Return the type of this shape.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static final int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getShapeType(long)" class="member-name-link">getShapeType</a><wbr>(long&nbsp;shapeId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Read the type of this shape.</div>
+<div class="block">Return the type of this shape.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isConcave()" class="member-name-link">isConcave</a>()</code></div>
@@ -245,36 +256,46 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Recalculate this shape's bounding box if necessary.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactFilterEnabled(boolean)" class="member-name-link">setContactFilterEnabled</a><wbr>(boolean&nbsp;setting)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaledVolume()" class="member-name-link">scaledVolume</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactFilterEnabled(boolean)" class="member-name-link">setContactFilterEnabled</a><wbr>(boolean&nbsp;setting)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Enable/disable contact filtering for this shape.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setDefaultMargin(float)" class="member-name-link">setDefaultMargin</a><wbr>(float&nbsp;margin)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setDefaultMargin(float)" class="member-name-link">setDefaultMargin</a><wbr>(float&nbsp;margin)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Alter the default margin for new shapes that are neither capsules nor
  spheres.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMargin(float)" class="member-name-link">setMargin</a><wbr>(float&nbsp;margin)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMargin(float)" class="member-name-link">setMargin</a><wbr>(float&nbsp;margin)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the collision margin of this shape.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNativeId(long)" class="member-name-link">setNativeId</a><wbr>(long&nbsp;shapeId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNativeId(long)" class="member-name-link">setNativeId</a><wbr>(long&nbsp;shapeId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Initialize the native ID.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(float)" class="member-name-link">setScale</a><wbr>(float&nbsp;factor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(float)" class="member-name-link">setScale</a><wbr>(float&nbsp;factor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the scale of this shape to a uniform factor.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(com.jme3.math.Vector3f)" class="member-name-link">setScale</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;scale)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(com.jme3.math.Vector3f)" class="member-name-link">setScale</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;scale)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the scale of this shape.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toSplittableShape()" class="member-name-link">toSplittableShape</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Approximate this shape with a splittable shape.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -284,7 +305,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateScale()" class="member-name-link">updateScale</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Synchronize the copied scale factors with the btCollisionShape.</div>
+<div class="block">Synchronize the copied scale factors with the <code>btCollisionShape</code>.</div>
 </div>
 </div>
 </div>
@@ -358,6 +379,21 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="aabbCenter(com.jme3.math.Vector3f)">
+<h3>aabbCenter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">aabbCenter</span><wbr><span class="parameters">(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Return the center of the shape's axis-aligned bounding box in local
+ coordinates.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>a location in the local coordinate system (either
+ <code>storeResult</code> or a new vector)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)">
 <h3>boundingBox</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../bounding/BoundingBox.html" title="class in com.jme3.bounding">BoundingBox</a></span>&nbsp;<span class="element-name">boundingBox</span><wbr><span class="parameters">(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;translation,
@@ -411,10 +447,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="canSplit()">
+<h3>canSplit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canSplit</span>()</div>
+<div class="block">Test whether this shape can be split by an arbitrary plane. Meant to be
+ overridden.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if splittable, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getDefaultMargin()">
 <h3>getDefaultMargin</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDefaultMargin</span>()</div>
-<div class="block">Read the default margin for new shapes that are neither capsules nor
+<div class="block">Return the default margin for new shapes that are neither capsules nor
  spheres.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -426,7 +474,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getMargin()">
 <h3>getMargin</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getMargin</span>()</div>
-<div class="block">Read the collision margin for this shape.</div>
+<div class="block">Return the collision margin for this shape.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the margin distance (in physics-space units, &ge;0)</dd>
@@ -451,10 +499,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getShapeType()">
 <h3>getShapeType</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getShapeType</span>()</div>
-<div class="block">Read the type of this shape.</div>
+<div class="block">Return the type of this shape.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the type value (from enum BroadphaseNativeTypes)</dd>
+<dd>the type value (from Bullet's <code>enum BroadphaseNativeTypes</code>)</dd>
 </dl>
 </section>
 </li>
@@ -555,6 +603,18 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="scaledVolume()">
+<h3>scaledVolume</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">scaledVolume</span>()</div>
+<div class="block">Estimate the volume of this shape, including scale and margin. Meant to
+ be overridden.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the volume (in physics-space units cubed, &ge;0)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="setContactFilterEnabled(boolean)">
 <h3>setContactFilterEnabled</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setContactFilterEnabled</span><wbr><span class="parameters">(boolean&nbsp;setting)</span></div>
@@ -634,15 +694,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="toSplittableShape()">
+<h3>toSplittableShape</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></span>&nbsp;<span class="element-name">toSplittableShape</span>()</div>
+<div class="block">Approximate this shape with a splittable shape. Meant to be overridden.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new splittable shape</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getShapeType(long)">
 <h3>getShapeType</h3>
 <div class="member-signature"><span class="modifiers">protected static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getShapeType</span><wbr><span class="parameters">(long&nbsp;shapeId)</span></div>
-<div class="block">Read the type of this shape.</div>
+<div class="block">Return the type of this shape.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shapeId</code> - the ID of the btCollisionShape (not zero)</dd>
+<dd><code>shapeId</code> - the ID of the <code>btCollisionShape</code> (not zero)</dd>
 <dt>Returns:</dt>
-<dd>the type value (from enum BroadphaseNativeTypes)</dd>
+<dd>the type value (from Bullet's <code>enum BroadphaseNativeTypes</code>)</dd>
 </dl>
 </section>
 </li>
@@ -658,7 +729,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="updateScale()">
 <h3>updateScale</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateScale</span>()</div>
-<div class="block">Synchronize the copied scale factors with the btCollisionShape.</div>
+<div class="block">Synchronize the copied scale factors with the <code>btCollisionShape</code>.</div>
 </section>
 </li>
 <li>
@@ -670,7 +741,7 @@ loadScripts(document, 'script');</script>
 <dt>Overrides:</dt>
 <dd><code><a href="../../NativePhysicsObject.html#setNativeId(long)">setNativeId</a></code>&nbsp;in class&nbsp;<code><a href="../../NativePhysicsObject.html" title="class in com.jme3.bullet">NativePhysicsObject</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>shapeId</code> - the identifier of the btCollisionShape (not zero)</dd>
+<dd><code>shapeId</code> - the identifier of the <code>btCollisionShape</code> (not zero)</dd>
 </dl>
 </section>
 </li>

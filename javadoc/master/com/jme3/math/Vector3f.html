@@ -247,6 +247,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  product in a 3rd vector.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#crossLocal(float,float,float)" class="member-name-link">crossLocal</a><wbr>(float&nbsp;otherX,
+ float&nbsp;otherY,
+ float&nbsp;otherZ)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Right multiplies by the specified components (cross product) and returns
+ the (modified) current instance.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#distance(com.jme3.math.Vector3f)" class="member-name-link">distance</a><wbr>(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;v)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the distance between this vector and the argument.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#divide(float,float,float)" class="member-name-link">divide</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
@@ -332,6 +345,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Multiplies component-wise by the specified components and returns the
  product as a new instance.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mult(float,com.jme3.math.Vector3f)" class="member-name-link">mult</a><wbr>(float&nbsp;scalar,
+ <a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;product)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Multiplies with the specified scalar and returns the product in the
+ specified vector.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mult(com.jme3.math.Vector3f)" class="member-name-link">mult</a><wbr>(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;vec)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Multiplies component-wise with the argument and returns the product as a
+ new instance.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mult(com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">mult</a><wbr>(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;vec,
@@ -741,6 +767,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="crossLocal(float,float,float)">
+<h3>crossLocal</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">crossLocal</span><wbr><span class="parameters">(float&nbsp;otherX,
+ float&nbsp;otherY,
+ float&nbsp;otherZ)</span></div>
+<div class="block">Right multiplies by the specified components (cross product) and returns
+ the (modified) current instance.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>otherX</code> - the X component of the right factor</dd>
+<dd><code>otherY</code> - the Y component of the right factor</dd>
+<dd><code>otherZ</code> - the Z component of the right factor</dd>
+<dt>Returns:</dt>
+<dd>the (modified) current instance (for chaining)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="isUnitVector()">
 <h3>isUnitVector</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isUnitVector</span>()</div>
@@ -776,6 +820,20 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="distance(com.jme3.math.Vector3f)">
+<h3>distance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">distance</span><wbr><span class="parameters">(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;v)</span></div>
+<div class="block">Returns the distance between this vector and the argument. The current
+ instance is unaffected.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>v</code> - the vector to compare (not null, unaffected)</dd>
+<dt>Returns:</dt>
+<dd>the Euclidean distance (not negative)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="mult(float)">
 <h3>mult</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">mult</span><wbr><span class="parameters">(float&nbsp;scalar)</span></div>
@@ -786,6 +844,23 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>scalar</code> - the scaling factor</dd>
 <dt>Returns:</dt>
 <dd>a new Vector3f</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mult(float,com.jme3.math.Vector3f)">
+<h3>mult</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">mult</span><wbr><span class="parameters">(float&nbsp;scalar,
+ <a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;product)</span></div>
+<div class="block">Multiplies with the specified scalar and returns the product in the
+ specified vector. The current instance is unaffected, unless it's
+ <code>product</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>scalar</code> - the scaling factor</dd>
+<dd><code>product</code> - storage for the product, or null for a new Vector3f</dd>
+<dt>Returns:</dt>
+<dd>either <code>product</code> or a new Vector3f</dd>
 </dl>
 </section>
 </li>
@@ -832,6 +907,21 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>z</code> - the scale factor for the Z component</dd>
 <dt>Returns:</dt>
 <dd>the (modified) current instance (for chaining)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mult(com.jme3.math.Vector3f)">
+<h3>mult</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">mult</span><wbr><span class="parameters">(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;vec)</span></div>
+<div class="block">Multiplies component-wise with the argument and returns the product as a
+ new instance. If the argument is null, null is returned. Either way, the
+ current instance is unaffected.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>vec</code> - the scale vector (unaffected) or null for none</dd>
+<dt>Returns:</dt>
+<dd>a new Vector3f or null</dd>
 </dl>
 </section>
 </li>

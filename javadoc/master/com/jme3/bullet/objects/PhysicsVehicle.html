@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PhysicsVehicle</span>
 <span class="extends-implements">extends <a href="PhysicsRigidBody.html" title="class in com.jme3.bullet.objects">PhysicsRigidBody</a></span></div>
 <div class="block">A rigid body for simplified vehicle simulation based on Bullet's
- btRaycastVehicle.
+ <code>btRaycastVehicle</code>.
  <p>
  The wheels of a PhysicsVehicle aren't collision objects, so the vehicle's
  ignore list doesn't affect them.
@@ -455,7 +455,7 @@ loadScripts(document, 'script');</script>
  mass=1.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shape</code> - the desired shape (not null, alias created)</dd>
+<dd><code>shape</code> - the desired shape of the chassis (not null, alias created)</dd>
 </dl>
 </section>
 </li>
@@ -468,8 +468,8 @@ loadScripts(document, 'script');</script>
  mass.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shape</code> - the desired shape (not null, alias created)</dd>
-<dd><code>mass</code> - the desired mass for the chassis (&gt;0)</dd>
+<dd><code>shape</code> - the desired shape of the chassis (not null, alias created)</dd>
+<dd><code>mass</code> - the desired mass of the chassis (&gt;0, default=1)</dd>
 </dl>
 </section>
 </li>
