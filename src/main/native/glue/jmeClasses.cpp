@@ -252,17 +252,12 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
             physicsSpace, "onContactStarted", "(J)V");
 
     jclass proceduralCollisionShape = pEnv->FindClass("com/jme3/bullet/collision/shapes/ProceduralCollisionShape");
-    if (pEnv->ExceptionCheck()) {
-        pEnv->Throw(pEnv->ExceptionOccurred());
-        return;
-    }
-    ProceduralCollisionShape_getTriangles = pEnv->GetMethodID(proceduralCollisionShape,
+    EXCEPTION_CHK(pEnv,);
+    GLOBAL_METHOD(ProceduralCollisionShape_getTriangles,
+            proceduralCollisionShape,
             "getTriangles",
-            "(FFFFFF)I");
-    if (pEnv->ExceptionCheck()) {
-        pEnv->Throw(pEnv->ExceptionOccurred());
-        return;
-    }
+            "(FFFFFF)I"
+    );
 
     jclass physicsGhostObject
             = pEnv->FindClass("com/jme3/bullet/objects/PhysicsGhostObject");
