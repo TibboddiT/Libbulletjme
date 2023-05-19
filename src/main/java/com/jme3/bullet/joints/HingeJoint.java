@@ -122,13 +122,12 @@ public class HingeJoint extends Constraint {
 
         assert axisInA.isUnitVector() : axisInA;
         assert axisInWorld.isUnitVector() : axisInWorld;
-        axisA = axisInA.clone();
-        axisB = axisInWorld.clone();
-        useReferenceFrameA = (referenceFrame == JointEnd.A);
+        this.axisA = axisInA.clone();
+        this.axisB = axisInWorld.clone();
+        this.useReferenceFrameA = (referenceFrame == JointEnd.A);
         createJoint();
-        /*
-         * Synchronize the btHingeConstraint parameters with the local copies.
-         */
+
+        // Synchronize the btHingeConstraint parameters with the local copies.
         long constraintId = super.nativeId();
         setAngularOnly(constraintId, angularOnly);
 
@@ -163,12 +162,11 @@ public class HingeJoint extends Constraint {
 
         assert axisInA.isUnitVector() : axisInA;
         assert axisInB.isUnitVector() : axisInB;
-        axisA = axisInA.clone();
-        axisB = axisInB.clone();
+        this.axisA = axisInA.clone();
+        this.axisB = axisInB.clone();
         createJoint();
-        /*
-         * Synchronize btHingeConstraint parameters with local copies.
-         */
+
+        // Synchronize btHingeConstraint parameters with local copies.
         long constraintId = super.nativeId();
         setAngularOnly(constraintId, angularOnly);
 
@@ -210,7 +208,9 @@ public class HingeJoint extends Constraint {
      */
     public boolean getEnableMotor() {
         long constraintId = nativeId();
-        return getEnableAngularMotor(constraintId);
+        boolean result = getEnableAngularMotor(constraintId);
+
+        return result;
     }
 
     /**
@@ -247,7 +247,9 @@ public class HingeJoint extends Constraint {
      */
     public float getHingeAngle() {
         long constraintId = nativeId();
-        return getHingeAngle(constraintId);
+        float result = getHingeAngle(constraintId);
+
+        return result;
     }
 
     /**
@@ -267,7 +269,9 @@ public class HingeJoint extends Constraint {
      */
     final public float getLowerLimit() {
         long constraintId = nativeId();
-        return getLowerLimit(constraintId);
+        float result = getLowerLimit(constraintId);
+
+        return result;
     }
 
     /**
@@ -277,7 +281,9 @@ public class HingeJoint extends Constraint {
      */
     public float getMotorTargetVelocity() {
         long constraintId = nativeId();
-        return getMotorTargetVelocity(constraintId);
+        float result = getMotorTargetVelocity(constraintId);
+
+        return result;
     }
 
     /**
@@ -287,7 +293,9 @@ public class HingeJoint extends Constraint {
      */
     public float getMaxMotorImpulse() {
         long constraintId = nativeId();
-        return getMaxMotorImpulse(constraintId);
+        float result = getMaxMotorImpulse(constraintId);
+
+        return result;
     }
 
     /**
@@ -306,7 +314,9 @@ public class HingeJoint extends Constraint {
      */
     final public float getUpperLimit() {
         long constraintId = nativeId();
-        return getUpperLimit(constraintId);
+        float result = getUpperLimit(constraintId);
+
+        return result;
     }
 
     /**
@@ -333,7 +343,7 @@ public class HingeJoint extends Constraint {
     }
 
     /**
-     * For compatibility with the jme3-bullet library.
+     * Alter the angular limits for this joint.
      *
      * @param low the desired lower limit of the hinge angle (in radians,
      * default=1)
@@ -369,9 +379,9 @@ public class HingeJoint extends Constraint {
     public void setLimit(float low, float high, float softness, float bias,
             float relaxation) {
         long constraintId = nativeId();
-        biasFactor = bias;
-        relaxationFactor = relaxation;
-        limitSoftness = softness;
+        this.biasFactor = bias;
+        this.relaxationFactor = relaxation;
+        this.limitSoftness = softness;
         setLimit(constraintId, low, high, softness, bias, relaxation);
     }
     // *************************************************************************
@@ -417,10 +427,7 @@ public class HingeJoint extends Constraint {
             a.setPhysicsLocation(saveLocation);
             a.setPhysicsRotation(saveRotation);
 
-        } else {
-            /*
-             * Create a double-ended joint.
-             */
+        } else { // Create a double-ended joint.
             assert !useReferenceFrameA;
             long bId = b.nativeId();
             constraintId = createJoint(aId, bId, pivotA, axisA, pivotB, axisB);

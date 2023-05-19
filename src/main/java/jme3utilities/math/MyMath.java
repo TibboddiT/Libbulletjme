@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2022, Stephen Gold
+ Copyright (c) 2013-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 
@@ -40,7 +41,7 @@ import jme3utilities.Validate;
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class MyMath { // TODO finalize the class
+final public class MyMath {
     // *************************************************************************
     // constants and loggers
 
@@ -221,6 +222,43 @@ public class MyMath { // TODO finalize the class
     }
 
     /**
+     * Tests whether the argument is a valid vector, returning false if it's
+     * null or if any component is NaN or infinite.
+     *
+     * @param vector the vector to test (unaffected)
+     * @return true if non-null and finite, otherwise false
+     * @deprecated use {@link com.simsilica.mathd.Vec3d#isFinite()}
+     */
+    @Deprecated
+    public static boolean isFinite(Vec3d vector) {
+        if (vector == null) {
+            return false;
+        } else if (isFiniteDouble(vector.x) && isFiniteDouble(vector.y)
+                && isFiniteDouble(vector.z)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test whether the specified floating-point value is finite. Note that Java
+     * 8 provides {@link java.lang.Double#isFinite(double)}.
+     *
+     * @param value the value to test
+     * @return true if finite, false if NaN or infinity
+     */
+    public static boolean isFiniteDouble(double value) {
+        if (Double.isInfinite(value)) {
+            return false;
+        } else if (Double.isNaN(value)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Test the specified transform for exact identity.
      *
      * @param transform which transform to test (not null, unaffected)
@@ -228,11 +266,11 @@ public class MyMath { // TODO finalize the class
      */
     public static boolean isIdentity(Transform transform) {
         boolean result = false;
-        Vector3f translation = transform.getTranslation();
+        Vector3f translation = transform.getTranslation(); // alias
         if (MyVector3f.isZero(translation)) {
-            Quaternion rotation = transform.getRotation();
+            Quaternion rotation = transform.getRotation(); // alias
             if (MyQuaternion.isRotationIdentity(rotation)) {
-                Vector3f scale = transform.getScale();
+                Vector3f scale = transform.getScale(); // alias
                 result = MyVector3f.isScaleIdentity(scale);
             }
         }

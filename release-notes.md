@@ -1,5 +1,145 @@
 # Release log for the Libbulletjme project
 
+## Version 18.2.1 released on 17 May 2023
+
++ Bugfix: the gravity of a rigid body is altered by a rebuild
++ Integrated https://github.com/bulletphysics/bullet3/pull/4413
++ Integrated https://github.com/bulletphysics/bullet3/pull/4462
++ Allow zero-mass kinematic rigid bodies.
++ Added the `applyAllExceptIgnoreListTo()`
+  method to the `RigidBodySnapshot` class.
+
+## Version 18.1.0 released on 15 February 2023
+
++ Bugfix: ignored collision objects get garbage-collected prematurely
++ Added the `isForceUpdateAllAabbs()` and `setForceUpdateAllAabbs()`
+  methods to the `CollisionSpace` class, to provide an (optional) optimization.
++ Added the `listIgnoredPcos()` and `setIgnoreList(PhysicsCollisionObject[])`
+  methods to the `PhysicsCollisionObject` class and deprecated the
+  `listIgnoredIds()` and `setIgnoreList(long[])` methods.
++ Deprecated the `isFinite(Vec3d)` method in the `MyMath` class.
++ Added various checks, including a few for the threading model.
+
+## Version 18.0.0 released on 11 February 2023
+
++ Renamed 6 methods in the Java-native interface, to avoid underscores:
+  + `CollisionSpace.notifyCollisionGroupListeners_native()`
+  + `CollisionSpace.rayTest_native()`
+  + `CollisionSpace.sweepTest_native()`
+  + `PhysicsGhostObject.addOverlappingObject_native()`
+  + `PhysicsSpace.postTick_native()`
+  + `PhysicsSpace.preTick_native()`
++ Changed the Java API:
+  + Added a `static` qualifier to the `listPointIds()` method
+    in the `PersistentManifolds` class.
+  + Privatized the `getCollisionFlags()` method
+    in the `PhysicsCollisionObject` class.
++ Bugfix: `jmeCollisionSpace::m_pEnv` gets modified during callbacks
++ Publicized another constructor of the `IndexedMesh` class.
+
+## Version 17.5.4 released on 24 January 2023
+
++ Build MacOSX_ARM64 natives for release using Xcode 12.3 .
++ Build MacOSX64 natives for release using Xcode 9.4.1 .
+
+## Version 17.5.2 released on 23 January 2023
+
++ Bugfix: `PhysicsCollisionObject.findInstance()`
+  creates a weak global reference that's never deleted.
++ Bugfix: weak global references in `PhysicsCollisionObject` and `MultiBody`
+  are never deleted.
++ Bugfix: assertion failure when `toString()` is invoked on an unassigned joint
++ Added 5 new methods:
+  + `CollisionSpace.jniEnvId()`
+  + `CompoundCollisionShape.connectivityMatrix()`
+  + `CompoundCollisionShape.countGroups()`
+  + `NativeLibrary.jniEnvId()`
+  + `New6Dof.getRotationMatrix()`
++ Build Windows natives for release using Visual Studio 2022 .
++ Build 64-bit MacOSX natives for release using Xcode 14.2 .
++ Throw Java exceptions (instead of crashing the JVM with `btAssert()`)
+  in the JNI glue code.
++ Improved handling of Java exceptions in the JNI glue code.
+
+## Version 17.4.0 released on 23 December 2022
+
++ Bugfix: transforms not updated for the `getCalculatedOriginA()` and
+  `getCalculatedOriginB()` methods in the `New6Dof` class
++ Bugfix: `Quatd.isRotationIdentity()` accepts NaNs
++ Bugfix: `toString()` fails for an unassigned `PhysicsCollisionObject`
++ Bugfix: `PhysicsCollisionObject.copyPcoProperties()` results in
+  different collision flags
++ Added 4 new methods:
+  + `New6Dof.calculatedBasisA()`
+  + `New6Dof.calculatedBasisB()`
+  + `PhysicsCollisionObject.collisionFlags()`
+  + `Vec3d.isFinite()`
++ Reduced the likelihood of hash collisions in `Matrix3d`.
++ Made the result of `PhysicsCollisionObject.toString()` more concise.
+
+## Version 17.3.0 released on 15 December 2022
+
++ Bugfix: `getPhysicsRotationDp()` returns wrong rotation for a soft body
++ Overrode the `equals()` and `hashCode()` methods of the `Matrix3d` class.
++ Added 6 double-precision accessors for physics objects:
+  + `MultiBodyCollider.setPhysicsRotationDp()`
+  + `PhysicsCollisionObject.getPhysicsRotationMatrixDp()`
+  + `PhysicsGhostObject.setPhysicsRotationDp(Matrix3d)`
+  + `PhysicsRigidBody.setPhysicsRotationDp(Matrix3d)`
+  + `RigidBodyMotionState.getOrientationMatrixDp()`
+  + `RigidBodyMotionState.getOrientationQuaternionDp()`
++ Added 4 new math methods:
+  + `Matrix3d.isIdentity()`
+  + `Quatd.isRotationIdentity()`
+  + `Quatd.isZero()`
+  + `Validate.nonZero(Quatd)`
++ Dramatically simplified the `jmeBulletUtil` native class.
++ Integrated https://github.com/bulletphysics/bullet3/pull/4284
+
+## Version 17.2.0 released on 27 November 2022
+
++ Added 4 double-precision accessors for physics objects:
+  + `CollisionSpace.rayTestDp()`
+  + `ManifoldPoints.getPositionWorldOnADp()`
+  + `ManifoldPoints.getPositionWorldOnBDp()`
+  + `PhysicsGhostObject.setPhysicsRotationDp()`
++ Added the `Matrix3d` math class.
++ Added the `mult(Quatd, Quatd)` and `toRotationMatrix()` methods
+  to the `Quatd` class.
++ Added the `combineWithParent()` and `transformInverseVector()` methods
+  to the `TransformDp` class.
++ Added the `divideLocal()` method to the `Vec3d` class.
+
+## Version 17.1.0 released on 23 November 2022
+
++ Bugfix:  `getPhysicsLocationDp()` returns wrong location for a soft body
++ Added 8 double-precision accessors for physics objects:
+  + `CharacterController.warpDp()`
+  + `CollisionShape.getScaleDp()`
+  + `MultiBodyCollider.setPhysicsLocationDp()`
+  + `PhysicsCharacter.setPhysicsLocationDp()`
+  + `PhysicsCollisionObject.getTransformDp()`
+  + `PhysicsGhostObject.setPhysicsLocationDp()`
+  + `PhysicsSoftBody.setPhysicsLocationDp()`
+  + `RigidBodyMotionState.getLocationDp()`
++ Added the `TransformDp` math class.
++ Added the `isFiniteDouble()` and `isFinite(Vec3d)` methods
+  to the `MyMath` class.
++ Added the `finite(Vec3d, String)` method to the `Validate` class.
+
+## Version 17.0.0 released on 12 November 2022
+
++ Renamed the public logger in `ConvexShape`. (API change)
++ Renamed 2 protected fields in `RigidBodySnapshot`. (API change)
++ Protected 5 no-arg constructors. (API changes)
++ Qualified 6 public classes as `final`. (API changes)
++ Privatized 27 protected fields in `RigidBodySnapshot`.
++ Added 3 new methods:
+  + `NativeLibrary.countClampedMotions()`
+  + `PhysicsSpace.isCcdWithStaticOnly()`
+  + `PhysicsSpace.setCcdWithStaticOnly()`
++ Upgraded Node.js to v18.12.1
+
 ## Version 16.3.0 released on 25 September 2022
 
 + Bugfix:  shape's scale isn't copied in `HullCollisionShape.split()`

@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "jmePhysicsSoftSpace.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 
 /*
  * Author: dokthar
@@ -58,7 +58,7 @@ void jmePhysicsSoftSpace::createPhysicsSoftSpace(const btVector3& min,
     btSoftRigidDynamicsWorld * const
             pWorld = new btSoftRigidDynamicsWorld(pDispatcher, pBroadphase,
             pConstraintSolver, pCollisionConfiguration, pSoftSolver); //dance007
-    m_collisionWorld = pWorld;
+    m_pCollisionWorld = pWorld;
 
     // Do btSoftBodyWorldInfo modifications.
     btSoftBodyWorldInfo softBodyWorldInfo = pWorld->getWorldInfo();

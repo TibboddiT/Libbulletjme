@@ -96,8 +96,8 @@ final public class DebugShapeFactory {
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 3)
      */
-    public static FloatBuffer debugVertices(CollisionShape shape,
-            int meshResolution) {
+    public static FloatBuffer debugVertices(
+            CollisionShape shape, int meshResolution) {
         Validate.nonNull(shape, "shape");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
                 highResolution);
@@ -131,8 +131,8 @@ final public class DebugShapeFactory {
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 9)
      */
-    public static FloatBuffer getDebugTriangles(CollisionShape shape,
-            int meshResolution) {
+    public static FloatBuffer getDebugTriangles(
+            CollisionShape shape, int meshResolution) {
         Validate.nonNull(shape, "shape");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
                 highResolution);
@@ -307,9 +307,8 @@ final public class DebugShapeFactory {
             createPlaneTriangles(PlaneCollisionShape shape, float halfExtent) {
         assert shape != null;
         assert halfExtent > 0f : halfExtent;
-        /*
-         * Generate vertex locations for a large square in the Y-Z plane.
-         */
+
+        // Generate vertex locations for a large square in the Y-Z plane.
         FloatBuffer result = BufferUtils.createFloatBuffer(
                 0f, 0f, -1f,
                 0f, 1f, 0f,
@@ -319,9 +318,8 @@ final public class DebugShapeFactory {
                 0f, 0f, 1f
         );
         int numFloats = result.capacity();
-        /*
-         * Transform vertex locations to the surface of the shape.
-         */
+
+        // Transform vertex locations to the surface of the shape.
         Transform transform = planeTransform(shape);
         transform.setScale(halfExtent);
         MyBuffer.transform(result, 0, numFloats, transform);
@@ -342,9 +340,8 @@ final public class DebugShapeFactory {
             createPlaneVertices(PlaneCollisionShape shape, float halfExtent) {
         assert shape != null;
         assert halfExtent > 0f : halfExtent;
-        /*
-         * Generate vertex locations for a large square in the Y-Z plane.
-         */
+
+        // Generate vertex locations for a large square in the Y-Z plane.
         FloatBuffer result = BufferUtils.createFloatBuffer(
                 0f, 0f, -1f,
                 0f, 1f, 0f,
@@ -352,9 +349,8 @@ final public class DebugShapeFactory {
                 0f, -1f, 0f
         );
         int numFloats = result.capacity();
-        /*
-         * Transform vertex locations to the surface of the shape.
-         */
+
+        // Transform vertex locations to the surface of the shape.
         Transform transform = planeTransform(shape);
         transform.setScale(halfExtent);
         MyBuffer.transform(result, 0, numFloats, transform);

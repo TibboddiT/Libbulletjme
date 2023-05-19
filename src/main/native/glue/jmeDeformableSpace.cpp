@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2022 jMonkeyEngine
+ * Copyright (c) 2009-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
  */
 #include "BulletSoftBody/BulletReducedDeformableBody/btReducedDeformableBodySolver.h"
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "jmeDeformableSpace.h"
 
 /*
@@ -64,7 +64,7 @@ void jmeDeformableSpace::createDeformableSpace(const btVector3& min,
             pWorld = new btDeformableMultiBodyDynamicsWorld(pDispatcher,
                     pBroadphase, pConstraintSolver, pCollisionConfiguration,
                     pDeformableSolver); //dance007
-    m_collisionWorld = pWorld;
+    m_pCollisionWorld = pWorld;
 
     // Do btSoftBodyWorldInfo modifications.
     btSoftBodyWorldInfo softBodyWorldInfo = pWorld->getWorldInfo();

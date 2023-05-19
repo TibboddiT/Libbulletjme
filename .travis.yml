@@ -13,7 +13,8 @@ jobs:
     - os: osx
       osx_image: xcode9.4.1
       script:
-        - ./gradlew build --console=plain --no-daemon -Ptravis=osx
+        - date
+        - ./gradlew build --console=plain --no-daemon -Ptravis=osx_intel
 
     # Linux32 and Linux64 non-multithreaded (job .2):
     - env:
@@ -23,6 +24,7 @@ jobs:
           packages:
             - g++-7-multilib
       script:
+        - date
         - sudo ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
         - sudo ln -s /usr/include/x86_64-linux-gnu/bits /usr/include/bits
         - g++ --version
@@ -32,6 +34,7 @@ jobs:
     - env:
         - FLAVOR=Mt64
       script:
+        - date
         - g++ --version
         - ./gradlew build --console=plain --no-daemon -Ptravis=amd64mt
 
@@ -45,6 +48,7 @@ jobs:
       env:
         - FLAVOR=Dp32
       script:
+        - date
         - arm-linux-gnueabi-g++-7 -E -v
         - travis_wait 20 ./gradlew assemble --console=plain --no-daemon -Pflavor=Dp -Ptravis=arm32
 
@@ -58,6 +62,7 @@ jobs:
       env:
         - FLAVOR=Sp32
       script:
+        - date
         - arm-linux-gnueabi-g++-7 -E -v
         - travis_wait 20 ./gradlew assemble --console=plain --no-daemon -Pflavor=Sp -Ptravis=arm32
 
@@ -71,6 +76,7 @@ jobs:
       env:
         - FLAVOR=Dp32
       script:
+        - date
         - arm-linux-gnueabihf-g++-6 -E -v
         - travis_wait 20 ./gradlew assemble --console=plain --no-daemon -Pflavor=Dp -Ptravis=arm32hf
 
@@ -84,6 +90,7 @@ jobs:
       env:
         - FLAVOR=Sp32
       script:
+        - date
         - arm-linux-gnueabihf-g++-6 -E -v
         - travis_wait 20 ./gradlew assemble --console=plain --no-daemon -Pflavor=Sp -Ptravis=arm32hf
 
@@ -97,6 +104,7 @@ jobs:
       env:
         - FLAVOR=Dp64
       script:
+        - date
         - aarch64-linux-gnu-g++-6 -E -v
         - travis_wait 20 ./gradlew build --console=plain --no-daemon -Pflavor=Dp -Ptravis=arm64
 
@@ -110,6 +118,7 @@ jobs:
       env:
         - FLAVOR=Sp64
       script:
+        - date
         - aarch64-linux-gnu-g++-6 -E -v
         - travis_wait 20 ./gradlew build --console=plain --no-daemon -Pflavor=Sp -Ptravis=arm64
 
@@ -120,9 +129,17 @@ jobs:
         components:
           - tools
       script:
+        - date
         - echo y | sdkmanager "ndk;21.3.6528147" > /dev/null
         - echo y | sdkmanager "patcher;v4" > /dev/null
         - ./gradlew copyToDist --build-file=android.gradle --console=plain --no-daemon
+        
+    # MacOSX_ARM64 (job .11):
+    - os: osx
+      osx_image: xcode12.3
+      script:
+        - date
+        - ./gradlew assemble --console=plain --no-daemon -Ptravis=osx_arm
 
 
 addons:
@@ -143,7 +160,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: "D5WJLmRPeb3C/h7ybwlJF4xqr7BwaCTTS7Hw8NBvehkBmjq4wdiN3bVG5byI9k3qtxaqzK3Rh1Jd2EJZ55vvg+JBi+2c2sKVnE8FzHpSrHvkCc5X3r99CnP2e0hMcH29kgP6buSvrInguOAw/QPIWy1fminBrFN/ekDV85wM1tcgwLyoyFmn/e3jSfYvOnnAKP3MR6KnBaT8M6jgYIBrRNgYIMzNdJwyl/b+5Tb2HoJIl7lJSxytX+DPz5/lGDcH6WkrgPGcNEw5kSZmgExgTfNP8lU/TGULAfhGmqL6awsgY+EHoEJLzTwzIMz94EhUVhMb2CbUb/NPhJUQjGU5ohB8S0U9RX27+YVH6zH0Hl0yVEtHWoqsHtY1+Ax2K6ACz5Z31IfXTQF0mHFbQZoTTuPH95zG/SLOikD0MjXe+6CpAUFpZhtBK1GGdJTge37PodxZpfRn80lHRBQB4zWuLADxiefER5AOjvSYPZwGYC30tvs7IaYbW3z2L5Xh9XNGRsFZWwk6Zuj7Y3NCUfS2iE+thsNnSQqOjtBPtg6dYUUjo72X0+h2ch0tQ3NXVjhjqhpmiNvZCV10awYylluHS6LfsBBkW3+pfduVsEqCvLfF5AiCu/w7HLSXh1CvwB+xhkF6sPglquNUqEN7dOPSCVJTS69i+dChilaHM51GIZI="
+    secure: "ykGFjZ0lF4rP+VbCmxZ/EX0rYhjoJqXnn3GqFcmzZNmZBWfbsr0ljwHnqsG1BOkrz2KAhSKOluQoMgVy3j7bnNJTn9cFmR0Ro5OdOlpbVrtxzzjAlZiwQk+QOK06kCvgPsydndvcE7I5VGIG7XEtfNVun93BGvyT52/4V+ss5m0MPzLzc51JseTxTiHIONYtDh2hfu3/vFNYwE4bfcbpPX3DAfqIb52cu0khsNGGJmawwRSYTfA1S9obENJaqSRx84wiByspB642LJ4FloLZERWijrLSfJx7FynyPhaRy63zM6EUlLHcEcPb5KiYFIMVMqr3voQBKQyu+0Dchs+TFNiotJwuFOR8uweEC4ddvD9EjLTDnFBj+s8Zh8fmA+3DbFQjj+8pZ5n0w3qbf9yXIRm6qfvME/OoqvItKozh7J/KFoc15tW2jV2R/QTkMhBvSkvhWq8Vc/xFUTI6i8xSEIwvFxYLkYyeOjlYUkh8VSfKTCtkzQ1bYT4X8joUa3MY9+qpBc8ZJJeGsQ4/6ZKYxxssJzs66HNaPR71c2H4JOY5zEWHdQix2cpg48V8xBHnd+sYufAWA1VM0PdrQkzdC8ZyLQvnkp4QAcIYaNPiPLtFHaTXKSEc3wwZIxVCQAbN4rI142KaYKidXcAOJ3WgbxSNNc9Hh2F0TvwytA5TgYk="
   file:
     - dist/Android_ARM7DebugSp_libbulletjme.so
     - dist/Android_ARM7ReleaseSp_libbulletjme.so
@@ -185,6 +202,10 @@ deploy:
     - dist/MacOSX64DebugSp_libbulletjme.dylib
     - dist/MacOSX64ReleaseDp_libbulletjme.dylib
     - dist/MacOSX64ReleaseSp_libbulletjme.dylib
+    - dist/MacOSX_ARM64DebugDp_libbulletjme.dylib
+    - dist/MacOSX_ARM64DebugSp_libbulletjme.dylib
+    - dist/MacOSX_ARM64ReleaseDp_libbulletjme.dylib
+    - dist/MacOSX_ARM64ReleaseSp_libbulletjme.dylib
   on:
     repo: stephengold/Libbulletjme
     tags: true   # deploy on tag push only

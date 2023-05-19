@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 jMonkeyEngine
+ * Copyright (c) 2019-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,18 +54,16 @@ abstract public class PhysicsBody extends PhysicsCollisionObject {
     // fields
 
     /**
-     * list of joints that connect to this body: The list isn't populated until
-     * the body is added to a PhysicsSpace.
+     * list of joints that connect to this body
      */
     final private ArrayList<PhysicsJoint> joints = new ArrayList<>(4);
     // *************************************************************************
     // constructors
 
     /**
-     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     * Instantiate a PhysicsBody.
      */
-    public PhysicsBody() {
-        // do nothing
+    protected PhysicsBody() { // explicit to avoid a warning from JDK 18 javadoc
     }
     // *************************************************************************
     // new methods exposed

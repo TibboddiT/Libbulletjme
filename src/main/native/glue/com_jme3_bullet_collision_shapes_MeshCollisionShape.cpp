@@ -34,7 +34,7 @@
  * Author: Normen Hansen
  */
 #include "com_jme3_bullet_collision_shapes_MeshCollisionShape.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
 
 /*
@@ -67,7 +67,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_
     btBvhTriangleMeshShape *pShape
             = reinterpret_cast<btBvhTriangleMeshShape *> (shapeId);
     NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.",);
-    btAssert(pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE);
+    ASSERT_CHK(pEnv, pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE,);
 
     pShape->recalcLocalAabb();
 }
@@ -82,19 +82,22 @@ JNIEXPORT jbyteArray JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollision
     btBvhTriangleMeshShape *pMesh
             = reinterpret_cast<btBvhTriangleMeshShape *> (meshobj);
     NULL_CHK(pEnv, pMesh, "The btBvhTriangleMeshShape does not exist.", 0);
-    btAssert(pMesh->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE);
+    ASSERT_CHK(pEnv, pMesh->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE, 0);
 
     btOptimizedBvh *pBvh = pMesh->getOptimizedBvh();
     unsigned int ssize = pBvh->calculateSerializeBufferSize();
     char *pBuffer = (char *) btAlignedAlloc(ssize, 16); //dance015
     bool success = pBvh->serialize(pBuffer, ssize, true);
     if (!success) {
-        jclass newExc = pEnv->FindClass("java/lang/RuntimeException");
-        pEnv->ThrowNew(newExc, "Unable to serialize, native error reported");
+        pEnv->ThrowNew(jmeClasses::RuntimeException,
+                "Unable to serialize, native error reported");
+        return 0;
     }
 
     jbyteArray byteArray = pEnv->NewByteArray(ssize);
+    EXCEPTION_CHK(pEnv, 0);
     pEnv->SetByteArrayRegion(byteArray, 0, ssize, (jbyte *) pBuffer);
+    EXCEPTION_CHK(pEnv, 0);
     btAlignedFree(pBuffer); //dance015
 
     return byteArray;
@@ -110,7 +113,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_
     btBvhTriangleMeshShape * const
             pShape = reinterpret_cast<btBvhTriangleMeshShape *> (shapeId);
     NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.",);
-    btAssert(pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE);
+    ASSERT_CHK(pEnv, pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE,);
 
     btOptimizedBvh * const pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
     NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);

@@ -33,7 +33,7 @@
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorldMt.h"
 #endif
 #include "jmePhysicsSpace.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "jmeUserInfo.h"
 
 /*
@@ -63,7 +63,7 @@ void jmePhysicsSpace::createMultiThreadedSpace(const btVector3& min,
             pSolverPool = new btConstraintSolverPoolMt(numSolvers); // TODO leak
 
     // Create the multithreaded dynamics world.
-    m_collisionWorld = new btDiscreteDynamicsWorldMt(pDispatcher, pBroadphase,
+    m_pCollisionWorld = new btDiscreteDynamicsWorldMt(pDispatcher, pBroadphase,
             pSolverPool, pConstraintSolver, pCollisionConfiguration); //dance007
 
     modify(); // Apply the standard modifications.
@@ -89,7 +89,7 @@ void jmePhysicsSpace::createPhysicsSpace(const btVector3& min,
             pConstraintSolver = new btSequentialImpulseConstraintSolver(); //dance006
 
     // Create the discrete dynamics world.
-    m_collisionWorld = new btDiscreteDynamicsWorld(pDispatcher, pBroadphase,
+    m_pCollisionWorld = new btDiscreteDynamicsWorld(pDispatcher, pBroadphase,
             pConstraintSolver, pCollisionConfiguration); //dance007
 
     modify(); // Apply the standard modifications.
@@ -126,7 +126,7 @@ void jmePhysicsSpace::contactEndedCallback(btPersistentManifold * const &pm) {
     pSpace->m_mutex.lock();
 #endif
 
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace
             = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
     if (javaPhysicsSpace == NULL) {
@@ -191,7 +191,7 @@ bool jmePhysicsSpace::contactProcessedCallback(btManifoldPoint& contactPoint,
 #if BT_THREADSAFE
     pSpace->m_mutex.lock();
 #endif
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
     if (javaPhysicsSpace == NULL) {
         printf("null javaPhysicsSpace in contactProcessedCallback\n");
@@ -203,7 +203,19 @@ bool jmePhysicsSpace::contactProcessedCallback(btManifoldPoint& contactPoint,
     }
 
     jobject javaCollisionObject0 = pEnv->NewLocalRef(pUser0->m_javaRef);
+    if (pEnv->ExceptionCheck()) {
+#if BT_THREADSAFE
+        pSpace->m_mutex.unlock();
+#endif
+        return true;
+    }
     jobject javaCollisionObject1 = pEnv->NewLocalRef(pUser1->m_javaRef);
+    if (pEnv->ExceptionCheck()) {
+#if BT_THREADSAFE
+        pSpace->m_mutex.unlock();
+#endif
+        return true;
+    }
     jlong manifoldPointId = reinterpret_cast<jlong> (&contactPoint);
     pEnv->CallVoidMethod(javaPhysicsSpace,
             jmeClasses::PhysicsSpace_onContactProcessed, javaCollisionObject0,
@@ -218,7 +230,23 @@ bool jmePhysicsSpace::contactProcessedCallback(btManifoldPoint& contactPoint,
     }
 
     pEnv->DeleteLocalRef(javaPhysicsSpace);
+    if (pEnv->ExceptionCheck()) {
+        printf("exception in contactProcessedCallback CallVoidMethod\n");
+        fflush(stdout);
+#if BT_THREADSAFE
+        pSpace->m_mutex.unlock();
+#endif
+        return true;
+    }
     pEnv->DeleteLocalRef(javaCollisionObject0);
+    if (pEnv->ExceptionCheck()) {
+        printf("exception in contactProcessedCallback CallVoidMethod\n");
+        fflush(stdout);
+#if BT_THREADSAFE
+        pSpace->m_mutex.unlock();
+#endif
+        return true;
+    }
     pEnv->DeleteLocalRef(javaCollisionObject1);
     if (pEnv->ExceptionCheck()) {
         printf("exception in contactProcessedCallback DeleteLocalRef\n");
@@ -260,7 +288,7 @@ void jmePhysicsSpace::contactStartedCallback(btPersistentManifold * const &pm) {
     pSpace->m_mutex.lock();
 #endif
 
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace
             = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
     if (javaPhysicsSpace == NULL) {
@@ -315,16 +343,13 @@ void jmePhysicsSpace::postTickCallback(btDynamicsWorld *pWorld,
 
     jmePhysicsSpace * const
             pSpace = (jmePhysicsSpace *) pWorld->getWorldUserInfo();
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
     if (javaPhysicsSpace != NULL) {
         pEnv->CallVoidMethod(javaPhysicsSpace, jmeClasses::PhysicsSpace_postTick,
                 timeStep);
+        EXCEPTION_CHK(pEnv,);
         pEnv->DeleteLocalRef(javaPhysicsSpace);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
     }
 }
 
@@ -334,16 +359,14 @@ void jmePhysicsSpace::preTickCallback(btDynamicsWorld *pWorld,
 
     jmePhysicsSpace * const
             pSpace = (jmePhysicsSpace *) pWorld->getWorldUserInfo();
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
+    EXCEPTION_CHK(pEnv,);
     if (javaPhysicsSpace != NULL) {
         pEnv->CallVoidMethod(javaPhysicsSpace, jmeClasses::PhysicsSpace_preTick,
                 timeStep);
+        EXCEPTION_CHK(pEnv,);
         pEnv->DeleteLocalRef(javaPhysicsSpace);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
     }
 }
 

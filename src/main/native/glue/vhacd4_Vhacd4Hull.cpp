@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
  * Author: Stephen Gold
  */
 #include "vhacd4_Vhacd4Hull.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 
 #define VHACD VHACD4
 #include "VHACD4.h"
@@ -72,8 +72,10 @@ JNIEXPORT void JNICALL Java_vhacd4_Vhacd4Hull_getPositions
     jfloat * const pPositions
             = (jfloat *) pEnv->GetDirectBufferAddress(storeBuffer);
     NULL_CHK(pEnv, pPositions, "The positions buffer is not direct.",);
+    EXCEPTION_CHK(pEnv,);
 
     const jlong capacity = pEnv->GetDirectBufferCapacity(storeBuffer);
+    EXCEPTION_CHK(pEnv,);
     const uint32_t numPoints = pHull->m_points.size();
     for (uint32_t i = 0; i < numPoints; ++i) {
         const uint32_t bp = 3 * i;

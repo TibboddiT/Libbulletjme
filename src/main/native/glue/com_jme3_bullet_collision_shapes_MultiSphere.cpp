@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020 jMonkeyEngine
+ * Copyright (c) 2018-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,18 +50,22 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_MultiSphere_create
     btVector3 * const pCenters = new btVector3[n]; //dance017
     for (int i = 0; i < n; ++i) {
         jobject center = pEnv->GetObjectArrayElement(centers, i);
+        EXCEPTION_CHK(pEnv, 0);
         jmeBulletUtil::convert(pEnv, center, &pCenters[i]);
+        EXCEPTION_CHK(pEnv, 0);
     }
 
     btScalar *pRadii;
 #ifdef BT_USE_DOUBLE_PRECISION
     float * const pFloats = pEnv->GetFloatArrayElements(radii, 0);
+    EXCEPTION_CHK(pEnv, 0);
     pRadii = new btScalar[n]; //dance018
     for (int i = 0; i < n; ++i) {
         pRadii[i] = pFloats[i];
     }
 #else
     pRadii = pEnv->GetFloatArrayElements(radii, 0);
+    EXCEPTION_CHK(pEnv, 0);
 #endif
 
     btMultiSphereShape * const
@@ -73,6 +77,7 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_MultiSphere_create
 #else
     pEnv->ReleaseFloatArrayElements(radii, pRadii, 0);
 #endif
+    EXCEPTION_CHK(pEnv, 0);
     delete[] pCenters; //dance017
 
     return reinterpret_cast<jlong> (pShape);
@@ -88,7 +93,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MultiSphere_recalcA
     btMultiSphereShape *pShape
             = reinterpret_cast<btMultiSphereShape *> (shapeId);
     NULL_CHK(pEnv, pShape, "The btMultiSphereShape does not exist.",);
-    btAssert(pShape->getShapeType() == MULTI_SPHERE_SHAPE_PROXYTYPE);
+    ASSERT_CHK(pEnv, pShape->getShapeType() == MULTI_SPHERE_SHAPE_PROXYTYPE,);
 
     pShape->recalcLocalAabb();
 }

@@ -38,15 +38,26 @@
 
 #include <jni.h>
 
-#define LIBBULLETJME_VERSION "16.3.0"
+#define LIBBULLETJME_VERSION "18.2.1"
+
+#define EXCEPTION_CHK(pEnv, retval) \
+    if (pEnv->ExceptionCheck()) { \
+        return retval; \
+    }
 
 #ifdef _DEBUG
+#define ASSERT_CHK(pEnv, assertion, retval) \
+    if (!(assertion)) { \
+        (pEnv)->ThrowNew(jmeClasses::RuntimeException, "expected " #assertion); \
+        return retval; \
+    }
 #define NULL_CHK(pEnv, pointer, message, retval) \
     if ((pointer) == NULL) { \
         (pEnv)->ThrowNew(jmeClasses::NullPointerException, message); \
         return retval; \
     }
 #else
+#define ASSERT_CHK(pEnv, assertion, retval)
 #define NULL_CHK(pEnv, pointer, message, retval)
 #endif
 
@@ -54,7 +65,11 @@ class jmeClasses {
 public:
     static void initJavaClasses(JNIEnv *);
 
+    // pointer to the Java virtual machine
+    static JavaVM * vm;
+
     static jclass IllegalArgumentException;
+    static jclass RuntimeException;
 
     static jmethodID List_addMethod;
 
@@ -73,21 +88,35 @@ public:
     static jfieldID Vec3d_x;
     static jfieldID Vec3d_y;
     static jfieldID Vec3d_z;
+    static jmethodID Vec3d_set;
 
     static jclass Vector3f;
     static jfieldID Vector3f_x;
     static jfieldID Vector3f_y;
     static jfieldID Vector3f_z;
+    static jmethodID Vector3f_set;
 
     static jfieldID Quatd_x;
     static jfieldID Quatd_y;
     static jfieldID Quatd_z;
     static jfieldID Quatd_w;
+    static jmethodID Quatd_set;
 
     static jfieldID Quaternion_x;
     static jfieldID Quaternion_y;
     static jfieldID Quaternion_z;
     static jfieldID Quaternion_w;
+    static jmethodID Quaternion_set;
+
+    static jfieldID Matrix3d_m00;
+    static jfieldID Matrix3d_m01;
+    static jfieldID Matrix3d_m02;
+    static jfieldID Matrix3d_m10;
+    static jfieldID Matrix3d_m11;
+    static jfieldID Matrix3d_m12;
+    static jfieldID Matrix3d_m20;
+    static jfieldID Matrix3d_m21;
+    static jfieldID Matrix3d_m22;
 
     static jfieldID Matrix3f_m00;
     static jfieldID Matrix3f_m01;
@@ -141,8 +170,6 @@ public:
     static bool reinitializationCallbackFlag;
 
 private:
-    static JavaVM * vm;
-
     jmeClasses() {
     }
 

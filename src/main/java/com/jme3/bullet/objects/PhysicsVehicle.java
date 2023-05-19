@@ -245,7 +245,7 @@ public class PhysicsVehicle extends PhysicsRigidBody {
             assert getCollisionSpace() == space;
         }
 
-        controller = new VehicleController(this, space);
+        this.controller = new VehicleController(this, space);
         logger3.log(Level.FINE, "Created {0}", controller);
 
         controller.setCoordinateSystem(PhysicsSpace.AXIS_X,
@@ -401,7 +401,7 @@ public class PhysicsVehicle extends PhysicsRigidBody {
     }
 
     /**
-     * used internally
+     * Used internally.
      *
      * @return the unique identifier (not zero)
      */
@@ -504,8 +504,8 @@ public class PhysicsVehicle extends PhysicsRigidBody {
      * @param maxSuspensionForce the desired maximum force per wheel
      * (default=6000)
      */
-    public void setMaxSuspensionForce(int wheelIndex,
-            float maxSuspensionForce) {
+    public void setMaxSuspensionForce(
+            int wheelIndex, float maxSuspensionForce) {
         VehicleWheel wheel = wheels.get(wheelIndex);
         wheel.setMaxSuspensionForce(maxSuspensionForce);
     }
@@ -537,8 +537,8 @@ public class PhysicsVehicle extends PhysicsRigidBody {
      * can be compressed or expanded, relative to its rest length (in hundredths
      * of a physics-space unit, default=500)
      */
-    public void setMaxSuspensionTravelCm(int wheelIndex,
-            float maxSuspensionTravelCm) {
+    public void setMaxSuspensionTravelCm(
+            int wheelIndex, float maxSuspensionTravelCm) {
         VehicleWheel wheel = wheels.get(wheelIndex);
         wheel.setMaxSuspensionTravelCm(maxSuspensionTravelCm);
     }
@@ -699,7 +699,7 @@ public class PhysicsVehicle extends PhysicsRigidBody {
     }
 
     /**
-     * used internally
+     * Used internally.
      */
     public void updateWheels() {
         if (controller != null) {
@@ -731,7 +731,7 @@ public class PhysicsVehicle extends PhysicsRigidBody {
     // private methods
 
     /**
-     * Compare Bullet's wheel count to the local copy.
+     * Compare Bullet's wheel count to the JVM copy.
      *
      * @return true if the counts are exactly equal, otherwise false
      */

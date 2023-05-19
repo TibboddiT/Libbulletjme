@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_addConstraintForce
     NULL_CHK(pEnv, forceVector, "The force vector does not exist.",);
     btVector3 force;
     jmeBulletUtil::convert(pEnv, forceVector, &force);
+    EXCEPTION_CHK(pEnv,);
 
     pLink->m_appliedConstraintForce += force;
 }
@@ -69,6 +70,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_addConstraintTorque
     NULL_CHK(pEnv, torqueVector, "The torque vector does not exist.",);
     btVector3 torque;
     jmeBulletUtil::convert(pEnv, torqueVector, &torque);
+    EXCEPTION_CHK(pEnv,);
 
     pLink->m_appliedConstraintTorque += torque;
 }
@@ -87,6 +89,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_addForce
     NULL_CHK(pEnv, forceVector, "The force vector does not exist.",);
     btVector3 force;
     jmeBulletUtil::convert(pEnv, forceVector, &force);
+    EXCEPTION_CHK(pEnv,);
 
     pLink->m_appliedForce += force;
 }
@@ -103,8 +106,8 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_addJointTorque
     NULL_CHK(pEnv, pLink, "The link does not exist.",);
 
     int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < pLink->m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0,);
+    ASSERT_CHK(pEnv, dof < pLink->m_dofCount,);
     btScalar amount = (btScalar) torque;
 
     pLink->m_jointTorque[dof] += amount;
@@ -124,6 +127,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_addTorque
     NULL_CHK(pEnv, torqueVector, "The torque vector does not exist.",);
     btVector3 torque;
     jmeBulletUtil::convert(pEnv, torqueVector, &torque);
+    EXCEPTION_CHK(pEnv,);
 
     pLink->m_appliedTorque += torque;
 }
@@ -332,8 +336,8 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_MultiBodyLink_getJointPos
     NULL_CHK(pEnv, pLink, "The link does not exist.", 0);
 
     int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < pLink->m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0, 0);
+    ASSERT_CHK(pEnv, dof < pLink->m_dofCount, 0);
 
     btScalar jointPos = pLink->m_jointPos[dof];
     return (jfloat) jointPos;
@@ -351,8 +355,8 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_MultiBodyLink_getJointTorque
     NULL_CHK(pEnv, pLink, "The link does not exist.", 0);
 
     int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < pLink->m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0, 0);
+    ASSERT_CHK(pEnv, dof < pLink->m_dofCount, 0);
 
     btScalar jointTorque = pLink->m_jointTorque[dof];
     return (jfloat) jointTorque;
@@ -385,8 +389,8 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_MultiBodyLink_getJointVel
     NULL_CHK(pEnv, pMultiBody, "The multibody does not exist.", 0);
 
     const int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < pMultiBody->getLink(linkIndex).m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0, 0);
+    ASSERT_CHK(pEnv, dof < pMultiBody->getLink(linkIndex).m_dofCount, 0);
 
     const btScalar * const pVelocities
             = pMultiBody->getJointVelMultiDof(linkIndex);
@@ -518,6 +522,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_localFrameToWorld
     NULL_CHK(pEnv, rotationMatrix, "The rotation matrix does not exist.",)
     btMatrix3x3 local_frame;
     jmeBulletUtil::convert(pEnv, rotationMatrix, &local_frame);
+    EXCEPTION_CHK(pEnv,);
 
     const btMatrix3x3 world_frame
             = pMultiBody->localFrameToWorld(linkIndex, local_frame);
@@ -540,6 +545,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_localPosToWorld
     NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
     btVector3 local_pos;
     jmeBulletUtil::convert(pEnv, locationVector, &local_pos);
+    EXCEPTION_CHK(pEnv,);
 
     const btVector3 world_pos
             = pMultiBody->localPosToWorld(linkIndex, local_pos);
@@ -579,8 +585,8 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_setJointPos
     btMultibodyLink& link = pMultiBody->getLink(linkIndex);
 
     const int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < link.m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0,);
+    ASSERT_CHK(pEnv, dof < link.m_dofCount,);
 
     link.m_jointPos[dof] = (btScalar) position;
     link.updateCacheMultiDof();
@@ -599,8 +605,8 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_setJointVel
     NULL_CHK(pEnv, pMultiBody, "The multibody does not exist.",);
 
     const int dof = (int) dofIndex;
-    btAssert(dof >= 0);
-    btAssert(dof < pMultiBody->getLink(linkIndex).m_dofCount);
+    ASSERT_CHK(pEnv, dof >= 0,);
+    ASSERT_CHK(pEnv, dof < pMultiBody->getLink(linkIndex).m_dofCount,);
 
     btScalar * const pVelocities = pMultiBody->getJointVelMultiDof(linkIndex);
     pVelocities[dof] = (btScalar) velocity;
@@ -621,6 +627,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_MultiBodyLink_worldPosToLocal
     NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
     btVector3 world_pos;
     jmeBulletUtil::convert(pEnv, locationVector, &world_pos);
+    EXCEPTION_CHK(pEnv,);
 
     const btVector3 local_pos
             = pMultiBody->worldPosToLocal(linkIndex, world_pos);

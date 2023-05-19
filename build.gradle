@@ -1,4 +1,4 @@
-// Gradle script to build Maven artifacts and desktop native libraries
+// Gradle build script for Maven artifacts and desktop native libraries
 
 plugins {
     id 'checkstyle'
@@ -11,8 +11,8 @@ plugins {
 ext {
     group = 'com.github.stephengold'
     artifact = 'Libbulletjme'
-    version = '16.3.0'
-    baseName = "${artifact}-${version}"
+    version = '18.2.1'
+    baseName = "${artifact}-${version}" // for artifacts
     websiteUrl = 'https://github.com/stephengold/Libbulletjme'
 }
 
@@ -155,7 +155,7 @@ model {
                     // CI build with -Ptravis= specified on the command line
                     String travis = project.ext.travis
                     if (travis == 'amd64') { // using g++-4.7, so skip Mt flavors
-                        buildable = (!isMt) && !pName.startsWith('Linux_ARM')
+                        buildable = (!isMt) && !pName.contains('_ARM')
                     } else if (travis == 'amd64mt') { // using g++-5 to build Mt flavors
                         buildable = isMt && (pName == 'Linux64')
                     } else if (travis == 'arm32') {
@@ -164,8 +164,10 @@ model {
                         buildable = (pName == 'Linux_ARM32hf')
                     } else if (travis == 'arm64') {
                         buildable = (pName == 'Linux_ARM64')
-                    } else if (travis == 'osx') { // using xcode9.3 for its 32-bit support
-                        buildable = pName.startsWith('MacOSX')
+                    } else if (travis == 'osx_intel') { // xcode9.4.1 job
+                        buildable = pName.startsWith('MacOSX') && !pName.contains('_ARM')
+                    } else if (travis == 'osx_arm') { // xcode12.3 job
+                        buildable = (pName == 'MacOSX_ARM64')
                     }
                 } else {
                     // non-CI build (neither -Pgithub= nor -Ptravis= specified)
@@ -347,6 +349,9 @@ tasks.register('copyToDistJars', Copy) {
 
 jar {
     archiveBaseName = project.ext.baseName
+    manifest {
+        attributes 'Created-By': "${JavaVersion.current()} (${System.getProperty("java.vendor")})"
+    }
 }
 tasks.register('javadocJar', Jar) {
     archiveBaseName = project.ext.baseName
@@ -438,7 +443,7 @@ publishMavenPublicationToMavenLocal.doLast {
     println 'installed locally as ' + project.ext.baseName
 }
 
-// signing tasks
+// signing tasks:
 
 // Signing relies on the existence of 3 properties
 // (signing.keyId, signing.password, and signing.secretKeyRingFile)
@@ -452,6 +457,10 @@ tasks.withType(Sign) {
     onlyIf { project.hasProperty('signing.keyId') }
 }
 signMavenPublication.dependsOn('module')
+
+tasks.register('checkstyle') {
+    dependsOn 'checkstyleMain', 'checkstyleTest'
+}
 
 // cleanup tasks:
 

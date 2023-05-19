@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2021 jMonkeyEngine
+ * Copyright (c) 2009-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@ import com.jme3.bullet.NativePhysicsObject;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.objects.PhysicsCharacter;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 
@@ -91,9 +92,8 @@ public class CharacterController extends NativePhysicsObject {
         setGravity(source.getGravity(null));
         setJumpSpeed(source.getJumpSpeed());
         setLinearDamping(source.getLinearDamping());
-        /*
-         * Walk direction affects linear velocity, so set it first!
-         */
+
+        // Walk direction affects linear velocity, so set it first!
         setWalkDirection(source.getWalkDirection(null));
         setLinearVelocity(source.getLinearVelocity(null));
 
@@ -354,9 +354,11 @@ public class CharacterController extends NativePhysicsObject {
      * "up" vector.
      *
      * @param gravity the desired acceleration vector (in physics-space units
-     * per second squared, not null, unaffected, default=(0,-29.4,0))
+     * per second squared, not null, finite, unaffected, default=(0,-29.4,0))
      */
     public void setGravity(Vector3f gravity) {
+        Validate.finite(gravity, "gravity");
+
         long controllerId = nativeId();
         setGravity(controllerId, gravity);
     }
@@ -386,9 +388,11 @@ public class CharacterController extends NativePhysicsObject {
     /**
      * Alter the linear velocity of the character's center.
      *
-     * @param velocity the desired velocity vector (not null)
+     * @param velocity the desired velocity vector (not null, finite)
      */
     public void setLinearVelocity(Vector3f velocity) {
+        Validate.finite(velocity, "velocity");
+
         long controllerId = nativeId();
         setLinearVelocity(controllerId, velocity);
     }
@@ -455,9 +459,11 @@ public class CharacterController extends NativePhysicsObject {
      * the "up" direction. It will continue to be applied until altered again.
      *
      * @param offset the desired location increment for each simulation step (in
-     * physics-space coordinates, not null, unaffected, default=(0,0,0))
+     * physics-space coordinates, not null, finite, unaffected, default=(0,0,0))
      */
     public void setWalkDirection(Vector3f offset) {
+        Validate.finite(offset, "offset");
+
         long controllerId = nativeId();
         setWalkDirection(controllerId, offset);
     }
@@ -465,11 +471,27 @@ public class CharacterController extends NativePhysicsObject {
     /**
      * Directly alter the location of the character's center.
      *
-     * @param location the desired physics location (not null, unaffected)
+     * @param location the desired physics location (not null, finite,
+     * unaffected)
      */
     public void warp(Vector3f location) {
+        Validate.finite(location, "location");
+
         long controllerId = nativeId();
         warp(controllerId, location);
+    }
+
+    /**
+     * Directly alter the location of the character's center.
+     *
+     * @param location the desired physics location (not null, finite,
+     * unaffected)
+     */
+    public void warpDp(Vec3d location) {
+        Validate.finite(location, "location");
+
+        long controllerId = nativeId();
+        warpDp(controllerId, location);
     }
     // *************************************************************************
     // Java private methods
@@ -571,4 +593,6 @@ public class CharacterController extends NativePhysicsObject {
             setWalkDirection(long controllerId, Vector3f direction);
 
     native private static void warp(long controllerId, Vector3f location);
+
+    native private static void warpDp(long controllerId, Vec3d location);
 }

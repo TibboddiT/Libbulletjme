@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020 jMonkeyEngine
+ * Copyright (c) 2009-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,8 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_c
     btPairCachingGhostObject * const pGhost
             = reinterpret_cast<btPairCachingGhostObject *> (pcoId);
     NULL_CHK(pEnv, pGhost, "The btPairCachingGhostObject does not exist.", 0);
-    btAssert(pGhost->getInternalType() & btCollisionObject::CO_GHOST_OBJECT);
+    ASSERT_CHK(pEnv, pGhost->getInternalType()
+            & btCollisionObject::CO_GHOST_OBJECT, 0);
 
     btCollisionShape * const pShape = pGhost->getCollisionShape();
     NULL_CHK(pEnv, pShape, "The btCollisionShape does not exist.", 0);
@@ -308,6 +309,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_ju
 
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, jumpVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->jump(vec);
 }
@@ -371,6 +373,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_se
     NULL_CHK(pEnv, velocityVector, "The velocity vector does not exist.",);
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, velocityVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->setAngularVelocity(vec);
 }
@@ -402,6 +405,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_se
             "The acceleration vector does not exist.",);
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, accelerationVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->setGravity(vec);
 }
@@ -445,6 +449,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_se
     NULL_CHK(pEnv, velocityVector, "The velocity vector does not exist.",)
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, velocityVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->setLinearVelocity(vec);
 }
@@ -501,6 +506,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_se
     NULL_CHK(pEnv, upVector, "The vector does not exist.",)
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, upVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->setUp(vec);
 }
@@ -532,6 +538,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_se
     NULL_CHK(pEnv, directionVector, "The direction vector does not exist.",)
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, directionVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->setWalkDirection(vec);
 }
@@ -549,6 +556,25 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_wa
     NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
     btVector3 vec;
     jmeBulletUtil::convert(pEnv, locationVector, &vec);
+    EXCEPTION_CHK(pEnv,);
+
+    pController->warp(vec);
+}
+
+/*
+ * Class:     com_jme3_bullet_objects_infos_CharacterController
+ * Method:    warpDp
+ * Signature: (JLcom/simsilica/mathd/Vec3d;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_infos_CharacterController_warpDp
+(JNIEnv *pEnv, jclass, jlong kccId, jobject locationVector) {
+    jmeKcc * const pController = reinterpret_cast<jmeKcc *> (kccId);
+    NULL_CHK(pEnv, pController, "The controller does not exist.",);
+
+    NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
+    btVector3 vec;
+    jmeBulletUtil::convertDp(pEnv, locationVector, &vec);
+    EXCEPTION_CHK(pEnv,);
 
     pController->warp(vec);
 }

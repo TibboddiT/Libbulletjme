@@ -74,9 +74,9 @@ abstract public class PhysicsJoint extends NativePhysicsObject {
     // constructors
 
     /**
-     * A no-argument constructor to avoid javadoc warnings from JDK 18.
+     * Instantiate a PhysicsJoint.
      */
-    protected PhysicsJoint() {
+    protected PhysicsJoint() { // to avoid a warning from JDK 18 javadoc
     }
     // *************************************************************************
     // new methods exposed
@@ -207,7 +207,7 @@ abstract public class PhysicsJoint extends NativePhysicsObject {
      * @param physicsSpace (may be null)
      */
     public void setPhysicsSpace(PhysicsSpace physicsSpace) {
-        space = physicsSpace;
+        this.space = physicsSpace;
     }
     // *************************************************************************
     // new protected methods
@@ -220,7 +220,7 @@ abstract public class PhysicsJoint extends NativePhysicsObject {
     final protected void setBodyA(PhysicsBody body) {
         assert body != null;
         assert bodyA == null : bodyA;
-        bodyA = body;
+        this.bodyA = body;
     }
 
     /**
@@ -231,7 +231,7 @@ abstract public class PhysicsJoint extends NativePhysicsObject {
     final protected void setBodyB(PhysicsBody body) {
         assert body != null;
         assert bodyB == null : bodyB;
-        bodyB = body;
+        this.bodyB = body;
     }
     // *************************************************************************
     // NativePhysicsObject methods
@@ -260,8 +260,12 @@ abstract public class PhysicsJoint extends NativePhysicsObject {
         result = result.replace("Physics", "");
         result = result.replace("Point", "P");
         result = result.replace("Six", "6");
-        long jointId = nativeId();
-        result += "#" + Long.toHexString(jointId);
+        if (hasAssignedNativeObject()) {
+            long jointId = nativeId();
+            result += "#" + Long.toHexString(jointId);
+        } else {
+            result += "#unassigned";
+        }
 
         return result;
     }

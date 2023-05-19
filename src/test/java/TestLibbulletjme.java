@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2020-2022, Stephen Gold
+ Copyright (c) 2020-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -49,6 +49,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.collision.shapes.ConeCollisionShape;
 import com.jme3.bullet.collision.shapes.Convex2dShape;
+import com.jme3.bullet.collision.shapes.ConvexShape;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.collision.shapes.EmptyShape;
 import com.jme3.bullet.collision.shapes.GImpactCollisionShape;
@@ -61,11 +62,13 @@ import com.jme3.bullet.collision.shapes.SimplexCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.collision.shapes.infos.IndexedMesh;
 import com.jme3.bullet.joints.New6Dof;
+import com.jme3.bullet.objects.MultiBodyCollider;
 import com.jme3.bullet.objects.PhysicsBody;
 import com.jme3.bullet.objects.PhysicsCharacter;
 import com.jme3.bullet.objects.PhysicsGhostObject;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.bullet.objects.PhysicsSoftBody;
+import com.jme3.bullet.objects.infos.RigidBodyMotionState;
 import com.jme3.bullet.objects.infos.SoftBodyConfig;
 import com.jme3.bullet.objects.infos.SoftBodyMaterial;
 import com.jme3.bullet.util.DebugShapeFactory;
@@ -74,8 +77,10 @@ import com.jme3.bullet.util.NativeSoftBodyUtil;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Plane;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.system.NativeLibraryLoader;
+import com.simsilica.mathd.Matrix3d;
 import com.simsilica.mathd.Quatd;
 import com.simsilica.mathd.Vec3d;
 import java.io.File;
@@ -130,13 +135,11 @@ public class TestLibbulletjme {
     @Test
     public void test001() {
         loadNativeLibrary();
-        /*
-         * Create a PhysicsSpace using DBVT for broadphase.
-         */
+
+        // Create a PhysicsSpace using DBVT for broadphase.
         PhysicsSpace space = new PhysicsSpace(PhysicsSpace.BroadphaseType.DBVT);
-        /*
-         * Add a static horizontal plane at y=-1.
-         */
+
+        // Add a static horizontal plane at y=-1.
         Plane plane = new Plane(Vector3f.UNIT_Y, -1f);
         CollisionShape pcs = new PlaneCollisionShape(plane);
         PhysicsRigidBody floorPrb = new PhysicsRigidBody(pcs, 0f);
@@ -145,9 +148,8 @@ public class TestLibbulletjme {
 
         Assert.assertEquals(2, floorPrb.proxyGroup().intValue());
         Assert.assertEquals(-3, floorPrb.proxyMask().intValue());
-        /*
-         * Add a box-shaped dynamic rigid body at y=0.
-         */
+
+        // Add a box-shaped dynamic rigid body at y=0.
         CollisionShape bcs = new BoxCollisionShape(0.1f, 0.2f, 0.3f);
         PhysicsRigidBody prb = new PhysicsRigidBody(bcs, 1f);
         testPco(prb);
@@ -155,15 +157,13 @@ public class TestLibbulletjme {
 
         Assert.assertEquals(1, prb.proxyGroup().intValue());
         Assert.assertEquals(-1, prb.proxyMask().intValue());
-        /*
-         * 50 iterations with a 20-msec timestep
-         */
+
+        // 50 iterations with a 20-msec timestep
         for (int i = 0; i < 50; ++i) {
             space.update(0.02f, 0);
         }
-        /*
-         * Check the final location of the box.
-         */
+
+        // Check the final location of the box.
         Vector3f location = prb.getPhysicsLocation(null);
         Assert.assertEquals(0f, location.x, 0.2f);
         Assert.assertEquals(-0.8f, location.y, 0.04f);
@@ -179,9 +179,8 @@ public class TestLibbulletjme {
     @Test
     public void test002() {
         loadNativeLibrary();
-        /*
-         * Generate an L-shaped mesh: 12 vertices, 20 triangles
-         */
+
+        // Generate an L-shaped mesh: 12 vertices, 20 triangles
         float[] positionArray = {
             0f, 0f, 0f,
             2f, 0f, 0f,
@@ -220,7 +219,7 @@ public class TestLibbulletjme {
         Assert.assertEquals(32, parameters4.getMaxVerticesPerHull());
         Assert.assertEquals(2, parameters4.getMinEdgeLength());
         Assert.assertTrue(parameters4.isShrinkWrap());
-        Assert.assertEquals(1.0, parameters4.getVolumePercentError(), 0.0);
+        Assert.assertEquals(1., parameters4.getVolumePercentError(), 0.);
         Assert.assertEquals(100_000, parameters4.getVoxelResolution());
 
         // Generate hulls for the mesh.
@@ -242,12 +241,12 @@ public class TestLibbulletjme {
         VHACDParameters parameters = new VHACDParameters();
         Assert.assertFalse(parameters.getDebugEnabled());
         Assert.assertEquals(ACDMode.VOXEL, parameters.getACDMode());
-        Assert.assertEquals(0.05, parameters.getAlpha(), 0.0);
-        Assert.assertEquals(0.05, parameters.getBeta(), 0.0);
+        Assert.assertEquals(0.05, parameters.getAlpha(), 0.);
+        Assert.assertEquals(0.05, parameters.getBeta(), 0.);
         Assert.assertEquals(4, parameters.getConvexHullDownSampling());
-        Assert.assertEquals(0.0025, parameters.getMaxConcavity(), 0.0);
+        Assert.assertEquals(0.0025, parameters.getMaxConcavity(), 0.);
         Assert.assertEquals(32, parameters.getMaxVerticesPerHull());
-        Assert.assertEquals(0.0001, parameters.getMinVolumePerHull(), 0.0);
+        Assert.assertEquals(0.0001, parameters.getMinVolumePerHull(), 0.);
         Assert.assertFalse(parameters.getPCA());
         Assert.assertEquals(4, parameters.getPlaneDownSampling());
         Assert.assertEquals(100_000, parameters.getVoxelResolution());
@@ -277,9 +276,8 @@ public class TestLibbulletjme {
     public void test003() {
         loadNativeLibrary();
         FloatBuffer buf;
-        /*
-         * Box2d
-         */
+
+        // Box2d
         Box2dShape box2d = new Box2dShape(1f, 2f);
         verifyCollisionShapeDefaults(box2d);
         Assert.assertEquals(0.04f, box2d.getMargin(), 0f);
@@ -288,12 +286,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(box2d.isInfinite());
         Assert.assertFalse(box2d.isNonMoving());
         Assert.assertFalse(box2d.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(box2d,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(box2d, DebugShapeFactory.lowResolution);
         Assert.assertEquals(108, buf.capacity());
-        /*
-         * Box
-         */
+
+        // Box
         BoxCollisionShape box = new BoxCollisionShape(1f);
         verifyCollisionShapeDefaults(box);
         Assert.assertEquals(0.04f, box.getMargin(), 0f);
@@ -302,12 +299,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(box.isInfinite());
         Assert.assertFalse(box.isNonMoving());
         Assert.assertTrue(box.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(box,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(box, DebugShapeFactory.lowResolution);
         Assert.assertEquals(108, buf.capacity());
-        /*
-         * Capsule
-         */
+
+        // Capsule
         CapsuleCollisionShape capsule = new CapsuleCollisionShape(1f, 1f);
         verifyCollisionShapeDefaults(capsule);
         Assert.assertEquals(PhysicsSpace.AXIS_Y, capsule.getAxis());
@@ -318,12 +314,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(capsule.isInfinite());
         Assert.assertFalse(capsule.isNonMoving());
         Assert.assertFalse(capsule.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(capsule,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(capsule, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Compound without added children
-         */
+
+        // Compound without added children
         CompoundCollisionShape compound = new CompoundCollisionShape();
         verifyCollisionShapeDefaults(compound);
         Assert.assertEquals(0, compound.countChildren());
@@ -333,12 +328,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(compound.isInfinite());
         Assert.assertFalse(compound.isNonMoving());
         Assert.assertFalse(compound.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(compound,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(compound, DebugShapeFactory.lowResolution);
         Assert.assertEquals(0, buf.capacity());
-        /*
-         * Cone
-         */
+
+        // Cone
         ConeCollisionShape cone = new ConeCollisionShape(1f, 1f);
         verifyCollisionShapeDefaults(cone);
         Assert.assertEquals(PhysicsSpace.AXIS_Y, cone.getAxis());
@@ -349,12 +343,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(cone.isInfinite());
         Assert.assertFalse(cone.isNonMoving());
         Assert.assertFalse(cone.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(cone,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(cone, DebugShapeFactory.lowResolution);
         Assert.assertEquals(702, buf.capacity());
-        /*
-         * Convex2d
-         */
+
+        // Convex2d
         ConeCollisionShape flatCone
                 = new ConeCollisionShape(10f, 0f, PhysicsSpace.AXIS_Z);
         Convex2dShape convex2d = new Convex2dShape(flatCone);
@@ -365,12 +358,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(convex2d.isInfinite());
         Assert.assertFalse(convex2d.isNonMoving());
         Assert.assertFalse(convex2d.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(convex2d,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(convex2d, DebugShapeFactory.lowResolution);
         Assert.assertEquals(504, buf.capacity());
-        /*
-         * Cylinder
-         */
+
+        // Cylinder
         CylinderCollisionShape cylinder
                 = new CylinderCollisionShape(new Vector3f(1f, 1f, 1f));
         verifyCollisionShapeDefaults(cylinder);
@@ -382,12 +374,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(cylinder.isInfinite());
         Assert.assertFalse(cylinder.isNonMoving());
         Assert.assertFalse(cylinder.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(cylinder,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(cylinder, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Empty
-         */
+
+        // Empty
         EmptyShape empty = new EmptyShape(true);
         verifyCollisionShapeDefaults(empty);
         Assert.assertEquals(0.04f, empty.getMargin(), 0f);
@@ -397,12 +388,11 @@ public class TestLibbulletjme {
         Assert.assertTrue(empty.isNonMoving());
         Assert.assertFalse(empty.isPolyhedral());
         Assert.assertEquals(0f, empty.unscaledVolume(), 0f);
-        buf = DebugShapeFactory.getDebugTriangles(empty,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(empty, DebugShapeFactory.lowResolution);
         Assert.assertEquals(0, buf.capacity());
-        /*
-         * Heightfield
-         */
+
+        // Heightfield
         float[] nineHeights = {1f, 0f, 1f, 0f, 0.5f, 0f, 1f, 0f, 1f};
         HeightfieldCollisionShape hcs
                 = new HeightfieldCollisionShape(nineHeights);
@@ -414,12 +404,11 @@ public class TestLibbulletjme {
         Assert.assertFalse(hcs.isInfinite());
         Assert.assertTrue(hcs.isNonMoving());
         Assert.assertFalse(hcs.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(hcs,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(hcs, DebugShapeFactory.lowResolution);
         Assert.assertEquals(72, buf.capacity());
-        /*
-         * Hull
-         */
+
+        // Hull
         List<Vector3f> prismVertices = new ArrayList<>(6);
         prismVertices.add(new Vector3f(1f, 1f, 1f));
         prismVertices.add(new Vector3f(1f, 1f, -1f));
@@ -438,15 +427,14 @@ public class TestLibbulletjme {
         Assert.assertFalse(hull.isInfinite());
         Assert.assertFalse(hull.isNonMoving());
         Assert.assertTrue(hull.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(hull,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(hull, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * MultiSphere
-         */
+
+        // MultiSphere
         MultiSphere multiSphere = new MultiSphere(1f);
         verifyCollisionShapeDefaults(multiSphere);
-        assertEquals(0f, 0f, 0f, multiSphere.copyCenter(0, null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, multiSphere.copyCenter(0, null), 0f);
         Assert.assertEquals(1, multiSphere.countSpheres());
         Assert.assertEquals(1f, multiSphere.getRadius(0), 0f);
         Assert.assertFalse(multiSphere.isConcave());
@@ -454,54 +442,50 @@ public class TestLibbulletjme {
         Assert.assertFalse(multiSphere.isInfinite());
         Assert.assertFalse(multiSphere.isNonMoving());
         Assert.assertFalse(multiSphere.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(multiSphere,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory.getDebugTriangles(
+                multiSphere, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Plane
-         */
+
+        // Plane
         Plane plane = new Plane(new Vector3f(0f, 1f, 0f), 0f);
         PlaneCollisionShape pcs = new PlaneCollisionShape(plane);
         verifyCollisionShapeDefaults(pcs);
         Assert.assertEquals(0.04f, pcs.getMargin(), 0f);
         Assert.assertEquals(0f, pcs.getPlane().getConstant(), 0f);
-        assertEquals(0f, 1f, 0f, pcs.getPlane().getNormal(), 0f);
+        Utils.assertEquals(0f, 1f, 0f, pcs.getPlane().getNormal(), 0f);
         Assert.assertTrue(pcs.isConcave());
         Assert.assertFalse(pcs.isConvex());
         Assert.assertTrue(pcs.isInfinite());
         Assert.assertTrue(pcs.isNonMoving());
         Assert.assertFalse(pcs.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(pcs,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(pcs, DebugShapeFactory.lowResolution);
         Assert.assertEquals(18, buf.capacity());
-        /*
-         * Simplex of 1 vertex
-         */
+
+        // Simplex of 1 vertex
         SimplexCollisionShape simplex1
                 = new SimplexCollisionShape(new Vector3f(0f, 0f, 0f));
         verifySimplexDefaults(simplex1);
         Assert.assertEquals(1, simplex1.countMeshVertices());
-        assertEquals(0f, 0f, 0f, simplex1.copyVertex(0, null), 0f);
-        assertEquals(0f, 0f, 0f, simplex1.getHalfExtents(null), 0f);
-        buf = DebugShapeFactory.getDebugTriangles(simplex1,
-                DebugShapeFactory.lowResolution);
+        Utils.assertEquals(0f, 0f, 0f, simplex1.copyVertex(0, null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, simplex1.getHalfExtents(null), 0f);
+        buf = DebugShapeFactory
+                .getDebugTriangles(simplex1, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Simplex of 2 vertices
-         */
+
+        // Simplex of 2 vertices
         SimplexCollisionShape simplex2 = new SimplexCollisionShape(
                 new Vector3f(1f, 0f, 0f), new Vector3f(-1, 0f, 0f));
         verifySimplexDefaults(simplex2);
         Assert.assertEquals(2, simplex2.countMeshVertices());
-        assertEquals(1f, 0f, 0f, simplex2.copyVertex(0, null), 0f);
-        assertEquals(-1f, 0f, 0f, simplex2.copyVertex(1, null), 0f);
-        assertEquals(1f, 0f, 0f, simplex2.getHalfExtents(null), 0f);
-        buf = DebugShapeFactory.getDebugTriangles(simplex2,
-                DebugShapeFactory.lowResolution);
+        Utils.assertEquals(1f, 0f, 0f, simplex2.copyVertex(0, null), 0f);
+        Utils.assertEquals(-1f, 0f, 0f, simplex2.copyVertex(1, null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, simplex2.getHalfExtents(null), 0f);
+        buf = DebugShapeFactory
+                .getDebugTriangles(simplex2, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Simplex of 3 vertices
-         */
+
+        // Simplex of 3 vertices
         SimplexCollisionShape simplex3 = new SimplexCollisionShape(
                 new Vector3f(0f, 1f, 1f),
                 new Vector3f(1f, 1f, 0f),
@@ -509,16 +493,15 @@ public class TestLibbulletjme {
         );
         verifySimplexDefaults(simplex3);
         Assert.assertEquals(3, simplex3.countMeshVertices());
-        assertEquals(0f, 1f, 1f, simplex3.copyVertex(0, null), 0f);
-        assertEquals(1f, 1f, 0f, simplex3.copyVertex(1, null), 0f);
-        assertEquals(1f, 0f, 1f, simplex3.copyVertex(2, null), 0f);
-        assertEquals(1f, 1f, 1f, simplex3.getHalfExtents(null), 0f);
-        buf = DebugShapeFactory.getDebugTriangles(simplex3,
-                DebugShapeFactory.lowResolution);
+        Utils.assertEquals(0f, 1f, 1f, simplex3.copyVertex(0, null), 0f);
+        Utils.assertEquals(1f, 1f, 0f, simplex3.copyVertex(1, null), 0f);
+        Utils.assertEquals(1f, 0f, 1f, simplex3.copyVertex(2, null), 0f);
+        Utils.assertEquals(1f, 1f, 1f, simplex3.getHalfExtents(null), 0f);
+        buf = DebugShapeFactory
+                .getDebugTriangles(simplex3, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Simplex of 4 vertices
-         */
+
+        // Simplex of 4 vertices
         SimplexCollisionShape simplex4 = new SimplexCollisionShape(
                 new Vector3f(0f, 1f, 1f),
                 new Vector3f(0f, 1f, -1f),
@@ -527,17 +510,16 @@ public class TestLibbulletjme {
         );
         verifySimplexDefaults(simplex4);
         Assert.assertEquals(4, simplex4.countMeshVertices());
-        assertEquals(0f, 1f, 1f, simplex4.copyVertex(0, null), 0f);
-        assertEquals(0f, 1f, -1f, simplex4.copyVertex(1, null), 0f);
-        assertEquals(1f, -1f, 0f, simplex4.copyVertex(2, null), 0f);
-        assertEquals(-1f, -1f, 0f, simplex4.copyVertex(3, null), 0f);
-        assertEquals(1f, 1f, 1f, simplex4.getHalfExtents(null), 0f);
-        buf = DebugShapeFactory.getDebugTriangles(simplex4,
-                DebugShapeFactory.lowResolution);
+        Utils.assertEquals(0f, 1f, 1f, simplex4.copyVertex(0, null), 0f);
+        Utils.assertEquals(0f, 1f, -1f, simplex4.copyVertex(1, null), 0f);
+        Utils.assertEquals(1f, -1f, 0f, simplex4.copyVertex(2, null), 0f);
+        Utils.assertEquals(-1f, -1f, 0f, simplex4.copyVertex(3, null), 0f);
+        Utils.assertEquals(1f, 1f, 1f, simplex4.getHalfExtents(null), 0f);
+        buf = DebugShapeFactory
+                .getDebugTriangles(simplex4, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
-        /*
-         * Sphere
-         */
+
+        // Sphere
         SphereCollisionShape sphere = new SphereCollisionShape(1f);
         verifyCollisionShapeDefaults(sphere);
         Assert.assertEquals(0f, sphere.getMargin(), 0f);
@@ -546,8 +528,8 @@ public class TestLibbulletjme {
         Assert.assertFalse(sphere.isInfinite());
         Assert.assertFalse(sphere.isNonMoving());
         Assert.assertFalse(sphere.isPolyhedral());
-        buf = DebugShapeFactory.getDebugTriangles(sphere,
-                DebugShapeFactory.lowResolution);
+        buf = DebugShapeFactory
+                .getDebugTriangles(sphere, DebugShapeFactory.lowResolution);
         Assert.assertEquals(720, buf.capacity());
     }
 
@@ -566,37 +548,36 @@ public class TestLibbulletjme {
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new CollisionSpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new CollisionSpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new CollisionSpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new CollisionSpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3_32);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new CollisionSpace(Vector3f.ZERO, Vector3f.ZERO,
-                PhysicsSpace.BroadphaseType.DBVT);
+        space = new CollisionSpace(
+                Vector3f.ZERO, Vector3f.ZERO, PhysicsSpace.BroadphaseType.DBVT);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
-        /*
-         * Physics spaces with various broadphase accelerators.
-         */
+
+        // Physics spaces with various broadphase accelerators.
         space = new PhysicsSpace(PhysicsSpace.BroadphaseType.SIMPLE);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new PhysicsSpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new PhysicsSpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new PhysicsSpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new PhysicsSpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3_32);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
@@ -604,9 +585,8 @@ public class TestLibbulletjme {
         space = new PhysicsSpace(PhysicsSpace.BroadphaseType.DBVT);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
-        /*
-         * Soft spaces with various broadphase accelerators.
-         */
+
+        // Soft spaces with various broadphase accelerators.
         space = new PhysicsSoftSpace(PhysicsSpace.BroadphaseType.SIMPLE);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
@@ -623,22 +603,21 @@ public class TestLibbulletjme {
         space = new PhysicsSoftSpace(PhysicsSpace.BroadphaseType.DBVT);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
-        /*
-         * Multibody spaces with various broadphase accelerators.
-         */
-        space = new MultiBodySpace(Vector3f.ZERO,
-                Vector3f.ZERO, PhysicsSpace.BroadphaseType.SIMPLE);
+
+        // Multibody spaces with various broadphase accelerators.
+        space = new MultiBodySpace(Vector3f.ZERO, Vector3f.ZERO,
+                PhysicsSpace.BroadphaseType.SIMPLE);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new MultiBodySpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new MultiBodySpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new MultiBodySpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new MultiBodySpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3_32);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
@@ -654,8 +633,8 @@ public class TestLibbulletjme {
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
 
-        space = new DeformableSpace(new Vector3f(-10f, -10f, -10f),
-                new Vector3f(10f, 10f, 10f),
+        space = new DeformableSpace(
+                new Vector3f(-10f, -10f, -10f), new Vector3f(10f, 10f, 10f),
                 PhysicsSpace.BroadphaseType.AXIS_SWEEP_3, SolverType.SI);
         verifyCollisionSpaceDefaults(space);
         performRayTests(sphereShape, space);
@@ -673,9 +652,8 @@ public class TestLibbulletjme {
 
         float radius = 0.2f;
         CollisionShape boxShape = new BoxCollisionShape(radius);
-        /*
-         * Perform drop tests with various broadphase accelerators.
-         */
+
+        // Perform drop tests with various broadphase accelerators.
         performDropTests(boxShape, PhysicsSpace.BroadphaseType.SIMPLE);
         performDropTests(boxShape, PhysicsSpace.BroadphaseType.AXIS_SWEEP_3);
         performDropTests(boxShape, PhysicsSpace.BroadphaseType.AXIS_SWEEP_3_32);
@@ -694,15 +672,15 @@ public class TestLibbulletjme {
         Vector3f baseInertia = Vector3f.UNIT_XYZ;
         boolean fixedBase = true;
         boolean canSleep = true;
-        MultiBody multiBody = new MultiBody(numLinks, baseMass, baseInertia,
-                fixedBase, canSleep);
+        MultiBody multiBody = new MultiBody(
+                numLinks, baseMass, baseInertia, fixedBase, canSleep);
 
         Assert.assertEquals(0.04f, multiBody.angularDamping(), 0f);
-        assertEquals(0f, 0f, 0f, multiBody.baseForce(null), 0f);
-        assertEquals(0f, 0f, 0f, multiBody.baseLocation(null), 0f);
-        assertEquals(0f, 0f, 0f, 1f, multiBody.baseOrientation(null), 0f);
-        assertEquals(0f, 0f, 0f, multiBody.baseTorque(null), 0f);
-        assertEquals(0f, 0f, 0f, multiBody.baseVelocity(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, multiBody.baseForce(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, multiBody.baseLocation(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, multiBody.baseOrientation(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, multiBody.baseTorque(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, multiBody.baseVelocity(null), 0f);
         Assert.assertTrue(multiBody.canSleep());
         Assert.assertTrue(multiBody.canWakeup());
         Assert.assertEquals(PhysicsCollisionObject.COLLISION_GROUP_01,
@@ -733,40 +711,40 @@ public class TestLibbulletjme {
         float linkMass = 0.1f;
         Vector3f linkInertia = new Vector3f(0.1f, 0.1f, 0.1f);
 
-        MultiBodyLink link0 = multiBody.configureFixedLink(linkMass,
-                linkInertia, null, Quaternion.IDENTITY, Vector3f.UNIT_X,
-                Vector3f.UNIT_X);
+        MultiBodyLink link0 = multiBody.configureFixedLink(
+                linkMass, linkInertia, null, Quaternion.IDENTITY,
+                Vector3f.UNIT_X, Vector3f.UNIT_X);
         Assert.assertNull(link0.getCollider());
         link0.addCollider(shape);
 
         Assert.assertNotNull(link0.getCollider());
         testPco(link0.getCollider());
         Assert.assertEquals(link0, multiBody.getLink(0));
-        assertEquals(0f, 0f, 0f, link0.appliedForce(null), 0f);
-        assertEquals(0f, 0f, 0f, link0.appliedTorque(null), 0f);
-        assertEquals(0f, 0f, 0f, link0.constraintForce(null), 0f);
-        assertEquals(0f, 0f, 0f, link0.constraintTorque(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, link0.appliedForce(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, link0.appliedTorque(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, link0.constraintForce(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, link0.constraintTorque(null), 0f);
         Assert.assertEquals(0, link0.countDofs());
         Assert.assertEquals(0, link0.countPositionVariables());
         Assert.assertNotNull(link0.getCollider());
         Assert.assertEquals(multiBody, link0.getMultiBody());
         Assert.assertNull(link0.getParentLink());
         Assert.assertEquals(0, link0.index());
-        assertEquals(0.1f, 0.1f, 0.1f, link0.inertia(null), 0f);
+        Utils.assertEquals(0.1f, 0.1f, 0.1f, link0.inertia(null), 0f);
         Assert.assertFalse(link0.isCollisionWithParent());
         Assert.assertEquals(MultiBodyJointType.Fixed, link0.jointType());
         Assert.assertEquals(linkMass, link0.mass(), 0f);
-        assertEquals(0f, 0f, 0f, 1f, link0.orientation(null), 0f);
-        assertEquals(1f, 0f, 0f, link0.parent2Pivot(null), 0f);
-        assertEquals(1f, 0f, 0f, link0.pivot2Link(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, link0.orientation(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link0.parent2Pivot(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link0.pivot2Link(null), 0f);
 
         boolean disableCollision = true;
-        MultiBodyLink link1 = multiBody.configurePlanarLink(linkMass,
-                linkInertia, link0, Quaternion.IDENTITY, Vector3f.UNIT_Y,
-                Vector3f.UNIT_X, disableCollision);
+        MultiBodyLink link1 = multiBody.configurePlanarLink(
+                linkMass, linkInertia, link0, Quaternion.IDENTITY,
+                Vector3f.UNIT_Y, Vector3f.UNIT_X, disableCollision);
 
         Assert.assertEquals(link1, multiBody.getLink(1));
-        assertEquals(0f, 1f, 0f, link1.axis(null), 1e-6f);
+        Utils.assertEquals(0f, 1f, 0f, link1.axis(null), 1e-6f);
         Assert.assertEquals(3, link1.countDofs());
         Assert.assertEquals(3, link1.countPositionVariables());
         Assert.assertEquals(link0, link1.getParentLink());
@@ -776,8 +754,8 @@ public class TestLibbulletjme {
         Assert.assertEquals(0f, link1.jointTorque(2), 0f);
         Assert.assertEquals(MultiBodyJointType.Planar, link1.jointType());
         Assert.assertEquals(0f, link1.jointVelocity(2), 0f);
-        assertEquals(0f, 0f, 0f, 1f, link1.orientation(null), 0f);
-        assertEquals(1f, 0f, 0f, link1.parent2Link(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, link1.orientation(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link1.parent2Link(null), 0f);
 
         MultiBodyLink link2 = multiBody.configurePrismaticLink(linkMass,
                 linkInertia, link1, Quaternion.IDENTITY, Vector3f.UNIT_Y,
@@ -785,54 +763,54 @@ public class TestLibbulletjme {
         link2.addCollider(shape);
 
         Assert.assertEquals(link2, multiBody.getLink(2));
-        assertEquals(0f, 0f, 0f, link2.appliedForce(null), 0f);
-        assertEquals(0f, 1f, 0f, link2.axis(null), 1e-6f);
+        Utils.assertEquals(0f, 0f, 0f, link2.appliedForce(null), 0f);
+        Utils.assertEquals(0f, 1f, 0f, link2.axis(null), 1e-6f);
         Assert.assertEquals(1, link2.countDofs());
         Assert.assertEquals(1, link2.countPositionVariables());
         Assert.assertFalse(link2.isCollisionWithParent());
         Assert.assertEquals(MultiBodyJointType.Prismatic, link2.jointType());
-        assertEquals(0f, 0f, 0f, 1f, link2.orientation(null), 0f);
-        assertEquals(1f, 0f, 0f, link2.parent2Pivot(null), 0f);
-        assertEquals(1f, 0f, 0f, link2.pivot2Link(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, link2.orientation(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link2.parent2Pivot(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link2.pivot2Link(null), 0f);
 
         MultiBodyLink link3 = multiBody.configureRevoluteLink(linkMass,
                 linkInertia, link2, Quaternion.IDENTITY, Vector3f.UNIT_Y,
                 Vector3f.UNIT_X, Vector3f.UNIT_X, disableCollision);
 
         Assert.assertEquals(link3, multiBody.getLink(3));
-        assertEquals(0f, 0f, 0f, link3.appliedForce(null), 0f);
-        assertEquals(0f, 1f, 0f, link3.axis(null), 1e-6f);
+        Utils.assertEquals(0f, 0f, 0f, link3.appliedForce(null), 0f);
+        Utils.assertEquals(0f, 1f, 0f, link3.axis(null), 1e-6f);
         Assert.assertEquals(1, link3.countDofs());
         Assert.assertEquals(1, link3.countPositionVariables());
         Assert.assertNull(link3.getCollider());
         Assert.assertFalse(link3.isCollisionWithParent());
         Assert.assertEquals(MultiBodyJointType.Revolute, link3.jointType());
-        assertEquals(0f, 0f, 0f, 1f, link3.orientation(null), 0f);
-        assertEquals(1f, 0f, 0f, link3.parent2Pivot(null), 0f);
-        assertEquals(1f, 0f, 0f, link3.pivot2Link(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, link3.orientation(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link3.parent2Pivot(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link3.pivot2Link(null), 0f);
 
         boolean enableCollision = false;
-        MultiBodyLink link4 = multiBody.configureSphericalLink(linkMass,
-                linkInertia, link3, Quaternion.IDENTITY, Vector3f.UNIT_X,
-                Vector3f.UNIT_X, enableCollision);
+        MultiBodyLink link4 = multiBody.configureSphericalLink(
+                linkMass, linkInertia, link3, Quaternion.IDENTITY,
+                Vector3f.UNIT_X, Vector3f.UNIT_X, enableCollision);
         link4.addCollider(shape);
 
         Assert.assertEquals(link4, multiBody.getLink(4));
-        assertEquals(0f, 0f, 0f, link4.appliedForce(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, link4.appliedForce(null), 0f);
         Assert.assertEquals(3, link4.countDofs());
         Assert.assertEquals(4, link4.countPositionVariables());
         Assert.assertTrue(link4.isCollisionWithParent());
         Assert.assertEquals(MultiBodyJointType.Spherical, link4.jointType());
-        assertEquals(0f, 0f, 0f, 1f, link4.orientation(null), 0f);
-        assertEquals(1f, 0f, 0f, link4.parent2Pivot(null), 0f);
-        assertEquals(1f, 0f, 0f, link4.pivot2Link(null), 0f);
+        Utils.assertEquals(0f, 0f, 0f, 1f, link4.orientation(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link4.parent2Pivot(null), 0f);
+        Utils.assertEquals(1f, 0f, 0f, link4.pivot2Link(null), 0f);
 
         Assert.assertEquals(5, multiBody.countConfiguredLinks());
         Assert.assertEquals(8, multiBody.countDofs());
         Assert.assertEquals(9, multiBody.countPositionVariables());
 
-        MultiBodySpace space = new MultiBodySpace(Vector3f.ZERO, Vector3f.ZERO,
-                PhysicsSpace.BroadphaseType.DBVT);
+        MultiBodySpace space = new MultiBodySpace(
+                Vector3f.ZERO, Vector3f.ZERO, PhysicsSpace.BroadphaseType.DBVT);
         verifyCollisionSpaceDefaults(space);
 
         space.add(multiBody);
@@ -875,8 +853,8 @@ public class TestLibbulletjme {
         // Create a static, rigid sphere and add it to the physics space.
         float radius = 1f;
         SphereCollisionShape shape = new SphereCollisionShape(radius);
-        PhysicsRigidBody sphere = new PhysicsRigidBody(shape,
-                PhysicsBody.massForStatic);
+        PhysicsRigidBody sphere
+                = new PhysicsRigidBody(shape, PhysicsBody.massForStatic);
         testPco(sphere);
         physicsSpace.addCollisionObject(sphere);
 
@@ -911,9 +889,8 @@ public class TestLibbulletjme {
 
         // Translate the cloth upward to its starting location.
         cloth.applyTranslation(new Vector3f(0f, 2f, 0f));
-        /*
-         * 50 iterations with a 20-msec timestep
-         */
+
+        // 50 iterations with a 20-msec timestep
         for (int i = 0; i < 50; ++i) {
             physicsSpace.update(0.02f, 0);
         }
@@ -931,9 +908,8 @@ public class TestLibbulletjme {
 
         PhysicsSoftSpace physicsSpace
                 = new PhysicsSoftSpace(PhysicsSpace.BroadphaseType.DBVT);
-        /*
-         * Stack 2 rigid boxes.
-         */
+
+        // Stack 2 rigid boxes.
         float halfExtent = 1f;
         BoxCollisionShape boxShape = new BoxCollisionShape(halfExtent);
 
@@ -943,22 +919,21 @@ public class TestLibbulletjme {
         rigid1.setPhysicsLocation(new Vector3f(0f, halfExtent, 0f));
         physicsSpace.addCollisionObject(rigid1);
 
-        PhysicsRigidBody rigid2 = new PhysicsRigidBody(boxShape,
-                PhysicsBody.massForStatic);
+        PhysicsRigidBody rigid2
+                = new PhysicsRigidBody(boxShape, PhysicsBody.massForStatic);
         testPco(rigid2);
         rigid2.setPhysicsLocation(new Vector3f(0f, -halfExtent, 0f));
         rigid2.addToIgnoreList(rigid1);
         physicsSpace.addCollisionObject(rigid2);
         Assert.assertTrue(rigid1.ignores(rigid2));
         Assert.assertEquals(1, rigid2.countIgnored());
-        /*
-         * 50 iterations with a 20-msec timestep
-         */
+
+        // 50 iterations with a 20-msec timestep
         for (int i = 0; i < 50; ++i) {
             physicsSpace.update(0.02f, 0);
         }
         Vector3f location = rigid1.getPhysicsLocation(null);
-        assertEquals(0f, -4f, 0f, location, 0.1f);
+        Utils.assertEquals(0f, -4f, 0f, location, 0.1f);
 
         physicsSpace = null;
         System.gc();
@@ -973,9 +948,8 @@ public class TestLibbulletjme {
 
         PhysicsSoftSpace physicsSpace
                 = new PhysicsSoftSpace(PhysicsSpace.BroadphaseType.DBVT);
-        /*
-         * Stack a spherical character on a box.
-         */
+
+        // Stack a spherical character on a box.
         float radius = 0.5f;
         SphereCollisionShape ballShape = new SphereCollisionShape(radius);
 
@@ -997,14 +971,13 @@ public class TestLibbulletjme {
         physicsSpace.addCollisionObject(rigid2);
         Assert.assertTrue(character.ignores(rigid2));
         Assert.assertEquals(1, rigid2.countIgnored());
-        /*
-         * 50 iterations with a 20-msec timestep
-         */
+
+        // 50 iterations with a 20-msec timestep
         for (int i = 0; i < 50; ++i) {
             physicsSpace.update(0.02f, 0);
         }
         Vector3f result = character.getPhysicsLocation(null);
-        assertEquals(0f, -14.5f, 0f, result, 0.1f);
+        Utils.assertEquals(0f, -14.5f, 0f, result, 0.1f);
 
         physicsSpace = null;
         System.gc();
@@ -1019,9 +992,8 @@ public class TestLibbulletjme {
 
         PhysicsSoftSpace physicsSpace
                 = new PhysicsSoftSpace(PhysicsSpace.BroadphaseType.DBVT);
-        /*
-         * A ghost sphere overlapping with a rigid box.
-         */
+
+        // A ghost sphere overlapping with a rigid box.
         float radius = 0.5f;
         SphereCollisionShape ballShape = new SphereCollisionShape(radius);
 
@@ -1032,8 +1004,8 @@ public class TestLibbulletjme {
         float halfExtent = 1f;
         BoxCollisionShape boxShape = new BoxCollisionShape(halfExtent);
 
-        PhysicsRigidBody rigid2 = new PhysicsRigidBody(boxShape,
-                PhysicsBody.massForStatic);
+        PhysicsRigidBody rigid2
+                = new PhysicsRigidBody(boxShape, PhysicsBody.massForStatic);
         testPco(rigid2);
         rigid2.setPhysicsLocation(new Vector3f(0f, -halfExtent, 0f));
         rigid2.addToIgnoreList(ghost);
@@ -1058,7 +1030,7 @@ public class TestLibbulletjme {
         Matrix3f rotMatrix = new Matrix3f().set(q);
 
         Vector3f euler = RotationOrder.XZY.matrixToEuler(rotMatrix, null);
-        assertEquals(-0.3f, -0.7f, -1f, euler, 1e-5f);
+        Utils.assertEquals(-0.3f, -0.7f, -1f, euler, 1e-5f);
 
         q = null;
         rotMatrix = null;
@@ -1075,8 +1047,8 @@ public class TestLibbulletjme {
 
         Vector3f min = new Vector3f(-10f, -10f, -10f);
         Vector3f max = new Vector3f(10f, 10f, 10f);
-        CollisionSpace space = new CollisionSpace(min, max,
-                PhysicsSpace.BroadphaseType.DBVT);
+        CollisionSpace space = new CollisionSpace(
+                min, max, PhysicsSpace.BroadphaseType.DBVT);
 
         CollisionShape box = new BoxCollisionShape(0.1f, 0.2f, 0.3f);
         CollisionShape compound = new CompoundCollisionShape();
@@ -1170,17 +1142,75 @@ public class TestLibbulletjme {
     @Test
     public void test013() {
         loadNativeLibrary();
-        /*
-         * Create a sphere-shaped dynamic rigid body.
-         */
-        CollisionShape shape = new SphereCollisionShape(0.1f);
+
+        // Generate a subdivided square mesh with alternating diagonals.
+        int numLines = 3;
+        float lineSpacing = 0.1f; // mesh units
+        IndexedMesh squareGrid
+                = createClothGrid(numLines, numLines, lineSpacing);
+
+        // Create a soft square and add it to the physics space.
+        PhysicsSoftBody cloth = new PhysicsSoftBody();
+        testPco(cloth);
+        NativeSoftBodyUtil.appendFromNativeMesh(squareGrid, cloth);
+
+        Vec3d xIn = new Vec3d(7.01234567, 6.01234567, 0.01234567);
+        cloth.setPhysicsLocationDp(xIn);
+
+        Vector3f xOut3 = cloth.getPhysicsLocation(null);
+        Utils.assertEquals(7.01234567f, 6.01234567f, 0.01234567f, xOut3, 1e-6f);
+        Vec3d xOut2 = cloth.getPhysicsLocationDp(null);
+        if (NativeLibrary.isDoublePrecision()) {
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut2, 1e-15);
+        } else {
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut2, 1e-6);
+        }
+
+        ConvexShape shape = new MultiSphere(0.1f);
+        shape.setScale(new Vector3f(0.2f, 0.3f, 0.4f));
+        Vec3d sc = shape.getScaleDp(null);
+        Utils.assertEquals(0.2, 0.3, 0.4, sc, 1e-6);
+
+        // Create a sphere-shaped character.
+        PhysicsCharacter character = new PhysicsCharacter(shape, 1f);
+        testPco(character);
+        character.setPhysicsLocationDp(xIn);
+        Vec3d xOut4 = character.getPhysicsLocationDp(null);
+        if (NativeLibrary.isDoublePrecision()) {
+            Assert.assertEquals(xIn, xOut4);
+        } else {
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut4, 1e-6);
+        }
+
+        // Create a sphere-shaped ghost object.
+        PhysicsGhostObject ghost = new PhysicsGhostObject(shape);
+        testPco(ghost);
+        ghost.setPhysicsLocationDp(xIn);
+        Vec3d xOut1 = ghost.getPhysicsLocationDp(null);
+        if (NativeLibrary.isDoublePrecision()) {
+            Assert.assertEquals(xIn, xOut1);
+        } else {
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut1, 1e-6);
+        }
+
+        Quatd qIn2 = new Quatd(-0.5, 0.5, 0.5, 0.5);
+        ghost.setPhysicsRotationDp(qIn2);
+        Quatd qOut2 = ghost.getPhysicsRotationDp(null);
+        Utils.assertEquals(0.5, -0.5, -0.5, -0.5, qOut2, 0.);
+
+        Matrix3d mIn = new Matrix3d(0., 0., 1., 1., 0., 0., 0., 1., 0.);
+        ghost.setPhysicsRotationDp(mIn);
+        Matrix3d mOut2 = ghost.getPhysicsRotationMatrixDp(null);
+        Assert.assertEquals(mIn, mOut2);
+
+        // Create a sphere-shaped dynamic rigid body.
         PhysicsRigidBody body = new PhysicsRigidBody(shape, 1f);
+        testPco(body);
         Vec3d gIn = new Vec3d(9.01234567, 0.98765433, -0.01234567);
         Quatd qIn = new Quatd(7.01234567, 8.01234567, -1.01234567, -2.01234567);
         qIn.normalizeLocal();
         Vec3d vIn = new Vec3d(4.01234567, 2.01234567, 3.01234567);
         Vec3d wIn = new Vec3d(5.01234567, 1.01234567, 8.01234567);
-        Vec3d xIn = new Vec3d(7.01234567, 6.01234567, 0.01234567);
         body.setGravityDp(gIn);
         body.setPhysicsRotationDp(qIn);
         body.setLinearVelocityDp(vIn);
@@ -1195,16 +1225,46 @@ public class TestLibbulletjme {
 
         if (NativeLibrary.isDoublePrecision()) {
             Assert.assertEquals(gIn, gOut);
-            assertEquals(qIn.x, qIn.y, qIn.z, qIn.w, qOut, 1e-16);
+            Utils.assertEquals(qIn.x, qIn.y, qIn.z, qIn.w, qOut, 1e-16);
             Assert.assertEquals(vIn, vOut);
             Assert.assertEquals(wIn, wOut);
             Assert.assertEquals(xIn, xOut);
         } else {
-            assertEquals(gIn.x, gIn.y, gIn.z, gOut, 1e-6);
-            assertEquals(qIn.x, qIn.y, qIn.z, qIn.w, qOut, 1e-6);
-            assertEquals(vIn.x, vIn.y, vIn.z, vOut, 1e-6);
-            assertEquals(wIn.x, wIn.y, wIn.z, wOut, 1e-6);
-            assertEquals(xIn.x, xIn.y, xIn.z, xOut, 1e-6);
+            Utils.assertEquals(gIn.x, gIn.y, gIn.z, gOut, 1e-6);
+            Utils.assertEquals(qIn.x, qIn.y, qIn.z, qIn.w, qOut, 1e-6);
+            Utils.assertEquals(vIn.x, vIn.y, vIn.z, vOut, 1e-6);
+            Utils.assertEquals(wIn.x, wIn.y, wIn.z, wOut, 1e-6);
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut, 1e-6);
+        }
+
+        body.setPhysicsRotationDp(mIn);
+        Matrix3d mOut3 = body.getPhysicsRotationMatrixDp(null);
+        Assert.assertEquals(mIn, mOut3);
+
+        // Create a sphere-shaped base collider.
+        int numLinks = 0;
+        float baseMass = 1f;
+        Vector3f baseInertia = Vector3f.UNIT_XYZ;
+        boolean fixedBase = true;
+        boolean canSleep = true;
+        MultiBody multiBody = new MultiBody(
+                numLinks, baseMass, baseInertia, fixedBase, canSleep);
+        multiBody.addBaseCollider(shape);
+        MultiBodyCollider collider = multiBody.getBaseCollider();
+        testPco(collider);
+
+        collider.setPhysicsLocationDp(xIn);
+        collider.setPhysicsRotationDp(mIn);
+
+        Matrix3d mOut5 = collider.getPhysicsRotationMatrixDp(null);
+        Assert.assertEquals(mIn, mOut5);
+        Quatd qOut5 = collider.getPhysicsRotationDp(null);
+        Utils.assertEquals(0.5, 0.5, 0.5, 0.5, qOut5, 0.);
+        Vec3d xOut5 = collider.getPhysicsLocationDp(null);
+        if (NativeLibrary.isDoublePrecision()) {
+            Assert.assertEquals(xIn, xOut5);
+        } else {
+            Utils.assertEquals(xIn.x, xIn.y, xIn.z, xOut5, 1e-6);
         }
     }
 
@@ -1278,25 +1338,23 @@ public class TestLibbulletjme {
 
         long nativeId = ManifoldPoints.createTestPoint();
         Vector3f tmpVector = new Vector3f();
-        /*
-         * Verify that the test point is sufficiently zeroed.
-         */
+
+        // Verify that the test point is sufficiently zeroed.
         Assert.assertEquals(0, ManifoldPoints.getFlags(nativeId));
         Assert.assertEquals(0, ManifoldPoints.getLifeTime(nativeId));
 
-        Assert.assertEquals(0f,
-                ManifoldPoints.getAppliedImpulse(nativeId), 0f);
-        Assert.assertEquals(0f,
-                ManifoldPoints.getAppliedImpulseLateral1(nativeId), 0f);
-        Assert.assertEquals(0f,
-                ManifoldPoints.getAppliedImpulseLateral2(nativeId), 0f);
-        Assert.assertEquals(0f,
-                ManifoldPoints.getContactMotion1(nativeId), 0f);
-        Assert.assertEquals(0f,
-                ManifoldPoints.getContactMotion2(nativeId), 0f);
-        /*
-         * Invoke all the setters.
-         */
+        Assert.assertEquals(
+                0f, ManifoldPoints.getAppliedImpulse(nativeId), 0f);
+        Assert.assertEquals(
+                0f, ManifoldPoints.getAppliedImpulseLateral1(nativeId), 0f);
+        Assert.assertEquals(
+                0f, ManifoldPoints.getAppliedImpulseLateral2(nativeId), 0f);
+        Assert.assertEquals(
+                0f, ManifoldPoints.getContactMotion1(nativeId), 0f);
+        Assert.assertEquals(
+                0f, ManifoldPoints.getContactMotion2(nativeId), 0f);
+
+        // Invoke all the setters.
         ManifoldPoints.setAppliedImpulse(nativeId, 1f);
         ManifoldPoints.setAppliedImpulseLateral1(nativeId, 2f);
         ManifoldPoints.setAppliedImpulseLateral2(nativeId, 3f);
@@ -1308,58 +1366,63 @@ public class TestLibbulletjme {
         ManifoldPoints.setContactMotion2(nativeId, 9f);
         ManifoldPoints.setDistance1(nativeId, 10f);
         ManifoldPoints.setFlags(nativeId, 11);
-        ManifoldPoints.setLateralFrictionDir1(nativeId,
-                new Vector3f(12f, 13f, 14f));
-        ManifoldPoints.setLateralFrictionDir2(nativeId,
-                new Vector3f(15f, 16f, 17f));
+        ManifoldPoints
+                .setLateralFrictionDir1(nativeId, new Vector3f(12f, 13f, 14f));
+        ManifoldPoints
+                .setLateralFrictionDir2(nativeId, new Vector3f(15f, 16f, 17f));
         ManifoldPoints.setLocalPointA(nativeId, new Vector3f(18f, 19f, 20f));
         ManifoldPoints.setLocalPointB(nativeId, new Vector3f(21f, 22f, 23f));
         ManifoldPoints.setNormalWorldOnB(nativeId, new Vector3f(24f, 25f, 26f));
-        ManifoldPoints.setPositionWorldOnA(nativeId,
-                new Vector3f(27f, 28f, 29f));
-        ManifoldPoints.setPositionWorldOnB(nativeId,
-                new Vector3f(30f, 31f, 32f));
-        /*
-         * Verify the resulting point.
-         */
+        ManifoldPoints
+                .setPositionWorldOnA(nativeId, new Vector3f(27f, 28f, 29f));
+        ManifoldPoints
+                .setPositionWorldOnB(nativeId, new Vector3f(30f, 31f, 32f));
+
+        // Verify the resulting point.
         Assert.assertEquals(11, ManifoldPoints.getFlags(nativeId));
         Assert.assertEquals(0, ManifoldPoints.getLifeTime(nativeId));
 
-        Assert.assertEquals(1f,
-                ManifoldPoints.getAppliedImpulse(nativeId), 0f);
-        Assert.assertEquals(2f,
-                ManifoldPoints.getAppliedImpulseLateral1(nativeId), 0f);
-        Assert.assertEquals(3f,
-                ManifoldPoints.getAppliedImpulseLateral2(nativeId), 0f);
-        Assert.assertEquals(4f,
-                ManifoldPoints.getCombinedFriction(nativeId), 0f);
-        Assert.assertEquals(5f,
-                ManifoldPoints.getCombinedRestitution(nativeId), 0f);
-        Assert.assertEquals(6f,
-                ManifoldPoints.getCombinedRollingFriction(nativeId), 0f);
-        Assert.assertEquals(7f,
-                ManifoldPoints.getCombinedSpinningFriction(nativeId), 0f);
-        Assert.assertEquals(8f,
-                ManifoldPoints.getContactMotion1(nativeId), 0f);
-        Assert.assertEquals(9f,
-                ManifoldPoints.getContactMotion2(nativeId), 0f);
-        Assert.assertEquals(10f,
-                ManifoldPoints.getDistance1(nativeId), 0f);
+        Assert.assertEquals(
+                1f, ManifoldPoints.getAppliedImpulse(nativeId), 0f);
+        Assert.assertEquals(
+                2f, ManifoldPoints.getAppliedImpulseLateral1(nativeId), 0f);
+        Assert.assertEquals(
+                3f, ManifoldPoints.getAppliedImpulseLateral2(nativeId), 0f);
+        Assert.assertEquals(
+                4f, ManifoldPoints.getCombinedFriction(nativeId), 0f);
+        Assert.assertEquals(
+                5f, ManifoldPoints.getCombinedRestitution(nativeId), 0f);
+        Assert.assertEquals(
+                6f, ManifoldPoints.getCombinedRollingFriction(nativeId), 0f);
+        Assert.assertEquals(
+                7f, ManifoldPoints.getCombinedSpinningFriction(nativeId), 0f);
+        Assert.assertEquals(
+                8f, ManifoldPoints.getContactMotion1(nativeId), 0f);
+        Assert.assertEquals(
+                9f, ManifoldPoints.getContactMotion2(nativeId), 0f);
+        Assert.assertEquals(
+                10f, ManifoldPoints.getDistance1(nativeId), 0f);
 
         ManifoldPoints.getLateralFrictionDir1(nativeId, tmpVector);
-        assertEquals(12f, 13f, 14f, tmpVector, 0f);
+        Utils.assertEquals(12f, 13f, 14f, tmpVector, 0f);
         ManifoldPoints.getLateralFrictionDir2(nativeId, tmpVector);
-        assertEquals(15f, 16f, 17f, tmpVector, 0f);
+        Utils.assertEquals(15f, 16f, 17f, tmpVector, 0f);
         ManifoldPoints.getLocalPointA(nativeId, tmpVector);
-        assertEquals(18f, 19f, 20f, tmpVector, 0f);
+        Utils.assertEquals(18f, 19f, 20f, tmpVector, 0f);
         ManifoldPoints.getLocalPointB(nativeId, tmpVector);
-        assertEquals(21f, 22f, 23f, tmpVector, 0f);
+        Utils.assertEquals(21f, 22f, 23f, tmpVector, 0f);
         ManifoldPoints.getNormalWorldOnB(nativeId, tmpVector);
-        assertEquals(24f, 25f, 26f, tmpVector, 0f);
+        Utils.assertEquals(24f, 25f, 26f, tmpVector, 0f);
         ManifoldPoints.getPositionWorldOnA(nativeId, tmpVector);
-        assertEquals(27f, 28f, 29f, tmpVector, 0f);
+        Utils.assertEquals(27f, 28f, 29f, tmpVector, 0f);
         ManifoldPoints.getPositionWorldOnB(nativeId, tmpVector);
-        assertEquals(30f, 31f, 32f, tmpVector, 0f);
+        Utils.assertEquals(30f, 31f, 32f, tmpVector, 0f);
+
+        Vec3d tmpVec = new Vec3d();
+        ManifoldPoints.getPositionWorldOnADp(nativeId, tmpVec);
+        Utils.assertEquals(27., 28., 29., tmpVec, 0.);
+        ManifoldPoints.getPositionWorldOnBDp(nativeId, tmpVec);
+        Utils.assertEquals(30., 31., 32., tmpVec, 0.);
     }
 
     /**
@@ -1371,9 +1434,8 @@ public class TestLibbulletjme {
 
         PhysicsSpace space = new PhysicsSpace(PhysicsSpace.BroadphaseType.DBVT);
         SolverInfo info = space.getSolverInfo();
-        /*
-         * Invoke all the setters.
-         */
+
+        // Invoke all the setters.
         info.setContactErp(2f);
         info.setGlobalCfm(3f);
         info.setJointErp(4f);
@@ -1383,9 +1445,8 @@ public class TestLibbulletjme {
         info.setSplitImpulseEnabled(false);
         info.setSplitImpulseErp(8f);
         info.setSplitImpulseThreshold(9f);
-        /*
-         * Verify the resulting SolverInfo.
-         */
+
+        // Verify the resulting SolverInfo.
         Assert.assertEquals(2f, info.contactErp(), 0f);
         Assert.assertEquals(3f, info.globalCfm(), 0f);
         Assert.assertEquals(4f, info.jointErp(), 0f);
@@ -1446,55 +1507,59 @@ public class TestLibbulletjme {
         b.setPhysicsLocation(new Vector3f(4f, 0f, 0f));
         space.addCollisionObject(b);
 
-        New6Dof p2p = new New6Dof(b, new Vector3f(-4f, 0f, 0f),
-                new Vector3f(0f, 0f, 0f), new Matrix3f(), new Matrix3f(),
-                RotationOrder.ZYX);
+        New6Dof p2p = new New6Dof(
+                b, new Vector3f(-4f, 0f, 0f), new Vector3f(0f, 0f, 0f),
+                new Matrix3f(), new Matrix3f(), RotationOrder.ZYX);
         space.addJoint(p2p);
 
         Assert.assertEquals(1, p2p.countEnds());
         Assert.assertTrue(p2p.checkRotationOrder());
-        assertEquals(-4f, 0f, 0f, p2p.getPivotB(null), 0f);
+        Utils.assertEquals(-4f, 0f, 0f, p2p.getPivotB(null), 0f);
 
         space.update(1f);
         Vector3f location = b.getMotionState().getLocation(null);
-        assertEquals(1.572f, -3.68f, 0f, location, 0.01f);
+        Utils.assertEquals(1.572f, -3.68f, 0f, location, 0.01f);
 
         space.update(1f);
         b.getMotionState().getLocation(location);
-        assertEquals(-3.944f, -0.666f, 0f, location, 0.01f);
+        Utils.assertEquals(-3.944f, -0.666f, 0f, location, 0.01f);
+    }
+
+    /**
+     * Test the RigidBodyMotionState defaults.
+     */
+    @Test
+    public void test019() {
+        loadNativeLibrary();
+        RigidBodyMotionState state = new RigidBodyMotionState();
+
+        Vector3f x = state.getLocation(null);
+        Utils.assertEquals(0f, 0f, 0f, x, 0f);
+
+        Vec3d xx = state.getLocationDp(null);
+        Utils.assertEquals(0., 0., 0., xx, 0.);
+
+        Matrix3f m = new Matrix3f();
+        state.getOrientation(m);
+        Assert.assertTrue(m.isIdentity());
+
+        Quaternion q = new Quaternion();
+        state.getOrientation(q);
+        Utils.assertEquals(0f, 0f, 0f, 1f, q, 0f);
+
+        Matrix3d mm = state.getOrientationMatrixDp(null);
+        Assert.assertTrue(mm.isIdentity());
+
+        Quatd qq = state.getOrientationQuaternionDp(null);
+        Utils.assertEquals(0., 0., 0., 1., qq, 0.);
+
+        Assert.assertFalse(state.isApplyPhysicsLocal());
+
+        Transform t = state.physicsTransform(null);
+        Assert.assertTrue(t.equals(Transform.IDENTITY));
     }
     // *************************************************************************
     // private methods
-
-    private static void assertEquals(double x, double y, double z, double w,
-            Quatd q, double tolerance) {
-        Assert.assertEquals(x, q.x, tolerance);
-        Assert.assertEquals(y, q.y, tolerance);
-        Assert.assertEquals(z, q.z, tolerance);
-        Assert.assertEquals(w, q.w, tolerance);
-    }
-
-    private static void assertEquals(float x, float y, float z, float w,
-            Quaternion q, float tolerance) {
-        Assert.assertEquals(x, q.getX(), tolerance);
-        Assert.assertEquals(y, q.getY(), tolerance);
-        Assert.assertEquals(z, q.getZ(), tolerance);
-        Assert.assertEquals(w, q.getW(), tolerance);
-    }
-
-    private static void assertEquals(double x, double y, double z, Vec3d vector,
-            double tolerance) {
-        Assert.assertEquals(x, vector.x, tolerance);
-        Assert.assertEquals(y, vector.y, tolerance);
-        Assert.assertEquals(z, vector.z, tolerance);
-    }
-
-    private static void assertEquals(float x, float y, float z, Vector3f vector,
-            float tolerance) {
-        Assert.assertEquals(x, vector.x, tolerance);
-        Assert.assertEquals(y, vector.y, tolerance);
-        Assert.assertEquals(z, vector.z, tolerance);
-    }
 
     /**
      * Instantiate a grid in the X-Z plane, centered on (0,0,0).
@@ -1507,17 +1572,16 @@ public class TestLibbulletjme {
      * lines (in mesh units, &gt;0)
      * @return a new IndexedMesh
      */
-    private static IndexedMesh createClothGrid(int xLines, int zLines,
-            float lineSpacing) {
+    private static IndexedMesh
+            createClothGrid(int xLines, int zLines, float lineSpacing) {
         Validate.inRange(xLines, "X lines", 2, Integer.MAX_VALUE);
         Validate.inRange(zLines, "Z lines", 2, Integer.MAX_VALUE);
         Validate.positive(lineSpacing, "line spacing");
 
         int numVertices = xLines * zLines;
         Vector3f[] positionArray = new Vector3f[numVertices];
-        /*
-         * Write the vertex locations:
-         */
+
+        // Write the vertex locations:
         int vectorIndex = 0;
         for (int xIndex = 0; xIndex < zLines; ++xIndex) {
             float x = (2 * xIndex - zLines + 1) * lineSpacing / 2f;
@@ -1532,9 +1596,8 @@ public class TestLibbulletjme {
         int numTriangles = 2 * (xLines - 1) * (zLines - 1);
         int numIndices = vpt * numTriangles;
         int[] indexArray = new int[numIndices];
-        /*
-         * Write vertex indices for triangles:
-         */
+
+        // Write vertex indices for triangles:
         int intIndex = 0;
         for (int zIndex = 0; zIndex < xLines - 1; ++zIndex) {
             for (int xIndex = 0; xIndex < zLines - 1; ++xIndex) {
@@ -1581,15 +1644,15 @@ public class TestLibbulletjme {
             directory = new File("build/libs/bulletjme/shared");
         }
 
-        boolean success = NativeLibraryLoader.loadLibbulletjme(fromDist,
-                directory, "Debug", "SpMt");
+        boolean success = NativeLibraryLoader
+                .loadLibbulletjme(fromDist, directory, "Debug", "SpMt");
         if (success) {
             Assert.assertFalse(NativeLibrary.isDoublePrecision());
             Assert.assertTrue(NativeLibrary.isThreadSafe());
 
         } else { // fallback to Sp-flavored library
-            success = NativeLibraryLoader.loadLibbulletjme(fromDist,
-                    directory, "Debug", "Sp");
+            success = NativeLibraryLoader
+                    .loadLibbulletjme(fromDist, directory, "Debug", "Sp");
             if (success) {
                 Assert.assertFalse(NativeLibrary.isDoublePrecision());
                 Assert.assertFalse(NativeLibrary.isThreadSafe());
@@ -1597,8 +1660,8 @@ public class TestLibbulletjme {
         }
 
         if (!success) { // fallback to Dp-flavored library
-            success = NativeLibraryLoader.loadLibbulletjme(fromDist,
-                    directory, "Debug", "Dp");
+            success = NativeLibraryLoader
+                    .loadLibbulletjme(fromDist, directory, "Debug", "Dp");
             if (success) {
                 Assert.assertTrue(NativeLibrary.isDoublePrecision());
                 Assert.assertFalse(NativeLibrary.isThreadSafe());
@@ -1617,8 +1680,8 @@ public class TestLibbulletjme {
      * @param dropShape the shape to drop (not null)
      * @param broadphase the broadphase accelerator to use (not null)
      */
-    private static void performDropTests(CollisionShape dropShape,
-            PhysicsSpace.BroadphaseType broadphase) {
+    private static void performDropTests(
+            CollisionShape dropShape, PhysicsSpace.BroadphaseType broadphase) {
         performDropTests(dropShape, broadphase, SolverType.Dantzig);
         performDropTests(dropShape, broadphase, SolverType.Lemke);
         performDropTests(dropShape, broadphase, SolverType.NNCG);
@@ -1698,16 +1761,15 @@ public class TestLibbulletjme {
      * @param dropShape the shape to drop (not null)
      * @param space the space in which to perform the test (not null, modified)
      */
-    private static void performDropTest(CollisionShape dropShape,
-            PhysicsSpace space) {
+    private static void
+            performDropTest(CollisionShape dropShape, PhysicsSpace space) {
         verifyPhysicsSpaceDefaults(space);
 
         if (space.getSolverType() == SolverType.Lemke) {
             space.getSolverInfo().setGlobalCfm(0.001f);
         }
-        /*
-         * Add a static horizontal plane at y=-1.
-         */
+
+        // Add a static horizontal plane at y=-1.
         Plane plane = new Plane(Vector3f.UNIT_Y, -1f);
         CollisionShape floorShape = new PlaneCollisionShape(plane);
         final PhysicsRigidBody floorBody
@@ -1729,9 +1791,8 @@ public class TestLibbulletjme {
         Assert.assertEquals(1, space.countCollisionObjects());
         Assert.assertEquals(1, space.countRigidBodies());
         Assert.assertTrue(space.contains(floorBody));
-        /*
-         * Add a dynamic rigid body at y=0.
-         */
+
+        // Add a dynamic rigid body at y=0.
         float mass = 1f;
         final PhysicsRigidBody dropBody = new PhysicsRigidBody(dropShape, mass);
 
@@ -1758,9 +1819,8 @@ public class TestLibbulletjme {
             drop = dropBody;
             floor = floorBody;
         }
-        /*
-         * 50 iterations with a 20-msec timestep
-         */
+
+        // 50 iterations with a 20-msec timestep
         for (int i = 0; i < 50; ++i) {
             space.update(0.02f, 0, false, true, false);
         }
@@ -1768,9 +1828,8 @@ public class TestLibbulletjme {
         if (space instanceof PhysicsSpace) {
             Assert.assertTrue(dropAndFloorHaveCollided);
         }
-        /*
-         * Check the final location of the dynamic body.
-         */
+
+        // Check the final location of the dynamic body.
         Vector3f location = dropBody.getPhysicsLocation(null);
         Assert.assertEquals(0f, location.x, 0.2f);
         Assert.assertEquals(0f, location.z, 0.2f);
@@ -1804,8 +1863,8 @@ public class TestLibbulletjme {
      * @param shape the shape to add to the space (not null)
      * @param space the space in which to perform the tests (not null, modified)
      */
-    private static void performRayTests(CollisionShape shape,
-            CollisionSpace space) {
+    private static void
+            performRayTests(CollisionShape shape, CollisionSpace space) {
         Assert.assertTrue(space.isEmpty());
 
         PhysicsGhostObject ghost = new PhysicsGhostObject(shape);
@@ -1836,6 +1895,21 @@ public class TestLibbulletjme {
                 new Vector3f(0.7f, 0.7f, 2f), new Vector3f(0.7f, 0.7f, -2f));
         Assert.assertEquals(1, results2.size());
 
+        List<PhysicsRayTestResult> results0d = space.rayTestDp(
+                new Vec3d(0.8, 0.8, 2.), new Vec3d(0.8, 0.8, 0.),
+                new ArrayList<>(2));
+        Assert.assertEquals(0, results0d.size());
+
+        List<PhysicsRayTestResult> results1d = space.rayTestDp(
+                new Vec3d(0.7, 0.7, 2.), new Vec3d(0.7, 0.7, 0.),
+                new ArrayList<>(2));
+        Assert.assertEquals(1, results1d.size());
+
+        List<PhysicsRayTestResult> results2d = space.rayTestDp(
+                new Vec3d(0.7f, 0.7, 2.), new Vec3d(0.7, 0.7, -2.),
+                new ArrayList<>(2));
+        Assert.assertEquals(1, results2d.size());
+
         space.removeCollisionObject(ghost);
 
         Assert.assertNull(ghost.getCollisionSpace());
@@ -1865,7 +1939,7 @@ public class TestLibbulletjme {
         Assert.assertEquals(0L, pco.spaceId());
 
         Assert.assertTrue(pco.isActive());
-        assertEquals(1f, 1f, 1f, pco.getAnisotropicFriction(null), 0f);
+        Utils.assertEquals(1f, 1f, 1f, pco.getAnisotropicFriction(null), 0f);
         Assert.assertFalse(pco.hasAnisotropicFriction(1));
         Assert.assertFalse(pco.hasAnisotropicFriction(2));
         Assert.assertEquals(0f, pco.getCcdMotionThreshold(), 0f);
@@ -1883,8 +1957,16 @@ public class TestLibbulletjme {
 
         Assert.assertEquals(0f, pco.getDeactivationTime(), 0f);
         Assert.assertEquals(0.5f, pco.getFriction(), 0f);
-        assertEquals(0f, 0f, 0f, pco.getPhysicsLocation(null), 0f);
-        assertEquals(0.0, 0.0, 0.0, pco.getPhysicsLocationDp(null), 0.0);
+
+        Utils.assertEquals(0f, 0f, 0f, pco.getPhysicsLocation(null), 0f);
+        Utils.assertEquals(0., 0., 0., pco.getPhysicsLocationDp(null), 0.);
+        Utils.assertEquals(0f, 0f, 0f, 1f, pco.getPhysicsRotation(null), 0f);
+        Utils.assertEquals(0., 0., 0., 1., pco.getPhysicsRotationDp(null), 0.);
+        Assert.assertEquals(
+                Matrix3f.IDENTITY, pco.getPhysicsRotationMatrix(null));
+        Assert.assertEquals(
+                new Matrix3d(), pco.getPhysicsRotationMatrixDp(null));
+
         Assert.assertNull(pco.proxyGroup());
         Assert.assertNull(pco.proxyMask());
         Assert.assertEquals(0f, pco.getRestitution(), 0f);
@@ -1898,31 +1980,30 @@ public class TestLibbulletjme {
             Assert.assertEquals(0, body.countJoints());
             Assert.assertEquals(Activation.active, body.getActivationState());
             Assert.assertEquals(0f, body.getAngularDamping(), 0f);
-            assertEquals(1f, 1f, 1f, body.getAngularFactor(null), 0f);
+            Utils.assertEquals(1f, 1f, 1f, body.getAngularFactor(null), 0f);
             Assert.assertEquals(1f, body.getAngularSleepingThreshold(), 0f);
-            assertEquals(0f, 0f, 0f, body.getGravity(null), 0f);
-            assertEquals(0.0, 0.0, 0.0, body.getGravityDp(null), 0.0);
+            Utils.assertEquals(0f, 0f, 0f, body.getGravity(null), 0f);
+            Utils.assertEquals(0., 0., 0., body.getGravityDp(null), 0.);
             Assert.assertEquals(0f, body.getLinearDamping(), 0f);
-            assertEquals(1f, 1f, 1f, body.getLinearFactor(null), 0f);
+            Utils.assertEquals(1f, 1f, 1f, body.getLinearFactor(null), 0f);
             Assert.assertEquals(0.8f, body.getLinearSleepingThreshold(), 0f);
-            assertEquals(0f, 0f, 0f, 1f, body.getPhysicsRotation(null), 0f);
-            assertEquals(0.0, 0.0, 0.0, 1.0,
-                    body.getPhysicsRotationDp(null), 0.0);
             Assert.assertTrue(body.isContactResponse());
             Assert.assertFalse(body.isGravityProtected());
             Assert.assertFalse(body.isKinematic());
             Assert.assertEquals(0, body.listJoints().length);
-            assertEquals(0f, 0f, 0f, body.totalAppliedForce(null), 0f);
-            assertEquals(0f, 0f, 0f, body.totalAppliedTorque(null), 0f);
+            Utils.assertEquals(0f, 0f, 0f, body.totalAppliedForce(null), 0f);
+            Utils.assertEquals(0f, 0f, 0f, body.totalAppliedTorque(null), 0f);
             if (body.isDynamic()) {
-                assertEquals(0f, 0f, 0f, body.getAngularVelocity(null), 0f);
-                assertEquals(0.0, 0.0, 0.0,
-                        body.getAngularVelocityDp(null), 0.0);
-                assertEquals(0f, 0f, 0f,
-                        body.getAngularVelocityLocal(null), 0f);
-                assertEquals(0f, 0f, 0f, body.getLinearVelocity(null), 0f);
-                assertEquals(0.0, 0.0, 0.0,
-                        body.getLinearVelocityDp(null), 0.0);
+                Utils.assertEquals(
+                        0f, 0f, 0f, body.getAngularVelocity(null), 0f);
+                Utils.assertEquals(
+                        0., 0., 0., body.getAngularVelocityDp(null), 0.);
+                Utils.assertEquals(
+                        0f, 0f, 0f, body.getAngularVelocityLocal(null), 0f);
+                Utils.assertEquals(
+                        0f, 0f, 0f, body.getLinearVelocity(null), 0f);
+                Utils.assertEquals(
+                        0., 0., 0., body.getLinearVelocityDp(null), 0.);
                 Assert.assertEquals(0f, body.getSquaredSpeed(), 0f);
                 Assert.assertFalse(body.isStatic());
                 Assert.assertEquals(0f, body.kineticEnergy(), 0f);
@@ -1931,6 +2012,10 @@ public class TestLibbulletjme {
                 Assert.assertEquals(0f, body.getMass(), 0f);
                 Assert.assertTrue(body.isStatic());
             }
+
+        } else if (pco instanceof MultiBodyCollider) {
+            MultiBodyCollider collider = (MultiBodyCollider) pco;
+            Assert.assertNotNull(collider.getMultiBody());
         }
     }
 
@@ -1942,7 +2027,8 @@ public class TestLibbulletjme {
     private static void verifyCollisionShapeDefaults(CollisionShape shape) {
         Assert.assertNotNull(shape);
         Assert.assertNotEquals(0L, shape.nativeId());
-        assertEquals(1f, 1f, 1f, shape.getScale(null), 0f);
+        Utils.assertEquals(1f, 1f, 1f, shape.getScale(null), 0f);
+        Utils.assertEquals(1., 1., 1., shape.getScaleDp(null), 0.);
         Assert.assertTrue(shape.isContactFilterEnabled());
     }
 
@@ -1955,8 +2041,9 @@ public class TestLibbulletjme {
         Assert.assertNotNull(space);
         Assert.assertTrue(space.isEmpty());
         Assert.assertEquals(0, space.countCollisionObjects());
-        Assert.assertEquals(RayTestFlag.SubSimplexRaytest,
-                space.getRayTestFlags());
+        Assert.assertEquals(
+                RayTestFlag.SubSimplexRaytest, space.getRayTestFlags());
+        Assert.assertTrue(space.isForceUpdateAllAabbs());
         Assert.assertFalse(space.isUsingDeterministicDispatch());
     }
 
@@ -1973,7 +2060,8 @@ public class TestLibbulletjme {
         Assert.assertEquals(0, space.countManifolds());
         Assert.assertEquals(0, space.countRigidBodies());
         Assert.assertEquals(1 / 60f, space.getAccuracy(), 0f);
-        assertEquals(0f, -9.81f, 0f, space.getGravity(null), 0f);
+        Utils.assertEquals(0f, -9.81f, 0f, space.getGravity(null), 0f);
+        Assert.assertFalse(space.isCcdWithStaticOnly());
         Assert.assertFalse(space.isUsingScr());
         Assert.assertEquals(0, space.listManifoldIds().length);
         Assert.assertEquals(4, space.maxSubSteps());

@@ -51,17 +51,17 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSoftSpace_addSoftBody
             pSpace = reinterpret_cast<jmePhysicsSoftSpace *> (spaceId);
     NULL_CHK(pEnv, pSpace, "The physics space does not exist.",)
     btSoftRigidDynamicsWorld * const pWorld = pSpace->getSoftDynamicsWorld();
-    btAssert(pWorld != NULL);
-    btAssert(pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD);
+    NULL_CHK(pEnv, pWorld, "The dynamics world does not exist.",);
+    ASSERT_CHK(pEnv, pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD,);
 
     btSoftBody * const
             pSoftBody = reinterpret_cast<btSoftBody *> (softBodyId);
     NULL_CHK(pEnv, pSoftBody, "The collision object does not exist.",)
-    btAssert(pSoftBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pSoftBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     jmeUserPointer const pUser = (jmeUserPointer) pSoftBody->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == NULL);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == NULL,);
     pUser->m_jmeSpace = pSpace;
 
     pWorld->addSoftBody(pSoftBody);
@@ -80,10 +80,12 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_PhysicsSoftSpace_createPhysicsSoftS
     NULL_CHK(pEnv, minVector, "The min vector does not exist.", 0)
     btVector3 min;
     jmeBulletUtil::convert(pEnv, minVector, &min);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, maxVector, "The max vector does not exist.", 0)
     btVector3 max;
     jmeBulletUtil::convert(pEnv, maxVector, &max);
+    EXCEPTION_CHK(pEnv, 0);
 
     jmePhysicsSoftSpace * const
             pSpace = new jmePhysicsSoftSpace(pEnv, object); //dance003
@@ -104,8 +106,8 @@ JNIEXPORT jint JNICALL Java_com_jme3_bullet_PhysicsSoftSpace_getNumSoftBodies
     NULL_CHK(pEnv, pSpace, "The physics space does not exist.", 0);
     const btSoftRigidDynamicsWorld * const
             pWorld = pSpace->getSoftDynamicsWorld();
-    btAssert(pWorld != NULL);
-    btAssert(pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD);
+    NULL_CHK(pEnv, pWorld, "The dynamics world does not exist.", 0);
+    ASSERT_CHK(pEnv, pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD, 0);
 
     const btSoftBodyArray& softBodies = pWorld->getSoftBodyArray();
     int sz = softBodies.size();
@@ -123,8 +125,8 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_PhysicsSoftSpace_getWorldInfo
             pSpace = reinterpret_cast<jmePhysicsSoftSpace *> (spaceId);
     NULL_CHK(pEnv, pSpace, "The physics space does not exist.", 0)
     btSoftRigidDynamicsWorld * const pWorld = pSpace->getSoftDynamicsWorld();
-    btAssert(pWorld != NULL);
-    btAssert(pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD);
+    NULL_CHK(pEnv, pWorld, "The dynamics world does not exist.", 0);
+    ASSERT_CHK(pEnv, pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD, 0);
 
     btSoftBodyWorldInfo *pWorldInfo = &(pWorld->getWorldInfo());
     return reinterpret_cast<jlong> (pWorldInfo);
@@ -141,16 +143,16 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSoftSpace_removeSoftBody
             pSpace = reinterpret_cast<jmePhysicsSoftSpace *> (spaceId);
     NULL_CHK(pEnv, pSpace, "The physics space does not exist.",)
     btSoftRigidDynamicsWorld * const pWorld = pSpace->getSoftDynamicsWorld();
-    btAssert(pWorld != NULL);
-    btAssert(pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD);
+    NULL_CHK(pEnv, pWorld, "The dynamics world does not exist.",);
+    ASSERT_CHK(pEnv, pWorld->getWorldType() == BT_SOFT_RIGID_DYNAMICS_WORLD,);
 
     btSoftBody * const pSoftBody = reinterpret_cast<btSoftBody *> (softBodyId);
     NULL_CHK(pEnv, pSoftBody, "The collision object does not exist.",)
-    btAssert(pSoftBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pSoftBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     jmeUserPointer const pUser = (jmeUserPointer) pSoftBody->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == pSpace);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == pSpace,);
     pUser->m_jmeSpace = NULL;
 
     pWorld->removeSoftBody(pSoftBody);

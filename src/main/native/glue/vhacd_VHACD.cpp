@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 #include <iostream>
 #endif
 #include "vhacd_VHACD.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "VHACD.h"
 
 using namespace VHACD;
@@ -55,16 +55,10 @@ public:
             const char* const operationName) {
 
         jstring arg4 = pEnv->NewStringUTF(stageName);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
 
         jstring arg5 = pEnv->NewStringUTF(operationName);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
 
         jfloat arg1 = overallPercent;
         jfloat arg2 = stagePercent;
@@ -105,13 +99,17 @@ JNIEXPORT void JNICALL Java_vhacd_VHACD_compute
     const jfloat * const pPositions
             = (jfloat *) pEnv->GetDirectBufferAddress(positionsBuffer);
     NULL_CHK(pEnv, pPositions, "The positions buffer is not direct.",);
+    EXCEPTION_CHK(pEnv,);
     const jlong numFloats = pEnv->GetDirectBufferCapacity(positionsBuffer);
+    EXCEPTION_CHK(pEnv,);
 
     NULL_CHK(pEnv, indicesBuffer, "The indices buffer does not exist.",);
     const jint * const pIndices
             = (jint *) pEnv->GetDirectBufferAddress(indicesBuffer);
     NULL_CHK(pEnv, pIndices, "The indices buffer is not direct.",);
+    EXCEPTION_CHK(pEnv,);
     const jlong numInts = pEnv->GetDirectBufferCapacity(indicesBuffer);
+    EXCEPTION_CHK(pEnv,);
 
     IVHACD::Parameters * const pParams
             = reinterpret_cast<IVHACD::Parameters *> (paramsId);
@@ -146,6 +144,7 @@ JNIEXPORT void JNICALL Java_vhacd_VHACD_compute
 
             pEnv->CallStaticVoidMethod(jmeClasses::Vhacd,
                     jmeClasses::Vhacd_addHull, hullId);
+            EXCEPTION_CHK(pEnv,);
             delete pHull; //dance002
         }
     }

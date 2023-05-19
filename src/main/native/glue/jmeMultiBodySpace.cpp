@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "jmeMultiBodySpace.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 
 /*
@@ -55,7 +55,7 @@ createMultiBodySpace(const btVector3& min, const btVector3& max,
             pConstraintSolver = new btMultiBodyConstraintSolver(); //dance006
 
     // Create the multibody dynamics world.
-    m_collisionWorld = new btMultiBodyDynamicsWorld(pDispatcher, pBroadphase,
+    m_pCollisionWorld = new btMultiBodyDynamicsWorld(pDispatcher, pBroadphase,
             pConstraintSolver, pCollisionConfiguration); //dance007
 
     modify(); // Make the standard modifications.

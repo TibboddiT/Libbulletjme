@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     com_jme3_bullet_util_NativeLibrary
+ * Method:    countClampedCcdMotions
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_util_NativeLibrary_countClampedCcdMotions
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_jme3_bullet_util_NativeLibrary
  * Method:    countThreads
  * Signature: ()I
  */
@@ -85,6 +93,14 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_NativeLibrary_isQuickprof
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_NativeLibrary_isThreadSafe
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_jme3_bullet_util_NativeLibrary
+ * Method:    jniEnvId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_jme3_bullet_util_NativeLibrary_jniEnvId
   (JNIEnv *, jclass);
 
 /*

@@ -100,7 +100,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addCharacterObject
     jmeUserPointer const
             pUser = (jmeUserPointer) pCollisionObject->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == NULL);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == NULL,);
     pUser->m_jmeSpace = pSpace;
 
     pWorld->addCollisionObject(pCollisionObject,
@@ -125,8 +125,8 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addConstraintC
     btTypedConstraint * const
             pConstraint = reinterpret_cast<btTypedConstraint *> (constraintId);
     NULL_CHK(pEnv, pConstraint, "The btTypedConstraint does not exist.",)
-    btAssert(pConstraint->getConstraintType() >= POINT2POINT_CONSTRAINT_TYPE);
-    btAssert(pConstraint->getConstraintType() <= MAX_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pConstraint->getConstraintType() >= POINT2POINT_CONSTRAINT_TYPE,);
+    ASSERT_CHK(pEnv, pConstraint->getConstraintType() <= MAX_CONSTRAINT_TYPE,);
 
     pWorld->addConstraint(pConstraint, bool(disableCollisions));
 }
@@ -147,11 +147,11 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addRigidBody
 
     btRigidBody * const pBody = reinterpret_cast<btRigidBody *> (rigidBodyId);
     NULL_CHK(pEnv, pBody, "The collision object does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_RIGID_BODY,);
 
     jmeUserPointer const pUser = (jmeUserPointer) pBody->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == NULL);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == NULL,);
     pUser->m_jmeSpace = pSpace;
 
     pWorld->addRigidBody(pBody, proxyGroup, proxyMask);
@@ -224,20 +224,22 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_PhysicsSpace_createPhysicsSpace
     NULL_CHK(pEnv, minVector, "The min vector does not exist.", 0)
     btVector3 min;
     jmeBulletUtil::convert(pEnv, minVector, &min);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, maxVector, "The max vector does not exist.", 0)
     btVector3 max;
     jmeBulletUtil::convert(pEnv, maxVector, &max);
+    EXCEPTION_CHK(pEnv, 0);
 
     jmePhysicsSpace * const
             pSpace = new jmePhysicsSpace(pEnv, object); //dance003
 #if BT_THREADSAFE
-    btAssert(numSolvers >= 1);
-    btAssert(numSolvers <= BT_MAX_THREAD_COUNT);
+    ASSERT_CHK(pEnv, numSolvers >= 1, 0);
+    ASSERT_CHK(pEnv, numSolvers <= BT_MAX_THREAD_COUNT, 0);
     pSpace->createMultiThreadedSpace(min, max, (int) broadphaseType,
             (int) numSolvers);
 #else
-    btAssert(numSolvers == 1);
+    ASSERT_CHK(pEnv, numSolvers == 1, 0);
     pSpace->createPhysicsSpace(min, max, (int) broadphaseType);
 #endif // BT_THREADSAFE
 
@@ -320,6 +322,23 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_PhysicsSpace_getSolverInfo
 
 /*
  * Class:     com_jme3_bullet_PhysicsSpace
+ * Method:    isCcdWithStaticOnly
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_PhysicsSpace_isCcdWithStaticOnly
+(JNIEnv *pEnv, jclass, jlong spaceId) {
+    const jmePhysicsSpace * const
+            pSpace = reinterpret_cast<jmePhysicsSpace *> (spaceId);
+    NULL_CHK(pEnv, pSpace, "The physics space does not exist.", JNI_FALSE);
+    const btDiscreteDynamicsWorld * const pWorld = pSpace->getDynamicsWorld();
+    NULL_CHK(pEnv, pWorld, "The physics world does not exist.", JNI_FALSE);
+
+    bool result = pWorld->getCcdWithStaticOnly();
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_PhysicsSpace
  * Method:    isSpeculativeContactRestitution
  * Signature: (J)Z
  */
@@ -375,7 +394,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_removeCharacterObject
     jmeUserPointer const
             pUser = (jmeUserPointer) pCollisionObject->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == pSpace);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == pSpace,);
     pUser->m_jmeSpace = NULL;
 
     pWorld->removeCollisionObject(pCollisionObject);
@@ -397,8 +416,8 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_removeConstraint
     btTypedConstraint * const
             pConstraint = reinterpret_cast<btTypedConstraint *> (constraintId);
     NULL_CHK(pEnv, pConstraint, "The constraint does not exist.",)
-    btAssert(pConstraint->getConstraintType() >= POINT2POINT_CONSTRAINT_TYPE);
-    btAssert(pConstraint->getConstraintType() <= MAX_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pConstraint->getConstraintType() >= POINT2POINT_CONSTRAINT_TYPE,);
+    ASSERT_CHK(pEnv, pConstraint->getConstraintType() <= MAX_CONSTRAINT_TYPE,);
 
     pWorld->removeConstraint(pConstraint);
 }
@@ -418,14 +437,31 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_removeRigidBody
 
     btRigidBody * const pBody = reinterpret_cast<btRigidBody *> (rigidBodyId);
     NULL_CHK(pEnv, pBody, "The collision object does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_RIGID_BODY,);
 
     jmeUserPointer const pUser = (jmeUserPointer) pBody->getUserPointer();
     NULL_CHK(pEnv, pUser, "The user object does not exist.",)
-    btAssert(pUser->m_jmeSpace == pSpace);
+    ASSERT_CHK(pEnv, pUser->m_jmeSpace == pSpace,);
     pUser->m_jmeSpace = NULL;
 
     pWorld->removeRigidBody(pBody);
+}
+
+/*
+ * Class:     com_jme3_bullet_PhysicsSpace
+ * Method:    setCcdWithStaticOnly
+ * Signature: (JZ)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_setCcdWithStaticOnly
+(JNIEnv *pEnv, jclass, jlong spaceId, jboolean setting) {
+    jmePhysicsSpace * const
+            pSpace = reinterpret_cast<jmePhysicsSpace *> (spaceId);
+    NULL_CHK(pEnv, pSpace, "The physics space does not exist.",);
+    btDiscreteDynamicsWorld * const pWorld = pSpace->getDynamicsWorld();
+    NULL_CHK(pEnv, pWorld, "The physics world does not exist.",);
+
+    bool enable = bool(setting);
+    pWorld->setCcdWithStaticOnly(enable);
 }
 
 /*
@@ -445,6 +481,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_setGravity
 
     btVector3 gravity;
     jmeBulletUtil::convert(pEnv, gravityVector, &gravity);
+    EXCEPTION_CHK(pEnv,);
 
     pWorld->setGravity(gravity);
 }
@@ -461,7 +498,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_setSolverType
     NULL_CHK(pEnv, pSpace, "The physics space does not exist.",)
     btDynamicsWorld * const pWorld = pSpace->getDynamicsWorld();
     NULL_CHK(pEnv, pWorld, "The physics world does not exist.",);
-    btAssert(pWorld->getWorldType() == BT_DISCRETE_DYNAMICS_WORLD);
+    ASSERT_CHK(pEnv, pWorld->getWorldType() == BT_DISCRETE_DYNAMICS_WORLD,);
 
     btConstraintSolver *pConstraintSolver;
     btMLCPSolverInterface *pMLCP;
@@ -487,6 +524,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_setSolverType
         default:
             pEnv->ThrowNew(jmeClasses::IllegalArgumentException,
                     "The solver type is out of range.");
+            return;
     }
 
     btConstraintSolver *pOldSolver = pWorld->getConstraintSolver();

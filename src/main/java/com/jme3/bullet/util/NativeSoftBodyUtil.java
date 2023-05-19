@@ -119,8 +119,8 @@ final public class NativeSoftBodyUtil {
      * @param softBody the soft body to which faces and links will be added (not
      * null, modified)
      */
-    public static void appendFromNativeMesh(IndexedMesh mesh,
-            PhysicsSoftBody softBody) {
+    public static void appendFromNativeMesh(
+            IndexedMesh mesh, PhysicsSoftBody softBody) {
         Validate.nonNull(softBody, "soft body");
 
         FloatBuffer positions = mesh.copyVertexPositions();
@@ -131,9 +131,8 @@ final public class NativeSoftBodyUtil {
         assert triangleIndices.isDirect();
         IndexBuffer indexBuffer = IndexBuffer.wrapIndexBuffer(triangleIndices);
         softBody.appendFaces(indexBuffer);
-        /*
-         * Enumerate all unique edges among the triangles.
-         */
+
+        // Enumerate all unique edges among the triangles.
         int size = triangleIndices.capacity();
         Collection<IntPair> uniqueEdges = new HashSet<>(vpt * size);
         for (int intOffset = 0; intOffset < size; intOffset += vpt) {
@@ -179,9 +178,8 @@ final public class NativeSoftBodyUtil {
         IndexBuffer triangleIndices = mesh.getIndexBuffer();
         assert triangleIndices.isDirect();
         softBody.appendFaces(triangleIndices);
-        /*
-         * Enumerate all unique edges among the triangles.
-         */
+
+        // Enumerate all unique edges among the triangles.
         int size = triangleIndices.size();
         Collection<IntPair> uniqueEdges = new HashSet<>(vpt * size);
         for (int intOffset = 0; intOffset < size; intOffset += vpt) {
@@ -215,16 +213,13 @@ final public class NativeSoftBodyUtil {
      * @param softBody the soft body to append to (not null, modified)
      */
     public static void appendTetras(PhysicsSoftBody softBody) {
-        /*
-         * Append a new node, located at the center of the AABB.
-         */
+        // Append a new node, located at the center of the AABB.
         int centerIndex = softBody.countNodes();
         Vector3f centerLocation = softBody.getPhysicsLocation(null);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(centerLocation);
         softBody.appendNodes(buffer); // TODO set mass of node
-        /*
-         * Append tetrahedra, one per face.
-         */
+
+        // Append tetrahedra, one per face.
         int numNodes = softBody.countNodes();
         assert numNodes == centerIndex + 1;
         int numFaces = softBody.countFaces();
@@ -374,8 +369,8 @@ final public class NativeSoftBodyUtil {
      * body's local coordinates (relative to its bounding-box center), otherwise
      * use physics-space coordinates
      */
-    public static void updateClusterMesh(PhysicsSoftBody body, Mesh store,
-            boolean meshInLocalSpace) {
+    public static void updateClusterMesh(
+            PhysicsSoftBody body, Mesh store, boolean meshInLocalSpace) {
         long bodyId = body.nativeId();
         FloatBuffer positionBuffer = store.getPositionsData();
         assert positionBuffer != null;
@@ -429,9 +424,8 @@ final public class NativeSoftBodyUtil {
 
         if (physicsToMesh != null) {
             Vector3f tempVector = new Vector3f();
-            /*
-             * Transform physics locations to mesh positions.
-             */
+
+            // Transform physics locations to mesh positions.
             positionBuffer.rewind();
             while (positionBuffer.hasRemaining()) {
                 positionBuffer.mark();
@@ -446,10 +440,7 @@ final public class NativeSoftBodyUtil {
                 positionBuffer.put(tempVector.z);
             }
 
-            if (normalBuffer != null) {
-                /*
-                 * Rotate the normals.
-                 */
+            if (normalBuffer != null) { // Rotate the normals.
                 normalBuffer.rewind();
                 while (normalBuffer.hasRemaining()) {
                     normalBuffer.mark();
@@ -483,8 +474,8 @@ final public class NativeSoftBodyUtil {
      * body's local coordinates (relative to its bounding-box center), otherwise
      * use physics-space coordinates
      */
-    public static void updatePinMesh(PhysicsSoftBody body, Mesh store,
-            boolean meshInLocalSpace) {
+    public static void updatePinMesh(
+            PhysicsSoftBody body, Mesh store, boolean meshInLocalSpace) {
         long bodyId = body.nativeId();
         FloatBuffer positionBuffer = store.getPositionsData();
         assert positionBuffer != null;
@@ -498,10 +489,10 @@ final public class NativeSoftBodyUtil {
     native private static void updateClusterMesh(long softBodyId,
             FloatBuffer outPositionBuffer, boolean meshInLocalSpace);
 
-    native private static void updateMesh(long softBodyId,
-            IntBuffer inIndexMapping, FloatBuffer outPositionBuffer,
-            FloatBuffer outNormalBuffer, boolean meshInLocalSpace,
-            boolean updateNormals);
+    native private static void updateMesh(
+            long softBodyId, IntBuffer inIndexMapping,
+            FloatBuffer outPositionBuffer, FloatBuffer outNormalBuffer,
+            boolean meshInLocalSpace, boolean updateNormals);
 
     native private static void updateMesh(long softBodyId,
             FloatBuffer outPositionBuffer, FloatBuffer outNormalBuffer,

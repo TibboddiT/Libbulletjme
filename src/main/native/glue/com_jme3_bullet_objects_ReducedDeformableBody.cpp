@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 jMonkeyEngine
+ * Copyright (c) 2022-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,18 +51,22 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_creat
     btVector3 * const pLocations = new btVector3[n]; //dance037
     for (int i = 0; i < n; ++i) {
         jobject location = pEnv->GetObjectArrayElement(locations, i);
+        EXCEPTION_CHK(pEnv, 0);
         jmeBulletUtil::convert(pEnv, location, &pLocations[i]);
+        EXCEPTION_CHK(pEnv, 0);
     }
 
     btScalar *pMasses;
 #ifdef BT_USE_DOUBLE_PRECISION
     float * const pFloats = pEnv->GetFloatArrayElements(masses, 0);
+    EXCEPTION_CHK(pEnv, 0);
     pMasses = new btScalar[n]; //dance038
     for (int i = 0; i < n; ++i) {
         pMasses[i] = pFloats[i];
     }
 #else
     pMasses = pEnv->GetFloatArrayElements(masses, 0);
+    EXCEPTION_CHK(pEnv, 0);
 #endif
 
     btSoftBodyWorldInfo * const
@@ -78,6 +82,7 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_creat
 #else
     pEnv->ReleaseFloatArrayElements(masses, pMasses, 0);
 #endif
+    EXCEPTION_CHK(pEnv, 0);
     delete[] pLocations; //dance037
 
     pBody->getCollisionShape()->setMargin(CONVEX_DISTANCE_MARGIN);
@@ -106,7 +111,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_getLin
     const btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
     NULL_CHK(pEnv, storeVector, "The store vector does not exist.",);
 
     btVector3 velocity = pBody->getLinearVelocity();
@@ -123,7 +128,7 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_is
     const btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.", JNI_FALSE);
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY, JNI_FALSE);
 
     bool enabled = !pBody->isReducedModesOFF();
     return (jboolean) enabled;
@@ -139,7 +144,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_pinNod
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     int node_i = nodeIndex;
     pBody->setFixedNodes(node_i);
@@ -155,7 +160,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_setDam
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     btScalar a = alpha;
     btScalar b = beta;
@@ -172,11 +177,12 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_setLin
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
     NULL_CHK(pEnv, velocityVector, "The velocity vector does not exist.",);
 
     btVector3 velocity;
     jmeBulletUtil::convert(pEnv, velocityVector, &velocity);
+    EXCEPTION_CHK(pEnv,);
     pBody->setRigidVelocity(velocity);
 }
 
@@ -190,7 +196,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_setRed
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     int num_modes = numReduced;
     int full_size = numFull;
@@ -207,7 +213,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_setRed
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     bool rigid_only = !enabled;
     pBody->disableReducedModes(rigid_only);
@@ -223,7 +229,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_ReducedDeformableBody_setSti
     btReducedDeformableBody * const
             pBody = reinterpret_cast<btReducedDeformableBody *> (bodyId);
     NULL_CHK(pEnv, pBody, "The btReducedDeformableBody does not exist.",)
-    btAssert(pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY);
+    ASSERT_CHK(pEnv, pBody->getInternalType() & btCollisionObject::CO_SOFT_BODY,);
 
     btScalar ks = scale;
     pBody->setStiffnessScale(ks);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 jMonkeyEngine
+ * Copyright (c) 2020-2022 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,8 @@ import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Matrix3d;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -146,22 +148,52 @@ public class MultiBodyCollider extends PhysicsCollisionObject {
      * Directly alter the location of this collider's center.
      *
      * @param location the desired location (in physics-space coordinates, not
-     * null, unaffected)
+     * null, finite, unaffected)
      */
     public void setPhysicsLocation(Vector3f location) {
+        Validate.finite(location, "location");
+
         long objectId = nativeId();
         setPhysicsLocation(objectId, location);
     }
 
     /**
+     * Directly alter the location of this collider's center.
+     *
+     * @param location the desired location (in physics-space coordinates, not
+     * null, finite, unaffected)
+     */
+    public void setPhysicsLocationDp(Vec3d location) {
+        Validate.finite(location, "location");
+
+        long objectId = nativeId();
+        setPhysicsLocationDp(objectId, location);
+    }
+
+    /**
      * Directly alter this collider's orientation.
      *
-     * @param rotation the desired orientation (a rotation matrix in
+     * @param orientation the desired orientation (a rotation matrix in
      * physics-space coordinates, not null, unaffected)
      */
-    public void setPhysicsRotation(Matrix3f rotation) {
+    public void setPhysicsRotation(Matrix3f orientation) {
+        Validate.nonNull(orientation, "orientation");
+
         long objectId = nativeId();
-        setPhysicsRotation(objectId, rotation);
+        setPhysicsRotation(objectId, orientation);
+    }
+
+    /**
+     * Directly alter this collider's orientation.
+     *
+     * @param orientation the desired orientation (a rotation matrix in
+     * physics-space coordinates, not null, unaffected)
+     */
+    public void setPhysicsRotationDp(Matrix3d orientation) {
+        Validate.nonNull(orientation, "orientation");
+
+        long objectId = nativeId();
+        setPhysicsRotationDp(objectId, orientation);
     }
     // *************************************************************************
     // Java private methods
@@ -185,8 +217,14 @@ public class MultiBodyCollider extends PhysicsCollisionObject {
     native private static long createCollider(long multiBodyId, int linkIndex);
 
     native private static void
-            setPhysicsLocation(long objectId, Vector3f location);
+            setPhysicsLocation(long colliderId, Vector3f locationVector);
 
     native private static void
-            setPhysicsRotation(long objectId, Matrix3f rotation);
+            setPhysicsLocationDp(long colliderId, Vec3d locationVector);
+
+    native private static void
+            setPhysicsRotation(long colliderId, Matrix3f rotationMatrix);
+
+    native private static void
+            setPhysicsRotationDp(long colliderId, Matrix3d rotationMatrix);
 }

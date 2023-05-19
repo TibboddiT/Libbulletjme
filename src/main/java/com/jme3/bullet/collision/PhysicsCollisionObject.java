@@ -38,9 +38,13 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
+import com.jme3.math.TransformDp;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Matrix3d;
 import com.simsilica.mathd.Quatd;
 import com.simsilica.mathd.Vec3d;
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -135,6 +139,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     // fields
 
     /**
+     * copy of the list of specific objects with which collisions are ignored,
+     * or null for none
+     */
+    private Collection<PhysicsCollisionObject> ignoreList;
+    /**
      * shape of this object, or null if none
      */
     private CollisionShape collisionShape;
@@ -154,10 +163,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     // constructors
 
     /**
-     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     * Instantiate a collision object with no tracker and no assigned native
+     * object.
      */
-    public PhysicsCollisionObject() {
-        // do nothing
+    protected PhysicsCollisionObject() { // avoid a warning from JDK 18 javadoc
     }
     // *************************************************************************
     // new methods exposed
@@ -197,13 +206,25 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * wheels of a PhysicsVehicle aren't collision objects, so the vehicle's
      * ignore list doesn't affect them.
      *
-     * @param otherPco the other collision object (not null, not this, modified)
+     * @param otherPco the other collision object (not null, not {@code this},
+     * modified)
      */
     public void addToIgnoreList(PhysicsCollisionObject otherPco) {
-        Validate.nonNull(otherPco, "other");
+        Validate.nonNull(otherPco, "other collision object");
         Validate.require(otherPco != this, "2 distinct collision objects");
 
-        if (!ignores(otherPco)) {
+        if (ignoreList == null) {
+            this.ignoreList = new TreeSet<>();
+        }
+        if (!ignoreList.contains(otherPco)) {
+            ignoreList.add(otherPco);
+
+            if (otherPco.ignoreList == null) {
+                otherPco.ignoreList = new TreeSet<>();
+            }
+            assert !otherPco.ignoreList.contains(this);
+            otherPco.ignoreList.add(this);
+
             long thisId = nativeId();
             long otherId = otherPco.nativeId();
             boolean toIgnore = true;
@@ -237,11 +258,30 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     public void clearIgnoreList() {
         long thisId = nativeId();
-        long[] otherIds = listIgnoredIds();
-        for (long otherId : otherIds) {
+        if (ignoreList != null && !ignoreList.isEmpty()) {
             boolean toIgnore = false;
-            setIgnoreCollisionCheck(thisId, otherId, toIgnore);
+            for (PhysicsCollisionObject otherPco : ignoreList) {
+                long otherId = otherPco.nativeId();
+                setIgnoreCollisionCheck(thisId, otherId, toIgnore);
+
+                assert otherPco.ignoreList.contains(this);
+                otherPco.ignoreList.remove(this);
+            }
+            ignoreList.clear();
         }
+    }
+
+    /**
+     * Return the collision flags. Flag values are defined in
+     * {@link com.jme3.bullet.collision.CollisionFlag}.
+     *
+     * @return the values of all flags that are set, ORed together
+     */
+    public int collisionFlags() {
+        long objectId = nativeId();
+        int result = getCollisionFlags(objectId);
+
+        return result;
     }
 
     /**
@@ -253,11 +293,19 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
         assert old.hasAssignedNativeObject();
         assert old.nativeId() != nativeId();
 
+        int flags = old.collisionFlags();
+        boolean hasCsd
+                = (flags & CollisionFlag.HAS_CONTACT_STIFFNESS_DAMPING) != 0;
+
         setCcdMotionThreshold(old.getCcdMotionThreshold());
         setCcdSweptSphereRadius(old.getCcdSweptSphereRadius());
-        setContactDamping(old.getContactDamping());
+        if (hasCsd) {
+            setContactDamping(old.getContactDamping());
+        }
         setContactProcessingThreshold(old.getContactProcessingThreshold());
-        setContactStiffness(old.getContactStiffness());
+        if (hasCsd) {
+            setContactStiffness(old.getContactStiffness());
+        }
         setDeactivationTime(old.getDeactivationTime());
         setFriction(old.getFriction());
         setRestitution(old.getRestitution());
@@ -280,15 +328,15 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @see #addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)
      */
     public int countIgnored() {
-        long objectId = nativeId();
-        int result = getNumObjectsWithoutCollision(objectId);
+        int result = (ignoreList == null) ? 0 : ignoreList.size();
 
+        assert result == getNumObjectsWithoutCollision(nativeId());
         assert result >= 0 : result;
         return result;
     }
 
     /**
-     * Find the PhysicCollisionObject with the specified ID. Native method.
+     * Find the collision object with the specified ID. Native method.
      *
      * @param pcoId the native identifier (not zero)
      * @return the pre-existing instance, or null if it's been reclaimed
@@ -498,11 +546,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Copy the location of this object's center.
+     * Copy the location of this object's center to a Vector3f.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return a location vector (in physics-space coordinates, either
-     * storeResult or a new vector, not null)
+     * storeResult or a new vector, finite)
      */
     public Vector3f getPhysicsLocation(Vector3f storeResult) {
         Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
@@ -515,11 +563,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Copy the location of this object's center.
+     * Copy the location of this object's center to a Vec3d.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return a location vector (in physics-space coordinates, either
-     * storeResult or a new vector, not null)
+     * storeResult or a new vector, not null, finite)
      */
     public Vec3d getPhysicsLocationDp(Vec3d storeResult) {
         Vec3d result = (storeResult == null) ? new Vec3d() : storeResult;
@@ -527,6 +575,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
         long objectId = nativeId();
         getLocationDp(objectId, result);
 
+        assert result.isFinite() : result;
         return result;
     }
 
@@ -565,7 +614,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     /**
      * Copy the orientation of this object (the basis of its local coordinate
-     * system) to a 3x3 matrix.
+     * system) to a Matrix3f.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return a rotation matrix (in physics-space coordinates, either
@@ -576,6 +625,23 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
         long objectId = nativeId();
         getBasis(objectId, result);
+
+        return result;
+    }
+
+    /**
+     * Copy the orientation of this object (the basis of its local coordinate
+     * system) to a Matrix3d.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return a rotation matrix (in physics-space coordinates, either
+     * storeResult or a new matrix, not null)
+     */
+    public Matrix3d getPhysicsRotationMatrixDp(Matrix3d storeResult) {
+        Matrix3d result = (storeResult == null) ? new Matrix3d() : storeResult;
+
+        long objectId = nativeId();
+        getBasisDp(objectId, result);
 
         return result;
     }
@@ -656,6 +722,25 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
+     * Copy the coordinate transform of this object, including the scale of its
+     * shape.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return a coordinate transform (in physics-space coordinates, either
+     * storeResult or a new Transform, not null)
+     */
+    public TransformDp getTransformDp(TransformDp storeResult) {
+        TransformDp result
+                = (storeResult == null) ? new TransformDp() : storeResult;
+
+        getPhysicsLocationDp(result.getTranslation());
+        getPhysicsRotationDp(result.getRotation());
+        collisionShape.getScaleDp(result.getScale());
+
+        return result;
+    }
+
+    /**
      * Access the "user" of this collision object.
      *
      * @return the pre-existing instance, or null if none
@@ -692,18 +777,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @see #addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)
      */
     public boolean ignores(PhysicsCollisionObject other) {
-        boolean result = false;
-        if (other != null && other != this) {
-            long objectId = nativeId();
-            long otherId = other.nativeId();
-            int numIgnoredObjects = getNumObjectsWithoutCollision(objectId);
-            for (int index = 0; index < numIgnoredObjects; ++index) {
-                long id = getObjectWithoutCollision(objectId, index);
-                if (id == otherId) {
-                    result = true;
-                    break;
-                }
-            }
+        boolean result;
+        if (ignoreList == null || other == null) {
+            result = false;
+        } else {
+            result = ignoreList.contains(other);
         }
 
         return result;
@@ -718,7 +796,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     public boolean isActive() {
         long objectId = nativeId();
-        return isActive(objectId);
+        boolean result = isActive(objectId);
+
+        return result;
     }
 
     /**
@@ -766,7 +846,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      *
      * @return a new array (not null, may be empty)
      * @see #addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)
+     * @deprecated use {@link #listIgnoredPcos()}
      */
+    @Deprecated
     public long[] listIgnoredIds() {
         long objectId = nativeId();
         int numIgnoredObjects = getNumObjectsWithoutCollision(objectId);
@@ -776,6 +858,31 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
             long otherId = getObjectWithoutCollision(objectId, listIndex);
             assert otherId != 0L;
             result[listIndex] = otherId;
+        }
+
+        return result;
+    }
+
+    /**
+     * Enumerate all collision objects in this object's ignore list.
+     *
+     * @return a new array (not null, may be empty)
+     * @see #addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)
+     */
+    public PhysicsCollisionObject[] listIgnoredPcos() {
+        PhysicsCollisionObject[] result;
+        if (ignoreList == null) {
+            result = new PhysicsCollisionObject[0];
+
+        } else {
+            int count = ignoreList.size();
+            result = new PhysicsCollisionObject[count];
+
+            int index = 0;
+            for (PhysicsCollisionObject otherPco : ignoreList) {
+                result[index] = otherPco;
+                ++index;
+            }
         }
 
         return result;
@@ -834,10 +941,16 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * @param otherPco the other collision object (not null, not this, modified)
      */
     public void removeFromIgnoreList(PhysicsCollisionObject otherPco) {
-        Validate.nonNull(otherPco, "other");
+        Validate.nonNull(otherPco, "other collision object");
         Validate.require(otherPco != this, "2 distinct collision objects");
 
-        if (ignores(otherPco)) {
+        if (ignoreList != null && ignoreList.contains(otherPco)) {
+            ignoreList.remove(otherPco);
+
+            assert otherPco.ignoreList != null;
+            assert otherPco.ignoreList.contains(this);
+            otherPco.ignoreList.remove(this);
+
             long thisId = nativeId();
             long otherId = otherPco.nativeId();
             boolean toIgnore = false;
@@ -938,7 +1051,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Alter the contact damping (native field: m_contactDamping).
+     * Alter the contact damping (native field: m_contactDamping). Also affects
+     * the collision flags.
      * <p>
      * Contact damping doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
@@ -966,7 +1080,8 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Alter the contact stiffness (native field: m_contactStiffness).
+     * Alter the contact stiffness (native field: m_contactStiffness). Also
+     * affects the collision flags.
      * <p>
      * Contact stiffness doesn't affect a PhysicsCharacter or
      * PhysicsGhostObject.
@@ -1007,18 +1122,45 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Alter the ignore list.
+     * Replace the ignore list.
      *
      * @param idList the collision-object IDs to ignore (not null, may be empty,
      * unaffected)
+     * @deprecated use {@link #setIgnoreList(
+     * com.jme3.bullet.collision.PhysicsCollisionObject[])}
      */
+    @Deprecated
     public void setIgnoreList(long[] idList) {
         Validate.nonNull(idList, "ID list");
-        clearIgnoreList();
 
-        long thisId = nativeId();
+        clearIgnoreList();
         for (long otherId : idList) {
-            setIgnoreCollisionCheck(thisId, otherId, true);
+            PhysicsCollisionObject otherPco = findInstance(otherId);
+            addToIgnoreList(otherPco);
+        }
+    }
+
+    /**
+     * Replace the ignore list.
+     *
+     * @param desiredList collision objects to ignore (not null, may be empty,
+     * may contain nulls or duplicates or {@code this}, unaffected)
+     */
+    public void setIgnoreList(PhysicsCollisionObject[] desiredList) {
+        Validate.nonNull(desiredList, "desired list");
+
+        clearIgnoreList();
+        if (desiredList.length > 0) {
+            if (ignoreList == null) {
+                this.ignoreList = new TreeSet<>();
+            }
+
+            for (PhysicsCollisionObject otherPco : desiredList) {
+                if (otherPco != null && otherPco != this
+                        && !ignoreList.contains(otherPco)) {
+                    addToIgnoreList(otherPco);
+                }
+            }
         }
     }
 
@@ -1104,15 +1246,6 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native protected static void finalizeNative(long objectId);
 
     /**
-     * Return the collision flags of this object. Flag values are defined in
-     * {@link com.jme3.bullet.collision.CollisionFlag}. Native method.
-     *
-     * @param objectId the ID of the btCollisionObject (not zero)
-     * @return the flags that are set, ORed together
-     */
-    native protected static int getCollisionFlags(long objectId);
-
-    /**
      * Return the type of this object. Native method.
      *
      * @param objectId the ID of the btCollisionObject (not zero)
@@ -1159,7 +1292,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
             setCollisionFlags(long objectId, int desiredFlags);
 
     /**
-     * Alter the ignore list for collisions.
+     * Alter the ignore list for collisions. TODO privatize
      *
      * @param object1Id the ID of the first btCollisionObject (not zero)
      * @param object2Id the ID of the 2nd btCollisionObject (not zero)
@@ -1195,10 +1328,15 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     @Override
     public String toString() {
         String result = getClass().getSimpleName();
+        result = result.replace("Body", "");
         result = result.replace("Physics", "");
         result = result.replace("Object", "");
-        long objectId = nativeId();
-        result += "#" + Long.toHexString(objectId);
+        if (hasAssignedNativeObject()) {
+            long objectId = nativeId();
+            result += "#" + Long.toHexString(objectId);
+        } else {
+            result += "#unassigned";
+        }
 
         return result;
     }
@@ -1222,15 +1360,19 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native private static int getActivationState(long objectId);
 
     native private static void
-            getAnisotropicFriction(long objectId, Vector3f storeResult);
+            getAnisotropicFriction(long objectId, Vector3f storeVector);
 
-    native private static void getBasis(long objectId, Matrix3f storeResult);
+    native private static void getBasis(long objectId, Matrix3f storeMatrix);
+
+    native private static void getBasisDp(long objectId, Matrix3d storeMatrix);
 
     native private static float getCcdMotionThreshold(long objectId);
 
     native private static float getCcdSweptSphereRadius(long objectId);
 
     native private static int getCollideWithGroups(long objectId);
+
+    native private static int getCollisionFlags(long objectId);
 
     native private static int getCollisionGroup(long objectId);
 
@@ -1246,9 +1388,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static float getFriction(long objectId);
 
-    native private static void getLocation(long objectId, Vector3f storeResult);
+    native private static void getLocation(long objectId, Vector3f storeVector);
 
-    native private static void getLocationDp(long objectId, Vec3d storeResult);
+    native private static void getLocationDp(long objectId, Vec3d storeVector);
 
     native private static int getNumObjectsWithoutCollision(long objectId);
 
@@ -1256,10 +1398,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
             getObjectWithoutCollision(long objectId, int listIndex);
 
     native private static void
-            getOrientation(long objectId, Quaternion storeResult);
+            getOrientation(long objectId, Quaternion storeQuat);
 
     native private static void
-            getOrientationDp(long objectId, Quatd storeResult);
+            getOrientationDp(long objectId, Quatd storeQuat);
 
     native private static int getProxyFilterGroup(long objectId);
 

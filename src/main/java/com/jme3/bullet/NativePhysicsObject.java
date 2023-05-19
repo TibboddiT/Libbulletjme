@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,16 +75,16 @@ abstract public class NativePhysicsObject
     // constructors
 
     /**
-     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     * Instantiate with no tracker and no assigned native object.
      */
-    public NativePhysicsObject() {
-        // do nothing
+    protected NativePhysicsObject() { // to avoid a warning from JDK 18 javadoc
     }
     // *************************************************************************
     // new methods exposed
 
     /**
-     * Count how many native objects are being tracked.
+     * Count how many native objects are being tracked. This method is intended
+     * for debugging.
      *
      * @return the count (&ge;0)
      */
@@ -94,7 +94,8 @@ abstract public class NativePhysicsObject
     }
 
     /**
-     * Dump all native-object trackers to {@code System.out}.
+     * Dump all native-object trackers to {@code System.out}. This method is
+     * intended for debugging.
      */
     final public static void dumpTrackers() {
         System.out.println("Active trackers:");
@@ -132,7 +133,8 @@ abstract public class NativePhysicsObject
     }
 
     /**
-     * Read the ID of the assigned native object, assuming that one is assigned.
+     * Return the ID of the assigned native object, assuming that one is
+     * assigned.
      *
      * @return the native identifier (not zero)
      */
@@ -165,10 +167,10 @@ abstract public class NativePhysicsObject
         Validate.nonZero(nativeId, "nativeId");
 
         if (nativeId != id) {
-            id = nativeId;
+            this.id = nativeId;
             NpoTracker tracker = new NpoTracker(this);
             NpoTracker previous = map.put(nativeId, tracker);
-            assert previous == null : id;
+            assert previous == null : Long.toHexString(id);
         }
     }
 
@@ -180,12 +182,12 @@ abstract public class NativePhysicsObject
      */
     protected void setNativeId(long nativeId) {
         Validate.nonZero(nativeId, "nativeId");
-        assert !hasAssignedNativeObject() : id;
+        assert !hasAssignedNativeObject() : Long.toHexString(id);
 
-        id = nativeId;
+        this.id = nativeId;
         NpoTracker tracker = new NpoTracker(this);
         NpoTracker previous = map.put(nativeId, tracker);
-        assert previous == null : id;
+        assert previous == null : Long.toHexString(id);
     }
 
     /**
@@ -196,19 +198,18 @@ abstract public class NativePhysicsObject
      */
     final protected void setNativeIdNotTracked(long nativeId) {
         Validate.nonZero(nativeId, "nativeId");
-        assert !hasAssignedNativeObject() : id;
+        assert !hasAssignedNativeObject() : Long.toHexString(id);
 
-        id = nativeId;
+        this.id = nativeId;
     }
 
     /**
      * Unassign (but don't free) the assigned native object, assuming that one
-     * is assigned. Typically invoked while cloning a subclass, followed by
-     * setNativeId().
+     * is assigned.
      */
     final protected void unassignNativeObject() {
         assert hasAssignedNativeObject();
-        id = 0L;
+        this.id = 0L;
     }
     // *************************************************************************
     // Comparable methods
@@ -234,8 +235,9 @@ abstract public class NativePhysicsObject
     /**
      * Test for ID equality with another object.
      *
-     * @param otherObject the object to compare to (may be null, unaffected)
-     * @return true if the objects have the same ID, otherwise false
+     * @param otherObject the object to compare (may be null, unaffected)
+     * @return true if {@code this} and {@code otherObject} have the same ID,
+     * otherwise false
      */
     @Override
     public boolean equals(Object otherObject) {

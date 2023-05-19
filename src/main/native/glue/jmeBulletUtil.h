@@ -41,24 +41,28 @@
  */
 class jmeBulletUtil {
 public:
-    // convert Bullet math objects to jMonkeyEngine:
+    // convert Bullet math objects to jMonkeyEngine/SimMath:
     static void convert(JNIEnv *, const btMatrix3x3 * in, jobject outMatrix3f);
     static void convert(JNIEnv *, const btQuaternion * in, jobject outQuaternion);
     static void convert(JNIEnv *, const btTransform * in, jobject outTransform);
     static void convert(JNIEnv *, const btVector3 * in, jobject outVector3f);
+    static void convertDp(JNIEnv *, const btMatrix3x3 * in, jobject outMatrix3d);
     static void convertDp(JNIEnv *, const btQuaternion * in, jobject outQuatd);
     static void convertDp(JNIEnv *, const btVector3 * in, jobject outVec3d);
     static void convertQuat(JNIEnv *, const btMatrix3x3 * in, jobject outQuaternion);
+    static void convertQuatDp(JNIEnv *, const btMatrix3x3 * in, jobject outQuatd);
 
-    // convert jMonkeyEngine math objects to Bullet:
+    // convert jMonkeyEngine/SimMath math objects to Bullet:
     static void convert(JNIEnv *, jobject inMatrix3f, btMatrix3x3 * out);
     static void convert(JNIEnv *, jobject inQuaternion, btQuaternion * out);
     static void convert(JNIEnv *, jobject inTransform,
             btTransform * outTransform, btVector3 * outScale);
     static void convert(JNIEnv *, jobject inVector3f, btVector3 * out);
+    static void convertDp(JNIEnv *, jobject inMatrix3d, btMatrix3x3 * out);
     static void convertDp(JNIEnv *, jobject inQuatd, btQuaternion * out);
     static void convertDp(JNIEnv *, jobject inVec3d, btVector3 * out);
     static void convertQuat(JNIEnv *, jobject inQuaternion, btMatrix3x3 * out);
+    static void convertQuatDp(JNIEnv *, jobject inQuatd, btMatrix3x3 * out);
 
     static void addRayTestResult(JNIEnv *, jobject resultList,
             const btVector3 *pNormal, btScalar hitFraction,

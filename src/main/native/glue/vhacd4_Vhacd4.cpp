@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 #include <iostream>
 #endif
 #include "vhacd4_Vhacd4.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 /*
  * Use the pre-processor to move V-HACD v4 native code into namespaces
  * that are distinct from those occupied by classic V-HACD.
@@ -64,16 +64,11 @@ public:
             const char* const stageName, const char* operationName) {
 
         jstring arg4 = pEnv->NewStringUTF(stageName);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
+
 
         jstring arg5 = pEnv->NewStringUTF(operationName);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
 
         jfloat arg1 = overallPercent;
         jfloat arg2 = stagePercent;
@@ -114,13 +109,17 @@ JNIEXPORT void JNICALL Java_vhacd4_Vhacd4_compute
     const jfloat * const pPositions
             = (jfloat *) pEnv->GetDirectBufferAddress(positionsBuffer);
     NULL_CHK(pEnv, pPositions, "The positions buffer is not direct.",);
+    EXCEPTION_CHK(pEnv,);
     const jlong numFloats = pEnv->GetDirectBufferCapacity(positionsBuffer);
+    EXCEPTION_CHK(pEnv,);
 
     NULL_CHK(pEnv, indicesBuffer, "The indices buffer does not exist.",);
     const jint * const pIndices
             = (jint *) pEnv->GetDirectBufferAddress(indicesBuffer);
     NULL_CHK(pEnv, pIndices, "The indices buffer is not direct.",);
+    EXCEPTION_CHK(pEnv,);
     const jlong numInts = pEnv->GetDirectBufferCapacity(indicesBuffer);
+    EXCEPTION_CHK(pEnv,);
 
     IVHACD::Parameters * const pParams
             = reinterpret_cast<IVHACD::Parameters *> (paramsId);
@@ -155,6 +154,7 @@ JNIEXPORT void JNICALL Java_vhacd4_Vhacd4_compute
 
             pEnv->CallStaticVoidMethod(jmeClasses::Vhacd4,
                     jmeClasses::Vhacd4_addHull, hullId);
+            EXCEPTION_CHK(pEnv,);
             delete pHull; //dance002
         }
     }

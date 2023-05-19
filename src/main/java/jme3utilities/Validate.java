@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014-2022, Stephen Gold
+ Copyright (c) 2014-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,8 @@ package jme3utilities;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Quatd;
+import com.simsilica.mathd.Vec3d;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -126,6 +128,35 @@ final public class Validate {
             String what;
             if (description == null) {
                 what = "Vector3f argument";
+            } else {
+                what = description;
+            }
+            logger.log(Level.SEVERE, "{0}={1}", new Object[]{what, vector});
+            String message = what + " must have all components finite.";
+            throw new IllegalArgumentException(message);
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate a finite Vec3d as a method argument.
+     *
+     * @param vector the vector to validate (unaffected)
+     * @param description a description of the argument
+     * @return true
+     * @throws IllegalArgumentException if the vector has a NaN or infinite
+     * component
+     * @throws NullPointerException or IllegalArgumentException if the vector is
+     * null
+     */
+    public static boolean finite(Vec3d vector, String description) {
+        nonNull(vector, description);
+
+        if (!vector.isFinite()) {
+            String what;
+            if (description == null) {
+                what = "Vec3d argument";
             } else {
                 what = description;
             }
@@ -549,6 +580,33 @@ final public class Validate {
             String what;
             if (description == null) {
                 what = "Quaternion argument";
+            } else {
+                what = description;
+            }
+            String message = what + " must not be zero.";
+            throw new IllegalArgumentException(message);
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate a non-zero Quatd as a method argument.
+     *
+     * @param quaternion the Quatd to validate (unaffected)
+     * @param description a description of the argument
+     * @return true
+     * @throws IllegalArgumentException if the Quatd equals (0,0,0,0)
+     * @throws NullPointerException or IllegalArgumentException if the Quatd is
+     * null
+     */
+    public static boolean nonZero(Quatd quaternion, String description) {
+        nonNull(quaternion, description);
+
+        if (quaternion.isZero()) {
+            String what;
+            if (description == null) {
+                what = "Quatd argument";
             } else {
                 what = description;
             }

@@ -61,24 +61,14 @@ public:
         pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexA.getX(), vertexA.getY(), vertexA.getZ(),
                 partId, triangleIndex);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
         pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexB.getX(), vertexB.getY(), vertexB.getZ(),
                 partId, triangleIndex);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
+        EXCEPTION_CHK(pEnv,);
         pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexC.getX(), vertexC.getY(), vertexC.getZ(),
                 partId, triangleIndex);
-        if (pEnv->ExceptionCheck()) {
-            pEnv->Throw(pEnv->ExceptionOccurred());
-            return;
-        }
     }
 };
 
@@ -127,26 +117,17 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getTriangles
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexA.getX(),
                     vertexA.getY(), vertexA.getZ());
-            if (pEnv->ExceptionCheck()) {
-                pEnv->Throw(pEnv->ExceptionOccurred());
-                return;
-            }
+            EXCEPTION_CHK(pEnv,);
 
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexB.getX(),
                     vertexB.getY(), vertexB.getZ());
-            if (pEnv->ExceptionCheck()) {
-                pEnv->Throw(pEnv->ExceptionOccurred());
-                return;
-            }
+            EXCEPTION_CHK(pEnv,);
 
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexC.getX(),
                     vertexC.getY(), vertexC.getZ());
-            if (pEnv->ExceptionCheck()) {
-                pEnv->Throw(pEnv->ExceptionOccurred());
-                return;
-            }
+            EXCEPTION_CHK(pEnv,);
         }
         delete pHull; //dance027
     }
@@ -191,10 +172,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getVertices
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertex.getX(),
                     vertex.getY(), vertex.getZ());
-            if (pEnv->ExceptionCheck()) {
-                pEnv->Throw(pEnv->ExceptionOccurred());
-                return;
-            }
+            EXCEPTION_CHK(pEnv,);
         }
         delete pHull; //dance026
     }

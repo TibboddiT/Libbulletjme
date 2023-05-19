@@ -40,6 +40,7 @@ import com.jme3.bullet.collision.shapes.ConvexShape;
 import com.jme3.bullet.objects.infos.CharacterController;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -113,9 +114,8 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
          */
         setGravity(defaultGravity);
         setUp(unitY);
-        /*
-         * Initialize the location.
-         */
+
+        // Initialize the location.
         warp(translateIdentity);
 
         assert isContactResponse();
@@ -366,13 +366,13 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
      * (default=true)
      */
     public void setContactResponse(boolean newState) {
-        long objectId = nativeId();
-        int flags = getCollisionFlags(objectId);
+        int flags = collisionFlags();
         if (newState) {
             flags &= ~CollisionFlag.NO_CONTACT_RESPONSE;
         } else {
             flags |= CollisionFlag.NO_CONTACT_RESPONSE;
         }
+        long objectId = nativeId();
         setCollisionFlags(objectId, flags);
     }
 
@@ -466,11 +466,21 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
      * Directly alter this character's location. (This is equivalent to
      * {@link #warp(com.jme3.math.Vector3f)}.)
      *
-     * @param location the desired location (not null, unaffected)
+     * @param location the desired location (not null, finite, unaffected)
      */
     public void setPhysicsLocation(Vector3f location) {
-        Validate.nonNull(location, "location");
+        Validate.finite(location, "location");
         controller.warp(location);
+    }
+
+    /**
+     * Directly alter this character's location.
+     *
+     * @param location the desired location (not null, finite, unaffected)
+     */
+    public void setPhysicsLocationDp(Vec3d location) {
+        Validate.finite(location, "location");
+        controller.warpDp(location);
     }
 
     /**
@@ -520,10 +530,11 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
     /**
      * Directly alter the location of this character's center.
      *
-     * @param location the desired physics location (not null, unaffected)
+     * @param location the desired physics location (not null, finite,
+     * unaffected)
      */
     public void warp(Vector3f location) {
-        Validate.nonNull(location, "location");
+        Validate.finite(location, "location");
         controller.warp(location);
     }
     // *************************************************************************
@@ -551,7 +562,7 @@ public class PhysicsCharacter extends PhysicsCollisionObject {
         long shapeId = shape.nativeId();
         attachCollisionShape(objectId, shapeId);
 
-        controller = new CharacterController(this);
+        this.controller = new CharacterController(this);
         logger2.log(Level.FINE, "Creating {0}.", this);
     }
     // *************************************************************************

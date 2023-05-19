@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "jmeCollisionSpace.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "jmeUserInfo.h"
 
 /*
@@ -75,50 +75,44 @@ bool jmeFilterCallback::needBroadphaseCollision(btBroadphaseProxy *pProxy0,
      * As a final test, invoke the applicable collision-group listeners, if any.
      */
     jmeCollisionSpace * const pSpace = pUser0->m_jmeSpace;
-    JNIEnv * const pEnv = pSpace->getEnv();
+    JNIEnv * const pEnv = pSpace->getEnvAndAttach();
     jobject javaPhysicsSpace = pEnv->NewLocalRef(pSpace->getJavaPhysicsSpace());
+    EXCEPTION_CHK(pEnv, false);
     jobject javaCollisionObject0 = pEnv->NewLocalRef(pUser0->m_javaRef); // TODO is this necessary?
+    EXCEPTION_CHK(pEnv, false);
     jobject javaCollisionObject1 = pEnv->NewLocalRef(pUser1->m_javaRef);
+    EXCEPTION_CHK(pEnv, false);
 
     const jboolean result = pEnv->CallBooleanMethod(javaPhysicsSpace,
             jmeClasses::CollisionSpace_notifyCollisionGroupListeners,
             javaCollisionObject0, javaCollisionObject1);
+    EXCEPTION_CHK(pEnv, false);
 
     pEnv->DeleteLocalRef(javaPhysicsSpace);
+    EXCEPTION_CHK(pEnv, false);
     pEnv->DeleteLocalRef(javaCollisionObject0);
+    EXCEPTION_CHK(pEnv, false);
     pEnv->DeleteLocalRef(javaCollisionObject1);
-    if (pEnv->ExceptionCheck()) {
-        pEnv->Throw(pEnv->ExceptionOccurred());
-        return false;
-    }
 
     return (bool) result;
 }
 
 jmeCollisionSpace::jmeCollisionSpace(JNIEnv *pEnv, jobject javaSpace) {
-    this->pEnv = pEnv;
+    this->m_pCreateEnv = pEnv;
+    attachThread();
 
     m_javaSpace = pEnv->NewWeakGlobalRef(javaSpace);
-    if (pEnv->ExceptionCheck()) {
-        pEnv->Throw(pEnv->ExceptionOccurred());
-        return;
-    }
-
-    pEnv->GetJavaVM(&vm);
-    if (pEnv->ExceptionCheck()) {
-        pEnv->Throw(pEnv->ExceptionOccurred());
-        return;
-    }
+    EXCEPTION_CHK(pEnv,);
 }
 
 void jmeCollisionSpace::attachThread() {
 #ifdef ANDROID
-    vm->AttachCurrentThread((JNIEnv **) & pEnv, NULL);
-#elif defined (JNI_VERSION_1_2)
-    vm->AttachCurrentThread((void **) &pEnv, NULL);
+    // doesn't match the Invocation API spec
+    jint retCode = jmeClasses::vm->AttachCurrentThread(&m_pAttachEnv, NULL);
 #else
-    vm->AttachCurrentThread(&pEnv, NULL);
+    jint retCode = jmeClasses::vm->AttachCurrentThread((void **)&m_pAttachEnv, NULL);
 #endif
+    btAssert(retCode == JNI_OK);
 }
 
 btBroadphaseInterface * jmeCollisionSpace::createBroadphase(
@@ -138,8 +132,9 @@ btBroadphaseInterface * jmeCollisionSpace::createBroadphase(
             pBroadphase = new btDbvtBroadphase(); //dance009
             break;
         default:
-            pEnv->ThrowNew(jmeClasses::IllegalArgumentException,
+            m_pCreateEnv->ThrowNew(jmeClasses::IllegalArgumentException,
                     "The broadphase type is out of range.");
+            return 0;
     }
 
     btOverlappingPairCache * const
@@ -163,21 +158,21 @@ void jmeCollisionSpace::createCollisionSpace(const btVector3& min,
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);
 
     // Create the collision world.
-    m_collisionWorld = new btCollisionWorld(pDispatcher, pBroadphase,
+    m_pCollisionWorld = new btCollisionWorld(pDispatcher, pBroadphase,
             pCollisionConfiguration); //dance007
 }
 
 jmeCollisionSpace::~jmeCollisionSpace() {
-    int numCollisionObjects = m_collisionWorld->getNumCollisionObjects();
+    int numCollisionObjects = m_pCollisionWorld->getNumCollisionObjects();
     if (numCollisionObjects > 0) {
         /*
          * To avoid JME issue #1351, remove all collision objects.
          */
         btCollisionObjectArray&
-                objects = m_collisionWorld->getCollisionObjectArray();
+                objects = m_pCollisionWorld->getCollisionObjectArray();
         for (int i = numCollisionObjects - 1; i >= 0; --i) {
             btCollisionObject *pObject = objects[i];
-            m_collisionWorld->removeCollisionObject(pObject);
+            m_pCollisionWorld->removeCollisionObject(pObject);
 
             jmeUserPointer const
                     pUser = (jmeUserPointer) pObject->getUserPointer();
@@ -187,9 +182,9 @@ jmeCollisionSpace::~jmeCollisionSpace() {
             }
         }
     }
-    btAssert(m_collisionWorld->getNumCollisionObjects() == 0);
+    btAssert(m_pCollisionWorld->getNumCollisionObjects() == 0);
 
-    btBroadphaseInterface *pBroadphase = m_collisionWorld->getBroadphase();
+    btBroadphaseInterface *pBroadphase = m_pCollisionWorld->getBroadphase();
     if (pBroadphase) {
         btOverlappingPairCache * const
                 pPairCache = pBroadphase->getOverlappingPairCache();
@@ -210,8 +205,8 @@ jmeCollisionSpace::~jmeCollisionSpace() {
         delete pBroadphase; //dance009
     }
 
-    btCollisionDispatcher *
-            pDispatcher = (btCollisionDispatcher *) m_collisionWorld->getDispatcher();
+    btCollisionDispatcher *pDispatcher =
+            (btCollisionDispatcher *) m_pCollisionWorld->getDispatcher();
     if (pDispatcher) {
         btCollisionConfiguration *
                 pCollisionConfiguration = pDispatcher->getCollisionConfiguration();
@@ -221,5 +216,5 @@ jmeCollisionSpace::~jmeCollisionSpace() {
         delete pDispatcher; //dance008
     }
 
-    delete m_collisionWorld; //dance007
+    delete m_pCollisionWorld; //dance007
 }

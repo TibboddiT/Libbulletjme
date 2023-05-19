@@ -37,6 +37,9 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Matrix3d;
+import com.simsilica.mathd.Quatd;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +84,7 @@ public class RigidBodyMotionState extends NativePhysicsObject {
     // new methods exposed
 
     /**
-     * Copy the location from this motion state.
+     * Copy the location to a Vector3f.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the location vector (in physics-space coordinates, either
@@ -98,11 +101,28 @@ public class RigidBodyMotionState extends NativePhysicsObject {
     }
 
     /**
-     * Copy the orientation from this motion state (as a matrix).
+     * Copy the location to a Vector3d.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return the rotation matrix (in physics-space coordinates, either
-     * storeResult or a new vector, not null)
+     * @return the location vector (in physics-space coordinates, either
+     * storeResult or a new vector, not null, finite)
+     */
+    public Vec3d getLocationDp(Vec3d storeResult) {
+        Vec3d result = (storeResult == null) ? new Vec3d() : storeResult;
+
+        long motionStateId = nativeId();
+        getWorldLocationDp(motionStateId, result);
+
+        assert result.isFinite() : result;
+        return result;
+    }
+
+    /**
+     * Copy the orientation to a Matrix3f.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return the orientation (in physics-space coordinates, either storeResult
+     * or a new matrix, not null)
      */
     public Matrix3f getOrientation(Matrix3f storeResult) {
         Matrix3f result = (storeResult == null) ? new Matrix3f() : storeResult;
@@ -114,11 +134,11 @@ public class RigidBodyMotionState extends NativePhysicsObject {
     }
 
     /**
-     * Copy the orientation from this motion state (as a Quaternion).
+     * Copy the orientation to a Quaternion.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return the rotation Quaternion (in physics-space coordinates, either
-     * storeResult or a new vector, not null)
+     * @return the orientation (in physics-space coordinates, either storeResult
+     * or a new instance, not null)
      */
     public Quaternion getOrientation(Quaternion storeResult) {
         Quaternion result
@@ -126,6 +146,38 @@ public class RigidBodyMotionState extends NativePhysicsObject {
 
         long motionStateId = nativeId();
         getWorldRotationQuat(motionStateId, result);
+
+        return result;
+    }
+
+    /**
+     * Copy the orientation to a Matrix3d.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return the orientation (in physics-space coordinates, either storeResult
+     * or a new matrix, not null)
+     */
+    public Matrix3d getOrientationMatrixDp(Matrix3d storeResult) {
+        Matrix3d result = (storeResult == null) ? new Matrix3d() : storeResult;
+
+        long motionStateId = nativeId();
+        getWorldRotationDp(motionStateId, result);
+
+        return result;
+    }
+
+    /**
+     * Copy the orientation to a Quatd.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return the orientation (in physics-space coordinates, either storeResult
+     * or a new instance, not null)
+     */
+    public Quatd getOrientationQuaternionDp(Quatd storeResult) {
+        Quatd result = (storeResult == null) ? new Quatd() : storeResult;
+
+        long motionStateId = nativeId();
+        getWorldRotationQuatDp(motionStateId, result);
 
         return result;
     }
@@ -205,11 +257,20 @@ public class RigidBodyMotionState extends NativePhysicsObject {
     native private static void finalizeNative(long objectId);
 
     native private static void
-            getWorldLocation(long stateId, Vector3f storeResult);
+            getWorldLocation(long stateId, Vector3f storeVector);
 
     native private static void
-            getWorldRotation(long stateId, Matrix3f storeResult);
+            getWorldLocationDp(long stateId, Vec3d storeVector);
 
     native private static void
-            getWorldRotationQuat(long stateId, Quaternion storeResult);
+            getWorldRotation(long stateId, Matrix3f storeMatrix);
+
+    native private static void
+            getWorldRotationDp(long stateId, Matrix3d storeMatrix);
+
+    native private static void
+            getWorldRotationQuat(long stateId, Quaternion storeQuat);
+
+    native private static void
+            getWorldRotationQuatDp(long stateId, Quatd storeQuat);
 }

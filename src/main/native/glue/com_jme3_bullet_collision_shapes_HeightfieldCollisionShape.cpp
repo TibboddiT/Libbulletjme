@@ -34,7 +34,7 @@
  * Author: Normen Hansen
  */
 #include "com_jme3_bullet_collision_shapes_HeightfieldCollisionShape.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
 /*
@@ -83,6 +83,7 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_HeightfieldCollisi
     const jfloat * const pHeights
             = (jfloat *) pEnv->GetDirectBufferAddress(floatBuffer);
     NULL_CHK(pEnv, pHeights, "The heightfield buffer is not direct.", 0);
+    EXCEPTION_CHK(pEnv, 0);
 
     HeightfieldShape *pShape;
 #ifdef BT_USE_DOUBLE_PRECISION

@@ -483,6 +483,14 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsSoftBody_getPhysicsLo
 
 /*
  * Class:     com_jme3_bullet_objects_PhysicsSoftBody
+ * Method:    getPhysicsLocationDp
+ * Signature: (JLcom/simsilica/mathd/Vec3d;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsSoftBody_getPhysicsLocationDp
+  (JNIEnv *, jclass, jlong, jobject);
+
+/*
+ * Class:     com_jme3_bullet_objects_PhysicsSoftBody
  * Method:    getRestLengthScale
  * Signature: (J)F
  */
@@ -679,6 +687,14 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsSoftBody_setNormals
  * Signature: (JLcom/jme3/math/Vector3f;)V
  */
 JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsSoftBody_setPhysicsLocation
+  (JNIEnv *, jclass, jlong, jobject);
+
+/*
+ * Class:     com_jme3_bullet_objects_PhysicsSoftBody
+ * Method:    setPhysicsLocationDp
+ * Signature: (JLcom/simsilica/mathd/Vec3d;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsSoftBody_setPhysicsLocationDp
   (JNIEnv *, jclass, jlong, jobject);
 
 /*

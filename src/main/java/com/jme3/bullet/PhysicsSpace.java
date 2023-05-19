@@ -313,9 +313,8 @@ public class PhysicsSpace
             return;
         }
         assert joint.getPhysicsSpace() == null;
-        /*
-         * Warn if the jointed bodies aren't already added to this space.
-         */
+
+        // Warn if the jointed bodies aren't already added to this space.
         PhysicsBody a = joint.getBodyA();
         if (a != null && !contains(a)) {
             logger.log(Level.WARNING,
@@ -490,7 +489,9 @@ public class PhysicsSpace
      */
     public Collection<PhysicsCharacter> getCharacterList() {
         Collection<PhysicsCharacter> result = characterMap.values();
-        return Collections.unmodifiableCollection(result);
+        result = Collections.unmodifiableCollection(result);
+
+        return result;
     }
 
     /**
@@ -517,7 +518,9 @@ public class PhysicsSpace
      */
     public Collection<PhysicsJoint> getJointList() {
         Collection<PhysicsJoint> result = jointMap.values();
-        return Collections.unmodifiableCollection(result);
+        result = Collections.unmodifiableCollection(result);
+
+        return result;
     }
 
     /**
@@ -527,7 +530,8 @@ public class PhysicsSpace
      * @return the pre-existing PhysicsSpace running on this thread
      */
     public static PhysicsSpace getPhysicsSpace() {
-        return (PhysicsSpace) getCollisionSpace();
+        CollisionSpace result = getCollisionSpace();
+        return (PhysicsSpace) result;
     }
 
     /**
@@ -539,7 +543,9 @@ public class PhysicsSpace
      */
     public Collection<PhysicsRigidBody> getRigidBodyList() {
         Collection<PhysicsRigidBody> result = rigidMap.values();
-        return Collections.unmodifiableCollection(result);
+        result = Collections.unmodifiableCollection(result);
+
+        return result;
     }
 
     /**
@@ -569,7 +575,23 @@ public class PhysicsSpace
      */
     public Collection<PhysicsVehicle> getVehicleList() {
         Collection<PhysicsVehicle> result = vehicleMap.values();
-        return Collections.unmodifiableCollection(result);
+        result = Collections.unmodifiableCollection(result);
+
+        return result;
+    }
+
+    /**
+     * Test whether CCD checks for collisions with static and kinematic bodies
+     * (native field: m_ccdWithStaticOnly).
+     *
+     * @return true if checks are limited, false if checking also for collisions
+     * with dynamic bodies
+     */
+    public boolean isCcdWithStaticOnly() {
+        long spaceId = nativeId();
+        boolean result = isCcdWithStaticOnly(spaceId);
+
+        return result;
     }
 
     /**
@@ -712,6 +734,18 @@ public class PhysicsSpace
     }
 
     /**
+     * Alter whether CCD checks for collisions with static and kinematic bodies
+     * (native field: m_ccdWithStaticOnly).
+     *
+     * @param setting true to limit checking, false to check also for collisions
+     * with dynamic bodies (default=false)
+     */
+    public void setCcdWithStaticOnly(boolean setting) {
+        long spaceId = nativeId();
+        setCcdWithStaticOnly(spaceId, setting);
+    }
+
+    /**
      * Alter the gravitational acceleration acting on newly-added bodies.
      * <p>
      * Typically, when a body is added to a space, the body's gravity gets set
@@ -796,7 +830,8 @@ public class PhysicsSpace
     }
 
     /**
-     * Update this space.
+     * Update this space. This method should be invoked from the thread that
+     * created the space.
      *
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
      * @param maxSteps the maximum number of steps of size {@code accuracy}
@@ -812,6 +847,10 @@ public class PhysicsSpace
             boolean doProcessed, boolean doStarted) {
         assert Validate.nonNegative(timeInterval, "time interval");
         assert Validate.nonNegative(maxSteps, "max steps");
+
+        if (NativeLibrary.jniEnvId() != jniEnvId()) {
+            logger.log(Level.WARNING, "invoked from wrong thread");
+        }
 
         long spaceId = nativeId();
         assert accuracy > 0f : accuracy;
@@ -1038,7 +1077,7 @@ public class PhysicsSpace
      */
     @Override
     public void onContactEnded(long manifoldId) {
-        // do nothing
+        assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
     }
 
     /**
@@ -1055,6 +1094,8 @@ public class PhysicsSpace
     @Override
     public void onContactProcessed(PhysicsCollisionObject pcoA,
             PhysicsCollisionObject pcoB, long pointId) {
+        assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
+
         PhysicsCollisionEvent event
                 = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
         // Queue the event to be handled later by distributeEvents().
@@ -1072,6 +1113,8 @@ public class PhysicsSpace
      */
     @Override
     public void onContactStarted(long manifoldId) {
+        assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
+
         int numPoints = PersistentManifolds.countPoints(manifoldId);
         if (numPoints == 0) {
             return;
@@ -1189,7 +1232,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Compare Bullet's gravity vector to the local copy.
+     * Compare Bullet's gravity vector to the JVM copy.
      *
      * @param storeVector caller-allocated temporary storage (not null)
      * @return true if scale factors are exactly equal, otherwise false
@@ -1209,7 +1252,9 @@ public class PhysicsSpace
      *
      * @param timeStep the time per simulation step (in seconds, &ge;0)
      */
-    private void postTick_native(float timeStep) {
+    private void postTick(float timeStep) {
+        assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
+
         for (PhysicsTickListener listener : tickListeners) {
             listener.physicsTick(this, timeStep);
         }
@@ -1220,7 +1265,9 @@ public class PhysicsSpace
      *
      * @param timeStep the time per simulation step (in seconds, &ge;0)
      */
-    private void preTick_native(float timeStep) {
+    private void preTick(float timeStep) {
+        assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
+
         for (PhysicsTickListener listener : tickListeners) {
             listener.prePhysicsTick(this, timeStep);
         }
@@ -1318,6 +1365,8 @@ public class PhysicsSpace
 
     native private static long getSolverInfo(long spaceId);
 
+    native private static boolean isCcdWithStaticOnly(long spaceId);
+
     native private static boolean isSpeculativeContactRestitution(long spaceId);
 
     native private static void removeAction(long spaceId, long actionId);
@@ -1329,6 +1378,9 @@ public class PhysicsSpace
             removeConstraint(long spaceId, long constraintId);
 
     native private static void removeRigidBody(long spaceId, long rigidBodyId);
+
+    native private static void
+            setCcdWithStaticOnly(long spaceId, boolean setting);
 
     native private static void setGravity(long spaceId, Vector3f gravityVector);
 

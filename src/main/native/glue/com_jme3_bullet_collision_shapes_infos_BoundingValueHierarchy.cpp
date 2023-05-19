@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,11 @@
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_deSerialize
 (JNIEnv *pEnv, jclass, jbyteArray bytearray) {
     int len = pEnv->GetArrayLength(bytearray);
+    EXCEPTION_CHK(pEnv, 0);
     void *pBuffer = btAlignedAlloc(len, 16); //dance035
     pEnv->GetByteArrayRegion(bytearray, 0, len,
             reinterpret_cast<jbyte *> (pBuffer));
+    EXCEPTION_CHK(pEnv, 0);
 
     btOptimizedBvh * const
             pBvh = btOptimizedBvh::deSerializeInPlace(pBuffer, len, true);
@@ -72,7 +74,7 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValu
     btBvhTriangleMeshShape * const
             pShape = reinterpret_cast<btBvhTriangleMeshShape *> (shapeId);
     NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.", 0);
-    btAssert(pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE);
+    ASSERT_CHK(pEnv, pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE, 0);
 
     btOptimizedBvh * const pBvh = pShape->getOptimizedBvh();
     return reinterpret_cast<jlong> (pBvh);
@@ -93,12 +95,15 @@ JNIEXPORT jbyteArray JNICALL Java_com_jme3_bullet_collision_shapes_infos_Boundin
     char *pBuffer = (char *) btAlignedAlloc(bufferSize, 16); //dance015
     bool success = pBvh->serialize(pBuffer, bufferSize, true);
     if (!success) {
-        jclass newExc = pEnv->FindClass("java/lang/RuntimeException");
-        pEnv->ThrowNew(newExc, "Unable to serialize, native error reported");
+        pEnv->ThrowNew(jmeClasses::RuntimeException,
+                "Unable to serialize, native error reported");
+        return 0;
     }
 
     jbyteArray byteArray = pEnv->NewByteArray(bufferSize);
+    EXCEPTION_CHK(pEnv, 0);
     pEnv->SetByteArrayRegion(byteArray, 0, bufferSize, (jbyte *) pBuffer);
+    EXCEPTION_CHK(pEnv, 0);
     btAlignedFree(pBuffer); //dance015
 
     return byteArray;

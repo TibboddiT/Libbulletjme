@@ -44,11 +44,13 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Matrix3d;
 import com.simsilica.mathd.Quatd;
 import com.simsilica.mathd.Vec3d;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
+import jme3utilities.math.MyQuaternion;
 import jme3utilities.math.MyVector3f;
 
 /**
@@ -70,12 +72,12 @@ public class PhysicsRigidBody extends PhysicsBody {
     // fields
 
     /**
-     * copy of kinematic flag: true&rarr;set kinematic mode,
+     * JVM copy of kinematic flag: true&rarr;set kinematic mode,
      * false&rarr;dynamic/static mode
      */
     private boolean kinematic = false;
     /**
-     * copy of the mass (&gt;0) of a dynamic body, or 0 for a static body
+     * JVM copy of the mass (&gt;0) of a dynamic body, or 0 for a static body
      */
     protected float mass = 1f;
     /**
@@ -501,7 +503,8 @@ public class PhysicsRigidBody extends PhysicsBody {
      * @return true if in dynamic mode, otherwise false (static/kinematic mode)
      */
     public boolean isDynamic() {
-        return mass > massForStatic && !kinematic;
+        boolean result = (mass > massForStatic && !kinematic);
+        return result;
     }
 
     /**
@@ -526,7 +529,7 @@ public class PhysicsRigidBody extends PhysicsBody {
      * @return true if in kinematic mode, otherwise false (dynamic/static mode)
      */
     final public boolean isKinematic() {
-        assert checkKinematicFlag() : kinematic;
+        assert checkKinematicFlag() : "copy of flag = " + kinematic;
         return kinematic;
     }
 
@@ -576,35 +579,48 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Rebuild this rigid body with a new native object.
      */
     public void rebuildRigidBody() {
+        long oldId = 0L;
         PhysicsSpace removedFrom = null;
         RigidBodySnapshot snapshot = null;
+        Vec3d gravity = null;
 
         if (hasAssignedNativeObject()) {
             // Gather information regarding the existing native object.
+            oldId = nativeId();
             removedFrom = (PhysicsSpace) getCollisionSpace();
             if (removedFrom != null) {
                 removedFrom.removeCollisionObject(this);
             }
             snapshot = new RigidBodySnapshot(this);
+            gravity = getGravityDp(null);
 
-            logger2.log(Level.FINE, "Clearing {0}.", this);
+            logger2.log(Level.INFO, "Clearing {0}.", this);
             clearIgnoreList();
             unassignNativeObject();
         }
 
         preRebuild();
 
+        long msId = motionState.nativeId();
         CollisionShape shape = getCollisionShape();
-        long objectId = createRigidBody(
-                mass, motionState.nativeId(), shape.nativeId());
+        long shapeId = shape.nativeId();
+        long objectId = createRigidBody(mass, msId, shapeId);
         setNativeId(objectId);
         assert getInternalType(objectId) == PcoType.rigid :
                 getInternalType(objectId);
-        logger2.log(Level.FINE, "Created {0}.", this);
-
-        if (mass != massForStatic) {
-            setKinematic(kinematic);
+        if (logger2.isLoggable(Level.INFO)) {
+            if (oldId == 0L) {
+                logger2.log(
+                        Level.INFO, "Created {0}.", Long.toHexString(objectId));
+            } else {
+                logger2.log(
+                        Level.INFO, "Substituted {0} for {1}.", new Object[]{
+                            Long.toHexString(objectId), Long.toHexString(oldId)
+                        });
+            }
         }
+
+        setKinematic(kinematic);
 
         postRebuild();
 
@@ -613,6 +629,9 @@ public class PhysicsRigidBody extends PhysicsBody {
         }
         if (snapshot != null) {
             snapshot.applyTo(this);
+        }
+        if (gravity != null) {
+            setGravityDp(objectId, gravity);
         }
         // TODO physics joints
     }
@@ -723,13 +742,13 @@ public class PhysicsRigidBody extends PhysicsBody {
      * (default=true)
      */
     public void setContactResponse(boolean newState) {
-        long objectId = nativeId();
-        int flags = getCollisionFlags(objectId);
+        int flags = collisionFlags();
         if (newState) {
             flags &= ~CollisionFlag.NO_CONTACT_RESPONSE;
         } else {
             flags |= CollisionFlag.NO_CONTACT_RESPONSE;
         }
+        long objectId = nativeId();
         setCollisionFlags(objectId, flags);
     }
 
@@ -815,17 +834,11 @@ public class PhysicsRigidBody extends PhysicsBody {
      * (default=false)
      */
     public void setKinematic(boolean kinematic) {
-        if (mass == massForStatic) {
-            throw new IllegalStateException(
-                    "Cannot set/clear kinematic mode on a static body!");
-        }
-        assert !isStatic();
-
         this.kinematic = kinematic;
         long objectId = nativeId();
         setKinematic(objectId, kinematic);
 
-        assert isKinematic() == kinematic : kinematic;
+        assert isKinematic() == kinematic : "copy of flag = " + kinematic;
     }
 
     /**
@@ -871,7 +884,7 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Alter the linear velocity of this body's center of mass.
      *
      * @param velocity the desired velocity (physics-space units per second in
-     * physics-space coordinates, not null, unaffected)
+     * physics-space coordinates, not null, finite, unaffected)
      */
     public void setLinearVelocity(Vector3f velocity) {
         Validate.finite(velocity, "velocity");
@@ -888,6 +901,8 @@ public class PhysicsRigidBody extends PhysicsBody {
      * physics-space coordinates, not null, unaffected)
      */
     public void setLinearVelocityDp(Vec3d velocity) {
+        Validate.nonNull(velocity, "velocity");
+
         long objectId = nativeId();
         setLinearVelocityDp(objectId, velocity);
         activate();
@@ -900,6 +915,8 @@ public class PhysicsRigidBody extends PhysicsBody {
      * null, unaffected)
      */
     public void setPhysicsLocationDp(Vec3d location) {
+        Validate.nonNull(location, "location");
+
         long objectId = nativeId();
         setPhysicsLocationDp(objectId, location);
     }
@@ -925,10 +942,14 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Directly reorient this body.
      *
      * @param orientation the desired orientation (relative to physics-space
-     * coordinates, not null, unaffected)
+     * coordinates, not null, not zero, unaffected)
      */
     public void setPhysicsRotation(Quaternion orientation) {
-        Validate.nonNull(orientation, "orientation");
+        Validate.nonZero(orientation, "orientation");
+        if (getCollisionShape() instanceof HeightfieldCollisionShape
+                && !MyQuaternion.isRotationIdentity(orientation)) {
+            throw new IllegalArgumentException("No rotation of heightfields.");
+        }
 
         long objectId = nativeId();
         setPhysicsRotation(objectId, orientation);
@@ -937,11 +958,32 @@ public class PhysicsRigidBody extends PhysicsBody {
     /**
      * Directly reorient this body.
      *
+     * @param orientation the desired orientation (rotation matrix relative to
+     * physics-space coordinates, not null, unaffected)
+     */
+    public void setPhysicsRotationDp(Matrix3d orientation) {
+        Validate.nonNull(orientation, "orientation");
+        if (getCollisionShape() instanceof HeightfieldCollisionShape
+                && !orientation.isIdentity()) {
+            throw new IllegalArgumentException("No rotation of heightfields.");
+        }
+
+        long objectId = nativeId();
+        setPhysicsRotationDp(objectId, orientation);
+    }
+
+    /**
+     * Directly reorient this body.
+     *
      * @param orientation the desired orientation (relative to physics-space
-     * coordinates, not null, unaffected)
+     * coordinates, not null, not zero, unaffected)
      */
     public void setPhysicsRotationDp(Quatd orientation) {
-        Validate.nonNull(orientation, "orientation");
+        Validate.nonZero(orientation, "orientation");
+        if (getCollisionShape() instanceof HeightfieldCollisionShape
+                && !orientation.isRotationIdentity()) {
+            throw new IllegalArgumentException("No rotation of heightfields.");
+        }
 
         long objectId = nativeId();
         setPhysicsRotationDp(objectId, orientation);
@@ -1050,13 +1092,13 @@ public class PhysicsRigidBody extends PhysicsBody {
      * For use by subclasses.
      */
     protected void postRebuild() {
-        long objectId = nativeId();
-        int flags = getCollisionFlags(objectId);
-        if (mass == massForStatic) {
+        int flags = collisionFlags();
+        if (mass == massForStatic && !kinematic) {
             flags |= CollisionFlag.STATIC_OBJECT;
         } else {
             flags &= ~CollisionFlag.STATIC_OBJECT;
         }
+        long objectId = nativeId();
         setCollisionFlags(objectId, flags);
 
         initUserPointer();
@@ -1128,17 +1170,17 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's mass. Bodies with mass=0 are static. For dynamic
-     * bodies, it is best to keep the mass on the order of 1.
+     * Alter this body's mass. Static bodies have mass=0. For dynamic bodies, it
+     * is best to keep the mass on the order of 1.
      *
-     * @param mass the desired mass (&gt;0) or 0 for a static body (default=1)
+     * @param mass the desired mass (&ge;0, default=1)
      */
     @Override
     public void setMass(float mass) {
         Validate.nonNegative(mass, "mass");
         CollisionShape shape = getCollisionShape();
         assert shape != null;
-        if (mass != massForStatic) {
+        if (mass > massForStatic && !kinematic) {
             validateDynamicShape(shape);
         }
         assert hasAssignedNativeObject();
@@ -1157,8 +1199,8 @@ public class PhysicsRigidBody extends PhysicsBody {
         long objectId = nativeId();
         updateMassProps(objectId, shape.nativeId(), mass);
 
-        int flags = getCollisionFlags(objectId);
-        if (mass == massForStatic) {
+        int flags = collisionFlags();
+        if (mass == massForStatic && !kinematic) {
             flags |= CollisionFlag.STATIC_OBJECT;
         } else {
             flags &= ~CollisionFlag.STATIC_OBJECT;
@@ -1170,7 +1212,7 @@ public class PhysicsRigidBody extends PhysicsBody {
      * Directly relocate this body's center of mass.
      *
      * @param location the desired location (in physics-space coordinates, not
-     * null, unaffected)
+     * null, finite, unaffected)
      */
     @Override
     public void setPhysicsLocation(Vector3f location) {
@@ -1183,7 +1225,24 @@ public class PhysicsRigidBody extends PhysicsBody {
     // Java private methods
 
     /**
-     * Compare Bullet's mass to the local copy.
+     * Compare Bullet's kinematic flag to the JVM copy.
+     *
+     * @return true if the flags are equal, otherwise false
+     */
+    private boolean checkKinematicFlag() {
+        int flags = collisionFlags();
+        boolean nativeKinematicFlag
+                = (flags & CollisionFlag.KINEMATIC_OBJECT) != 0x0;
+
+        if (kinematic == nativeKinematicFlag) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Compare Bullet's mass to the JVM copy.
      *
      * @return true if the masses are approximately equal, otherwise false
      */
@@ -1193,29 +1252,6 @@ public class PhysicsRigidBody extends PhysicsBody {
         boolean result = FastMath.approximateEquals(nativeMass, mass);
 
         return result;
-    }
-
-    /**
-     * Compare Bullet's kinematic flag to the local copy.
-     *
-     * @return true if the flags are equal, otherwise false
-     */
-    private boolean checkKinematicFlag() {
-        if (mass == massForStatic) {
-            // don't invoke getCollisionFlags(long) TODO
-            return true;
-        }
-
-        long objectId = nativeId();
-        int flags = getCollisionFlags(objectId);
-        boolean nativeKinematicFlag
-                = (flags & CollisionFlag.KINEMATIC_OBJECT) != 0x0;
-
-        if (kinematic == nativeKinematicFlag) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -1350,6 +1386,9 @@ public class PhysicsRigidBody extends PhysicsBody {
 
     native private static void
             setPhysicsRotation(long objectId, Quaternion rotation);
+
+    native private static void
+            setPhysicsRotationDp(long objectId, Matrix3d rotation);
 
     native private static void
             setPhysicsRotationDp(long objectId, Quatd rotation);

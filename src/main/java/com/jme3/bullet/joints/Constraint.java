@@ -99,14 +99,14 @@ abstract public class Constraint extends PhysicsJoint {
         switch (bodyEnd) {
             case A:
                 setBodyA(body);
-                pivotA = pivotInBody.clone();
-                pivotB = null;
+                this.pivotA = pivotInBody.clone();
+                this.pivotB = null;
                 break;
 
             case B:
                 setBodyB(body);
-                pivotA = null;
-                pivotB = pivotInBody.clone();
+                this.pivotA = null;
+                this.pivotB = pivotInBody.clone();
                 break;
 
             default:
@@ -141,14 +141,14 @@ abstract public class Constraint extends PhysicsJoint {
         switch (bodyEnd) {
             case A:
                 setBodyA(body);
-                pivotA = pivotInBody.clone();
-                pivotB = pivotInWorld.clone();
+                this.pivotA = pivotInBody.clone();
+                this.pivotB = pivotInWorld.clone();
                 break;
 
             case B:
                 setBodyB(body);
-                pivotA = pivotInWorld.clone();
-                pivotB = pivotInBody.clone();
+                this.pivotA = pivotInWorld.clone();
+                this.pivotB = pivotInBody.clone();
                 break;
 
             default:
@@ -184,8 +184,8 @@ abstract public class Constraint extends PhysicsJoint {
 
         setBodyA(bodyA);
         setBodyB(bodyB);
-        pivotA = pivotInA.clone();
-        pivotB = pivotInB.clone();
+        this.pivotA = pivotInA.clone();
+        this.pivotB = pivotInB.clone();
         bodyA.addJoint(this);
         bodyB.addJoint(this);
     }
@@ -246,14 +246,19 @@ abstract public class Constraint extends PhysicsJoint {
     public Vector3f getPivot(JointEnd end, Vector3f storeResult) {
         Validate.nonNull(end, "end");
 
+        Vector3f result;
         switch (end) {
             case A:
-                return getPivotA(storeResult);
+                result = getPivotA(storeResult);
+                break;
             case B:
-                return getPivotB(storeResult);
+                result = getPivotB(storeResult);
+                break;
             default:
                 throw new IllegalArgumentException("end = " + end);
         }
+
+        return result;
     }
 
     /**

@@ -34,7 +34,7 @@
  * Author: Normen Hansen
  */
 #include "com_jme3_bullet_objects_PhysicsCharacter.h"
-#include "jmeBulletUtil.h"
+#include "jmeClasses.h"
 #include "jmePhysicsSpace.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_PhysicsCharacter_setCharacte
     btPairCachingGhostObject * const
             pGhost = reinterpret_cast<btPairCachingGhostObject *> (ghostId);
     NULL_CHK(pEnv, pGhost, "The btPairCachingGhostObject does not exist.",)
-    btAssert(pGhost->getInternalType() & btCollisionObject::CO_GHOST_OBJECT);
+    ASSERT_CHK(pEnv, pGhost->getInternalType() & btCollisionObject::CO_GHOST_OBJECT,);
 
     pGhost->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 }

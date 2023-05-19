@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 jMonkeyEngine
+ * Copyright (c) 2019-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,19 @@
 #include "LinearMath/btAlignedAllocator.h"
 #include "LinearMath/btQuickprof.h"
 #include "LinearMath/btThreads.h"
+
+extern int gNumClampedCcdMotions;
+
+/*
+ * Class:     com_jme3_bullet_util_NativeLibrary
+ * Method:    countClampedCcdMotions
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_util_NativeLibrary_countClampedCcdMotions
+(JNIEnv *pEnv, jclass) {
+    int result = gNumClampedCcdMotions;
+    return jint(result);
+}
 
 /*
  * Class:     com_jme3_bullet_util_NativeLibrary
@@ -161,12 +174,16 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_NativeLibrary_isInsideTrian
 
     btVector3 pt;
     jmeBulletUtil::convert(pEnv, testVector, &pt);
+    EXCEPTION_CHK(pEnv, JNI_FALSE);
     btVector3 p0;
     jmeBulletUtil::convert(pEnv, v0Vector, &p0);
+    EXCEPTION_CHK(pEnv, JNI_FALSE);
     btVector3 p1;
     jmeBulletUtil::convert(pEnv, v1Vector, &p1);
+    EXCEPTION_CHK(pEnv, JNI_FALSE);
     btVector3 p2;
     jmeBulletUtil::convert(pEnv, v2Vector, &p2);
+    EXCEPTION_CHK(pEnv, JNI_FALSE);
 
     btTriangleShape triangleShape(p0, p1, p2);
     btScalar margin = (btScalar) maxSeparation;
@@ -201,6 +218,16 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_NativeLibrary_isThreadSafe
 #else
     return JNI_FALSE;
 #endif //BT_THREADSAFE
+}
+
+/*
+ * Class:     com_jme3_bullet_util_NativeLibrary
+ * Method:    jniEnvId
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_jme3_bullet_util_NativeLibrary_jniEnvId
+(JNIEnv *pEnv, jclass) {
+    return reinterpret_cast<jlong> (pEnv);
 }
 
 /*

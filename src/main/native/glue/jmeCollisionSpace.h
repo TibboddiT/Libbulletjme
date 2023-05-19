@@ -49,13 +49,16 @@ struct jmeFilterCallback : public btOverlapFilterCallback {
 
 class jmeCollisionSpace {
 protected:
-    btCollisionWorld * m_collisionWorld;
+    btCollisionWorld * m_pCollisionWorld;
     /*
-     * an interface pointer for the Java thread that simulates this space:
+     * interface pointer most recently attached by this space:
      */
-    JNIEnv *pEnv;
+    JNIEnv *m_pAttachEnv;
+    /*
+     * interface pointer for the thread that created this space:
+     */
+    JNIEnv *m_pCreateEnv;
     jobject m_javaSpace;
-    JavaVM * vm;
     /*
      * exclusive access to the JavaVM and JNIEnv during parallel for loops:
      */
@@ -76,18 +79,28 @@ public:
 
     const btCollisionWorld *
     getCollisionWorld() const {
-        return m_collisionWorld;
+        return m_pCollisionWorld;
     }
 
     btCollisionWorld *
     getCollisionWorld() {
-        return m_collisionWorld;
+        return m_pCollisionWorld;
+    }
+
+    const JNIEnv *
+    getAttachEnv() const {
+        return m_pAttachEnv;
+    }
+
+    const JNIEnv *
+    getCreateEnv() const {
+        return m_pCreateEnv;
     }
 
     JNIEnv *
-    getEnv() {
+    getEnvAndAttach() {
         attachThread();
-        return pEnv;
+        return m_pAttachEnv;
     }
 
     jobject

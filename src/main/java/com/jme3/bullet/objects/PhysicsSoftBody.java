@@ -43,6 +43,9 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.util.BufferUtils;
+import com.simsilica.mathd.Matrix3d;
+import com.simsilica.mathd.Quatd;
+import com.simsilica.mathd.Vec3d;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -1030,7 +1033,9 @@ public class PhysicsSoftBody extends PhysicsBody {
      */
     public float restingLengthsScale() {
         long objectId = nativeId();
-        return getRestLengthScale(objectId);
+        float result = getRestLengthScale(objectId);
+
+        return result;
     }
 
     /**
@@ -1182,7 +1187,20 @@ public class PhysicsSoftBody extends PhysicsBody {
     }
 
     /**
-     * Set the "default pose" or "lowest energy state" of this body to its
+     * Directly relocate the center of this body's bounding box.
+     *
+     * @param location the desired location (in physics-space coordinates, not
+     * null, finite, unaffected)
+     */
+    public void setPhysicsLocationDp(Vec3d location) {
+        Validate.finite(location, "location");
+
+        long objectId = nativeId();
+        setPhysicsLocationDp(objectId, location);
+    }
+
+    /**
+     * Set the "default pose" (lowest energy state) of this body based on its
      * current pose.
      *
      * @param setVolumePose true&rarr;alter the volume pose, false&rarr; don't
@@ -1203,7 +1221,7 @@ public class PhysicsSoftBody extends PhysicsBody {
      * replaced (default=false)
      */
     public void setProtectWorldInfo(boolean newState) {
-        isWorldInfoProtected = newState;
+        this.isWorldInfoProtected = newState;
     }
 
     /**
@@ -1305,7 +1323,9 @@ public class PhysicsSoftBody extends PhysicsBody {
      */
     public float volume() {
         long objectId = nativeId();
-        return getVolume(objectId);
+        float result = getVolume(objectId);
+
+        return result;
     }
 
     /**
@@ -1462,11 +1482,29 @@ public class PhysicsSoftBody extends PhysicsBody {
     }
 
     /**
+     * Locate the center of this body's axis-aligned bounding box.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return a location vector (in physics-space coordinates, either
+     * storeResult or a new instance, not null, finite)
+     */
+    @Override
+    public Vec3d getPhysicsLocationDp(Vec3d storeResult) {
+        Vec3d result = (storeResult == null) ? new Vec3d() : storeResult;
+
+        long objectId = nativeId();
+        getPhysicsLocationDp(objectId, result);
+
+        assert result.isFinite() : result;
+        return result;
+    }
+
+    /**
      * Copy the orientation (rotation) of this body to a Quaternion.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return a rotation quaternion (in physics-space coordinates, either
-     * storeResult or a new instance, not null)
+     * @return an identity quaternion (either storeResult or a new instance, not
+     * null)
      */
     @Override
     public Quaternion getPhysicsRotation(Quaternion storeResult) {
@@ -1477,12 +1515,30 @@ public class PhysicsSoftBody extends PhysicsBody {
     }
 
     /**
-     * Copy the orientation of this body (the basis of its local coordinate
-     * system) to a 3x3 matrix.
+     * Copy the orientation (rotation) of this body to a Quatd.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return a rotation matrix (in physics-space coordinates, either
-     * storeResult or a new matrix, not null)
+     * @return an identity quaternion (either storeResult or a new instance, not
+     * null)
+     */
+    @Override
+    public Quatd getPhysicsRotationDp(Quatd storeResult) {
+        Quatd result;
+        if (storeResult == null) {
+            result = new Quatd();
+        } else {
+            result = storeResult.set(0., 0., 0., 1.);
+        }
+        return result;
+    }
+
+    /**
+     * Copy the orientation of this body (the basis of its local coordinate
+     * system) to a Matrix3f.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return an identity matrix (either storeResult or a new instance, not
+     * null)
      */
     @Override
     public Matrix3f getPhysicsRotationMatrix(Matrix3f storeResult) {
@@ -1492,11 +1548,29 @@ public class PhysicsSoftBody extends PhysicsBody {
     }
 
     /**
+     * Copy the orientation of this body (the basis of its local coordinate
+     * system) to a Matrix3d.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return an identity matrix (either storeResult or a new instance, not
+     * null)
+     */
+    @Override
+    public Matrix3d getPhysicsRotationMatrixDp(Matrix3d storeResult) {
+        Matrix3d result;
+        if (storeResult == null) {
+            result = new Matrix3d();
+        } else {
+            result = storeResult.makeIdentity();
+        }
+        return result;
+    }
+
+    /**
      * Copy the scale factors of this object.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return the scale factor for each local axis (either storeResult or a new
-     * vector, not null, no negative component)
+     * @return the value (1,1,1) (either storeResult or a new vector)
      */
     @Override
     public Vector3f getScale(Vector3f storeResult) {
@@ -1541,7 +1615,7 @@ public class PhysicsSoftBody extends PhysicsBody {
      * Directly relocate the center of this body's bounding box.
      *
      * @param location the desired location (in physics-space coordinates, not
-     * null, unaffected)
+     * null, finite, unaffected)
      */
     @Override
     public void setPhysicsLocation(Vector3f location) {
@@ -1702,6 +1776,9 @@ public class PhysicsSoftBody extends PhysicsBody {
     native private static void
             getPhysicsLocation(long bodyId, Vector3f storeVector);
 
+    native private static void
+            getPhysicsLocationDp(long bodyId, Vec3d storeVector);
+
     native private static float getRestLengthScale(long bodyId);
 
     native private static long getSoftBodyWorldInfo(long bodyId);
@@ -1764,6 +1841,9 @@ public class PhysicsSoftBody extends PhysicsBody {
 
     native private static void
             setPhysicsLocation(long bodyId, Vector3f locationVector);
+
+    native private static void
+            setPhysicsLocationDp(long bodyId, Vec3d locationVector);
 
     native private static void
             setPose(long bodyId, boolean setVolumePose, boolean setFramePose);

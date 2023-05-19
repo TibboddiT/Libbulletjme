@@ -91,7 +91,7 @@ public class DeformableSpace extends MultiBodySpace {
 
         long spaceId = super.nativeId();
         long worldInfoId = getWorldInfo(spaceId);
-        worldInfo = new SoftBodyWorldInfo(worldInfoId);
+        this.worldInfo = new SoftBodyWorldInfo(worldInfoId);
 
         // Ensure that the same gravity is applied to all bodies.
         Vector3f gravity = super.getGravity(null);
@@ -120,7 +120,8 @@ public class DeformableSpace extends MultiBodySpace {
      * @return the pre-existing DeformableSpace running on this thread
      */
     public static DeformableSpace getDeformableSpace() {
-        return (DeformableSpace) getCollisionSpace();
+        CollisionSpace result = getCollisionSpace();
+        return (DeformableSpace) result;
     }
 
     /**
@@ -132,7 +133,9 @@ public class DeformableSpace extends MultiBodySpace {
      */
     public Collection<PhysicsSoftBody> getSoftBodyList() {
         Collection<PhysicsSoftBody> result = softBodyMap.values();
-        return Collections.unmodifiableCollection(result);
+        result = Collections.unmodifiableCollection(result);
+
+        return result;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 jMonkeyEngine
+ * Copyright (c) 2019-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,9 +50,9 @@ final public class NativeLibrary {
     final public static Logger logger
             = Logger.getLogger(NativeLibrary.class.getName());
     /**
-     * expected version of the native library
+     * expected version string of the native library
      */
-    final public static String expectedVersion = "16.3.0";
+    final public static String expectedVersion = "18.2.1";
     // *************************************************************************
     // constructors
 
@@ -65,6 +65,16 @@ final public class NativeLibrary {
     // new methods exposed
 
     /**
+     * Count the cumulative number of clamped CCD motions (native variable:
+     * gNumClampedCcdMotions).
+     * <p>
+     * For debugging. The value shouldn't grow too large.
+     *
+     * @return the count (&ge;0)
+     */
+    native public static int countClampedCcdMotions();
+
+    /**
      * Count how many threads are available for task scheduling.
      *
      * @return the count (&ge;0)
@@ -72,7 +82,8 @@ final public class NativeLibrary {
     native public static int countThreads();
 
     /**
-     * Crash the JVM with an EXCEPTION_ACCESS_VIOLATION or SIGILL, for testing.
+     * Crash the JVM with an EXCEPTION_ACCESS_VIOLATION or SIGILL. Intended for
+     * testing only!
      */
     native public static void crash();
 
@@ -99,7 +110,7 @@ final public class NativeLibrary {
     /**
      * Execute btAssert(0). This has no effect on Release builds, but if the
      * native library was built with debugging enabled, it should terminate the
-     * JVM.
+     * Java Virtual Machine. Intended for testing only!
      */
     native public static void fail();
 
@@ -147,6 +158,14 @@ final public class NativeLibrary {
     native public static boolean isThreadSafe();
 
     /**
+     * Return the address of the current thread's JNIEnv. For debugging and
+     * testing.
+     *
+     * @return the virtual address of the (native) object (not zero)
+     */
+    native public static long jniEnvId();
+
+    /**
      * Reset Quickprof. This feature is enabled only in native libraries built
      * with the BT_ENABLE_PROFILE macro defined. Must be invoked on the
      * designated physics thread.
@@ -173,9 +192,9 @@ final public class NativeLibrary {
     native public static void setStartupMessageEnabled(boolean printFlag);
 
     /**
-     * Determine the native library's core version number.
+     * Determine the native library's version string.
      *
-     * @return the version number (typically of the form Major.Minor.Patch)
+     * @return the version string (typically of the form Major.Minor.Patch)
      */
     native public static String versionNumber();
     // *************************************************************************

@@ -48,27 +48,31 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_joints_HingeJoint_createJoint
 
     btRigidBody *pBodyA = reinterpret_cast<btRigidBody *> (bodyIdA);
     NULL_CHK(pEnv, pBodyA, "Rigid body A does not exist.", 0)
-    btAssert(pBodyA->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+    ASSERT_CHK(pEnv, pBodyA->getInternalType() & btCollisionObject::CO_RIGID_BODY, 0);
 
     btRigidBody *pBodyB = reinterpret_cast<btRigidBody *> (bodyIdB);
     NULL_CHK(pEnv, pBodyB, "Rigid body B does not exist.", 0)
-    btAssert(pBodyB->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+    ASSERT_CHK(pEnv, pBodyB->getInternalType() & btCollisionObject::CO_RIGID_BODY, 0);
 
     NULL_CHK(pEnv, pivotInA, "The pivotInA vector does not exist.", 0)
     btVector3 pivotA;
     jmeBulletUtil::convert(pEnv, pivotInA, &pivotA);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, pivotInB, "The pivotInB vector does not exist.", 0)
     btVector3 pivotB;
     jmeBulletUtil::convert(pEnv, pivotInB, &pivotB);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, axisInA, "The axisInA vector does not exist.", 0)
     btVector3 axisA;
     jmeBulletUtil::convert(pEnv, axisInA, &axisA);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, axisInB, "The axisInB vector does not exist.", 0)
     btVector3 axisB;
     jmeBulletUtil::convert(pEnv, axisInB, &axisB);
+    EXCEPTION_CHK(pEnv, 0);
 
     btHingeConstraint *
             pJoint = new btHingeConstraint(*pBodyA, *pBodyB, pivotA, pivotB,
@@ -89,15 +93,17 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_joints_HingeJoint_createJoint1
 
     btRigidBody *pBodyA = reinterpret_cast<btRigidBody *> (bodyIdA);
     NULL_CHK(pEnv, pBodyA, "Rigid body A does not exist.", 0)
-    btAssert(pBodyA->getInternalType() & btCollisionObject::CO_RIGID_BODY);
+    ASSERT_CHK(pEnv, pBodyA->getInternalType() & btCollisionObject::CO_RIGID_BODY, 0);
 
     NULL_CHK(pEnv, pivotInA, "The pivotInA vector does not exist.", 0)
     btVector3 pivot;
     jmeBulletUtil::convert(pEnv, pivotInA, &pivot);
+    EXCEPTION_CHK(pEnv, 0);
 
     NULL_CHK(pEnv, axisInA, "The axisInA vector does not exist.", 0)
     btVector3 axis;
     jmeBulletUtil::convert(pEnv, axisInA, &axis);
+    EXCEPTION_CHK(pEnv, 0);
 
     btHingeConstraint *pJoint = new btHingeConstraint(*pBodyA, pivot, axis,
             useReferenceFrameA); //dance021
@@ -116,7 +122,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_joints_HingeJoint_enableMotor
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.",)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE,);
 
     pJoint->enableAngularMotor(enable, targetVelocity, maxMotorImpulse);
 }
@@ -131,7 +137,7 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_joints_HingeJoint_getEnableAngul
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", JNI_FALSE)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, JNI_FALSE);
 
     return pJoint->getEnableAngularMotor();
 }
@@ -146,7 +152,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_joints_HingeJoint_getFrameOffsetA
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.",)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE,);
 
     NULL_CHK(pEnv, storeTransform, "The storeTransform does not exist.",);
 
@@ -164,7 +170,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_joints_HingeJoint_getFrameOffsetB
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.",)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE,);
 
     NULL_CHK(pEnv, storeTransform, "The storeTransform does not exist.",);
 
@@ -182,7 +188,7 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_joints_HingeJoint_getHingeAngle
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", 0)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, 0);
 
     return pJoint->getHingeAngle();
 }
@@ -197,7 +203,7 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_joints_HingeJoint_getLowerLimit
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", 0)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, 0);
 
     return pJoint->getLowerLimit();
 }
@@ -212,7 +218,7 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_joints_HingeJoint_getMaxMotorImpul
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", 0)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, 0);
 
     return pJoint->getMaxMotorImpulse();
 }
@@ -227,7 +233,7 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_joints_HingeJoint_getMotorTargetVe
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", 0)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, 0);
 
     return pJoint->getMotorTargetVelocity();
 }
@@ -242,7 +248,7 @@ JNIEXPORT jfloat JNICALL Java_com_jme3_bullet_joints_HingeJoint_getUpperLimit
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.", 0)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE, 0);
 
     return pJoint->getUpperLimit();
 }
@@ -257,7 +263,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_joints_HingeJoint_setAngularOnly
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.",)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE,);
 
     pJoint->setAngularOnly(angular);
 }
@@ -273,7 +279,7 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_joints_HingeJoint_setLimit
     btHingeConstraint *pJoint
             = reinterpret_cast<btHingeConstraint *> (jointId);
     NULL_CHK(pEnv, pJoint, "The btHingeConstraint does not exist.",)
-    btAssert(pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE);
+    ASSERT_CHK(pEnv, pJoint->getConstraintType() == HINGE_CONSTRAINT_TYPE,);
 
     return pJoint->setLimit(low, high, softness, biasFactor,
             relaxationFactor);

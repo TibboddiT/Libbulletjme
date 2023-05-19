@@ -49,6 +49,14 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_CollisionSpace_getDeterministicO
 
 /*
  * Class:     com_jme3_bullet_CollisionSpace
+ * Method:    getJniEnvId
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jme3_bullet_CollisionSpace_getJniEnvId
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_CollisionSpace
  * Method:    getNumCollisionObjects
  * Signature: (J)I
  */
@@ -73,6 +81,14 @@ JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_CollisionSpace_hasContact
 
 /*
  * Class:     com_jme3_bullet_CollisionSpace
+ * Method:    isForceUpdateAllAabbs
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_CollisionSpace_isForceUpdateAllAabbs
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_CollisionSpace
  * Method:    pairTest
  * Signature: (JJJLcom/jme3/bullet/collision/PhysicsCollisionListener;)I
  */
@@ -81,10 +97,18 @@ JNIEXPORT jint JNICALL Java_com_jme3_bullet_CollisionSpace_pairTest
 
 /*
  * Class:     com_jme3_bullet_CollisionSpace
- * Method:    rayTest_native
+ * Method:    rayTestNative
  * Signature: (Lcom/jme3/math/Vector3f;Lcom/jme3/math/Vector3f;JLjava/util/List;I)V
  */
-JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_rayTest_1native
+JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_rayTestNative
+  (JNIEnv *, jclass, jobject, jobject, jlong, jobject, jint);
+
+/*
+ * Class:     com_jme3_bullet_CollisionSpace
+ * Method:    rayTestNativeDp
+ * Signature: (Lcom/simsilica/mathd/Vec3d;Lcom/simsilica/mathd/Vec3d;JLjava/util/List;I)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_rayTestNativeDp
   (JNIEnv *, jclass, jobject, jobject, jlong, jobject, jint);
 
 /*
@@ -105,10 +129,18 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_setDeterministicOverl
 
 /*
  * Class:     com_jme3_bullet_CollisionSpace
- * Method:    sweepTest_native
+ * Method:    setForceUpdateAllAabbs
+ * Signature: (JZ)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_setForceUpdateAllAabbs
+  (JNIEnv *, jclass, jlong, jboolean);
+
+/*
+ * Class:     com_jme3_bullet_CollisionSpace
+ * Method:    sweepTestNative
  * Signature: (JLcom/jme3/math/Transform;Lcom/jme3/math/Transform;JLjava/util/List;F)V
  */
-JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_sweepTest_1native
+JNIEXPORT void JNICALL Java_com_jme3_bullet_CollisionSpace_sweepTestNative
   (JNIEnv *, jclass, jlong, jobject, jobject, jlong, jobject, jfloat);
 
 #ifdef __cplusplus

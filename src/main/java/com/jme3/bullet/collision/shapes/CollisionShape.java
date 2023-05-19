@@ -38,6 +38,7 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
+import com.simsilica.mathd.Vec3d;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
@@ -99,10 +100,10 @@ abstract public class CollisionShape extends NativePhysicsObject {
     // constructors
 
     /**
-     * A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect
+     * Instantiate a collision shape with no tracker and no assigned native
+     * object.
      */
-    public CollisionShape() {
-        // do nothing
+    protected CollisionShape() { // to avoid a warning from JDK 18 javadoc
     }
     // *************************************************************************
     // new methods exposed
@@ -133,8 +134,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * @param storeResult storage for the result (modified if not null)
      * @return a bounding box (either storeResult or a new instance, not null)
      */
-    public BoundingBox boundingBox(Vector3f translation, Matrix3f rotation,
-            BoundingBox storeResult) {
+    public BoundingBox boundingBox(
+            Vector3f translation, Matrix3f rotation, BoundingBox storeResult) {
         Validate.finite(translation, "translation");
         Validate.nonNull(rotation, "rotation");
         BoundingBox result
@@ -248,6 +249,21 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
+     * Copy the scale factors.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return the scale factor for each local axis (either {@code storeResult}
+     * or a new vector, not null, no negative component)
+     */
+    public Vec3d getScaleDp(Vec3d storeResult) {
+        long shapeId = nativeId();
+        Vec3d result = (storeResult == null) ? new Vec3d() : storeResult;
+        getLocalScalingDp(shapeId, result);
+
+        return result;
+    }
+
+    /**
      * Return the type of this shape.
      *
      * @return the type value (from Bullet's {@code enum BroadphaseNativeTypes})
@@ -286,7 +302,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
      */
     public boolean isContactFilterEnabled() {
         assert enableContactFilter == isContactFilterEnabled(nativeId()) :
-                enableContactFilter;
+                "copy of flag = " + enableContactFilter;
         return enableContactFilter;
     }
 
@@ -534,7 +550,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * Compare Bullet's scale factors to the local copies.
      *
      * @param storeVector caller-allocated temporary storage (not null)
-     * @return true if Bullet and the local copy match exactly, otherwise false
+     * @return true if Bullet and the JVM copy match exactly, otherwise false
      */
     private boolean checkScale(Vector3f storeVector) {
         assert storeVector != null;
@@ -570,6 +586,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
 
     native private static void
             getLocalScaling(long shapeId, Vector3f storeVector);
+
+    native private static void
+            getLocalScalingDp(long shapeId, Vec3d storeVector);
 
     native private static float getMargin(long shapeId);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 jMonkeyEngine
+ * Copyright (c) 2022-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -145,11 +145,13 @@ public class GearJoint extends Constraint {
     public Vector3f getAxisA(Vector3f storeResult) {
         assert checkAxisA();
 
+        Vector3f result;
         if (storeResult == null) {
-            return axisA.clone();
+            result = axisA.clone();
         } else {
-            return storeResult.set(axisA);
+            result = storeResult.set(axisA);
         }
+        return result;
     }
 
     /**
@@ -162,11 +164,13 @@ public class GearJoint extends Constraint {
     public Vector3f getAxisB(Vector3f storeResult) {
         assert checkAxisB();
 
+        Vector3f result;
         if (storeResult == null) {
-            return axisB.clone();
+            result = axisB.clone();
         } else {
-            return storeResult.set(axisB);
+            result = storeResult.set(axisB);
         }
+        return result;
     }
 
     /**
@@ -228,7 +232,7 @@ public class GearJoint extends Constraint {
     // Java private methods
 
     /**
-     * Test whether the local copy of the A body's axis matches the native
+     * Test whether the JVM copy of the A body's axis matches the native
      * value.
      *
      * @return true for an exact match, otherwise false
@@ -243,7 +247,7 @@ public class GearJoint extends Constraint {
     }
 
     /**
-     * Test whether the local copy of the A body's axis matches the native
+     * Test whether the JVM copy of the A body's axis matches the native
      * value.
      *
      * @return true for an exact match, otherwise false

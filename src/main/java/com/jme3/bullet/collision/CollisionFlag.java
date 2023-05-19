@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  * Named collision flags for a PhysicsCollisionObject.
  *
  * @author Stephen Gold sgold@sonic.net
- * @see PhysicsCollisionObject#getCollisionFlags(long)
+ * @see PhysicsCollisionObject#collisionFlags()
  */
 final public class CollisionFlag {
     // *************************************************************************
@@ -73,7 +73,7 @@ final public class CollisionFlag {
      */
     final public static int DISABLE_SPU_COLLISION_PROCESSING = 0x40;
     /**
-     * flag not supported by Libbulletjme
+     * indicates that contact damping and/or contact stiffness have been set
      */
     final public static int HAS_CONTACT_STIFFNESS_DAMPING = 0x80;
     /**

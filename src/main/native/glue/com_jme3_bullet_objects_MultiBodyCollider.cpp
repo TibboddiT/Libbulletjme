@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 jMonkeyEngine
+ * Copyright (c) 2020-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,13 +66,32 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_MultiBodyCollider_setPhysics
     btMultiBodyLinkCollider * const pCollider
             = reinterpret_cast<btMultiBodyLinkCollider *> (colliderId);
     NULL_CHK(pEnv, pCollider, "The btMultiBodyLinkCollider does not exist.",)
-    btAssert(pCollider->getInternalType()
-            & btCollisionObject::CO_FEATHERSTONE_LINK);
+    ASSERT_CHK(pEnv, pCollider->getInternalType()
+            & btCollisionObject::CO_FEATHERSTONE_LINK,);
 
     NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
 
-    btVector3 *pLocation = &pCollider->getWorldTransform().getOrigin();
+    btVector3 * const pLocation = &pCollider->getWorldTransform().getOrigin();
     jmeBulletUtil::convert(pEnv, locationVector, pLocation);
+}
+
+/*
+ * Class:     com_jme3_bullet_objects_MultiBodyCollider
+ * Method:    setPhysicsLocationDp
+ * Signature: (JLcom/simsilica/mathd/Vec3d;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_MultiBodyCollider_setPhysicsLocationDp
+(JNIEnv *pEnv, jclass, jlong colliderId, jobject locationVector) {
+    btMultiBodyLinkCollider * const pCollider
+            = reinterpret_cast<btMultiBodyLinkCollider *> (colliderId);
+    NULL_CHK(pEnv, pCollider, "The btMultiBodyLinkCollider does not exist.",)
+    ASSERT_CHK(pEnv, pCollider->getInternalType()
+            & btCollisionObject::CO_FEATHERSTONE_LINK,);
+
+    NULL_CHK(pEnv, locationVector, "The location vector does not exist.",)
+
+    btVector3 * const pLocation = &pCollider->getWorldTransform().getOrigin();
+    jmeBulletUtil::convertDp(pEnv, locationVector, pLocation);
 }
 
 /*
@@ -85,11 +104,31 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_MultiBodyCollider_setPhysics
     btMultiBodyLinkCollider * const pCollider
             = reinterpret_cast<btMultiBodyLinkCollider *> (colliderId);
     NULL_CHK(pEnv, pCollider, "The btMultiBodyLinkCollider does not exist.",)
-    btAssert(pCollider->getInternalType()
-            & btCollisionObject::CO_FEATHERSTONE_LINK);
+    ASSERT_CHK(pEnv, pCollider->getInternalType()
+            & btCollisionObject::CO_FEATHERSTONE_LINK,);
 
     NULL_CHK(pEnv, rotationMatrix, "The rotation matrix does not exist.",)
 
-    btMatrix3x3 *pRotation = &pCollider->getWorldTransform().getBasis();
+    btMatrix3x3 * const pRotation = &pCollider->getWorldTransform().getBasis();
     jmeBulletUtil::convert(pEnv, rotationMatrix, pRotation);
 }
+
+/*
+ * Class:     com_jme3_bullet_objects_MultiBodyCollider
+ * Method:    setPhysicsRotationDp
+ * Signature: (JLcom/simsilica/mathd/Matrix3d;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_objects_MultiBodyCollider_setPhysicsRotationDp
+(JNIEnv *pEnv, jclass, jlong colliderId, jobject rotationMatrix) {
+    btMultiBodyLinkCollider * const pCollider
+            = reinterpret_cast<btMultiBodyLinkCollider *> (colliderId);
+    NULL_CHK(pEnv, pCollider, "The btMultiBodyLinkCollider does not exist.",)
+    ASSERT_CHK(pEnv, pCollider->getInternalType()
+            & btCollisionObject::CO_FEATHERSTONE_LINK,);
+
+    NULL_CHK(pEnv, rotationMatrix, "The rotation matrix does not exist.",)
+
+    btMatrix3x3 * const pRotation = &pCollider->getWorldTransform().getBasis();
+    jmeBulletUtil::convertDp(pEnv, rotationMatrix, pRotation);
+}
+
