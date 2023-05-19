@@ -83,7 +83,7 @@ public:
             return;
         }
 
-        JNIEnv * const pEnv = pSpace->getEnv();
+        JNIEnv * const pEnv = pSpace->getEnvAndAttach();
 
         jobject javaShape = pEnv->NewLocalRef(pUser->m_javaRef);
 
@@ -138,14 +138,14 @@ public:
 
 /*
  * Class:     com_jme3_bullet_collision_shapes_ProceduralCollisionShape
- * Method:    createShape_native
+ * Method:    createShapeNative
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisionShape_createShape_1native
+JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_ProceduralCollisionShape_createShapeNative
   (JNIEnv *pEnv, jobject object, jobject storage) {
     jmeClasses::initJavaClasses(pEnv);
 
-    // printf("in ProceduralCollisionShape_createShape_native\n");
+    // printf("in ProceduralCollisionShape_createShapeNative\n");
     // fflush(stdout);
 
     btProcMeshShape * pShape = new btProcMeshShape();

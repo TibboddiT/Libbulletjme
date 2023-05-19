@@ -113,11 +113,11 @@ public class ProceduralCollisionShape extends CollisionShape {
      * Instantiate the configured btTriangleMeshShape.
      */
     private void createShape() {
-        long shapeId = createShape_native(trianglesStorage);
+        long shapeId = createShapeNative(trianglesStorage);
         setNativeId(shapeId);
    }
     // *************************************************************************
     // native private methods
 
-    native private long createShape_native(FloatBuffer storage);
+    native private long createShapeNative(FloatBuffer storage);
 }
