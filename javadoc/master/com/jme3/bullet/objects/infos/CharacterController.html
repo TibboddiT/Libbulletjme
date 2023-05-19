@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../../script.js"></script>
-<script type="text/javascript" src="../../../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -288,6 +288,11 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warp(com.jme3.math.Vector3f)" class="member-name-link">warp</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;location)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Directly alter the location of the character's center.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warpDp(com.simsilica.mathd.Vec3d)" class="member-name-link">warpDp</a><wbr>(<a href="../../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;location)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Directly alter the location of the character's center.</div>
 </div>
 </div>
@@ -595,7 +600,7 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>gravity</code> - the desired acceleration vector (in physics-space units
- per second squared, not null, unaffected, default=(0,-29.4,0))</dd>
+ per second squared, not null, finite, unaffected, default=(0,-29.4,0))</dd>
 </dl>
 </section>
 </li>
@@ -630,7 +635,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Alter the linear velocity of the character's center.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>velocity</code> - the desired velocity vector (not null)</dd>
+<dd><code>velocity</code> - the desired velocity vector (not null, finite)</dd>
 </dl>
 </section>
 </li>
@@ -703,7 +708,7 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>offset</code> - the desired location increment for each simulation step (in
- physics-space coordinates, not null, unaffected, default=(0,0,0))</dd>
+ physics-space coordinates, not null, finite, unaffected, default=(0,0,0))</dd>
 </dl>
 </section>
 </li>
@@ -714,7 +719,20 @@ loadScripts(document, 'script');</script>
 <div class="block">Directly alter the location of the character's center.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>location</code> - the desired physics location (not null, unaffected)</dd>
+<dd><code>location</code> - the desired physics location (not null, finite,
+ unaffected)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="warpDp(com.simsilica.mathd.Vec3d)">
+<h3>warpDp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">warpDp</span><wbr><span class="parameters">(<a href="../../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;location)</span></div>
+<div class="block">Directly alter the location of the character's center.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>location</code> - the desired physics location (not null, finite,
+ unaffected)</dd>
 </dl>
 </section>
 </li>

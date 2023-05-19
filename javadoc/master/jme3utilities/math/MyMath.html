@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../script.js"></script>
-<script type="text/javascript" src="../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <hr>
-<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MyMath</span>
+<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">MyMath</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Mathematical utility methods. TODO method to combine 2 transforms</div>
 </section>
@@ -119,7 +119,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -165,6 +165,18 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isFinite(float)" class="member-name-link">isFinite</a><wbr>(float&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Test whether the specified floating-point value is finite.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#isFinite(com.simsilica.mathd.Vec3d)" class="member-name-link">isFinite</a><wbr>(<a href="../../com/simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;vector)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="../../com/simsilica/mathd/Vec3d.html#isFinite()"><code>Vec3d.isFinite()</code></a></div>
+</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isFiniteDouble(double)" class="member-name-link">isFiniteDouble</a><wbr>(double&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Test whether the specified floating-point value is finite.</div>
 </div>
@@ -404,6 +416,38 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFinite</span><wbr><span class="parameters">(float&nbsp;value)</span></div>
 <div class="block">Test whether the specified floating-point value is finite. Note that Java
  8 provides <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#isFinite(float)" title="class or interface in java.lang" class="external-link"><code>Float.isFinite(float)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - the value to test</dd>
+<dt>Returns:</dt>
+<dd>true if finite, false if NaN or infinity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isFinite(com.simsilica.mathd.Vec3d)">
+<h3>isFinite</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFinite</span><wbr><span class="parameters">(<a href="../../com/simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;vector)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="../../com/simsilica/mathd/Vec3d.html#isFinite()"><code>Vec3d.isFinite()</code></a></div>
+</div>
+<div class="block">Tests whether the argument is a valid vector, returning false if it's
+ null or if any component is NaN or infinite.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>vector</code> - the vector to test (unaffected)</dd>
+<dt>Returns:</dt>
+<dd>true if non-null and finite, otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isFiniteDouble(double)">
+<h3>isFiniteDouble</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFiniteDouble</span><wbr><span class="parameters">(double&nbsp;value)</span></div>
+<div class="block">Test whether the specified floating-point value is finite. Note that Java
+ 8 provides <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Double.html#isFinite(double)" title="class or interface in java.lang" class="external-link"><code>Double.isFinite(double)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - the value to test</dd>

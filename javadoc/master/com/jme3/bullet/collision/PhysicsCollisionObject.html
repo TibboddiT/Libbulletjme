@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../script.js"></script>
-<script type="text/javascript" src="../../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -206,12 +206,15 @@ loadScripts(document, 'script');</script>
 <section class="constructor-summary" id="constructor-summary">
 <h2>Constructor Summary</h2>
 <div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">PhysicsCollisionObject</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">A no-arg constructor to avoid javadoc warnings from JDK 18.</div>
+<div class="block">Instantiate a collision object with no tracker and no assigned native
+ object.</div>
 </div>
 </div>
 </section>
@@ -221,7 +224,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -260,63 +263,63 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Clear this object's ignore list.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copyPcoProperties(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">copyPcoProperties</a><wbr>(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;old)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#collisionFlags()" class="member-name-link">collisionFlags</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return the collision flags.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copyPcoProperties(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">copyPcoProperties</a><wbr>(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;old)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy common properties from another collision object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countIgnored()" class="member-name-link">countIgnored</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countIgnored()" class="member-name-link">countIgnored</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Count the collision objects in this object's ignore list.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#finalizeNative(long)" class="member-name-link">finalizeNative</a><wbr>(long&nbsp;objectId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#finalizeNative(long)" class="member-name-link">finalizeNative</a><wbr>(long&nbsp;objectId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finalize the identified btCollisionObject.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findInstance(long)" class="member-name-link">findInstance</a><wbr>(long&nbsp;pcoId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Find the PhysicCollisionObject with the specified ID.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findInstance(long)" class="member-name-link">findInstance</a><wbr>(long&nbsp;pcoId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find the collision object with the specified ID.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActivationState()" class="member-name-link">getActivationState</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActivationState()" class="member-name-link">getActivationState</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return this object's activation state (native field: m_activationState1).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnisotropicFriction(com.jme3.math.Vector3f)" class="member-name-link">getAnisotropicFriction</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnisotropicFriction(com.jme3.math.Vector3f)" class="member-name-link">getAnisotropicFriction</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy this object's anisotropic friction components (native field:
  m_anisotropicFriction).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdMotionThreshold()" class="member-name-link">getCcdMotionThreshold</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdMotionThreshold()" class="member-name-link">getCcdMotionThreshold</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return the continuous collision detection (CCD) motion threshold (native
  field: m_ccdMotionThreshold).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdSquareMotionThreshold()" class="member-name-link">getCcdSquareMotionThreshold</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdSquareMotionThreshold()" class="member-name-link">getCcdSquareMotionThreshold</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return the squared motion threshold.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdSweptSphereRadius()" class="member-name-link">getCcdSweptSphereRadius</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCcdSweptSphereRadius()" class="member-name-link">getCcdSweptSphereRadius</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return the radius of the sphere used for continuous collision detection
  (CCD) (native field: m_ccdSweptSphereRadius).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCollideWithGroups()" class="member-name-link">getCollideWithGroups</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCollideWithGroups()" class="member-name-link">getCollideWithGroups</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return the set of collision groups with which this object can collide.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCollisionFlags(long)" class="member-name-link">getCollisionFlags</a><wbr>(long&nbsp;objectId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Return the collision flags of this object.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCollisionGroup()" class="member-name-link">getCollisionGroup</a>()</code></div>
@@ -367,12 +370,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPhysicsLocation(com.jme3.math.Vector3f)" class="member-name-link">getPhysicsLocation</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Copy the location of this object's center.</div>
+<div class="block">Copy the location of this object's center to a Vector3f.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPhysicsLocationDp(com.simsilica.mathd.Vec3d)" class="member-name-link">getPhysicsLocationDp</a><wbr>(<a href="../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Copy the location of this object's center.</div>
+<div class="block">Copy the location of this object's center to a Vec3d.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Quaternion.html" title="class in com.jme3.math">Quaternion</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPhysicsRotation(com.jme3.math.Quaternion)" class="member-name-link">getPhysicsRotation</a><wbr>(<a href="../../math/Quaternion.html" title="class in com.jme3.math">Quaternion</a>&nbsp;storeResult)</code></div>
@@ -388,32 +391,44 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPhysicsRotationMatrix(com.jme3.math.Matrix3f)" class="member-name-link">getPhysicsRotationMatrix</a><wbr>(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy the orientation of this object (the basis of its local coordinate
- system) to a 3x3 matrix.</div>
+ system) to a Matrix3f.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRestitution()" class="member-name-link">getRestitution</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../simsilica/mathd/Matrix3d.html" title="class in com.simsilica.mathd">Matrix3d</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPhysicsRotationMatrixDp(com.simsilica.mathd.Matrix3d)" class="member-name-link">getPhysicsRotationMatrixDp</a><wbr>(<a href="../../../simsilica/mathd/Matrix3d.html" title="class in com.simsilica.mathd">Matrix3d</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Copy the orientation of this object (the basis of its local coordinate
+ system) to a Matrix3d.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRestitution()" class="member-name-link">getRestitution</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return this object's restitution (bounciness) (native field:
  m_restitution).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRollingFriction()" class="member-name-link">getRollingFriction</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRollingFriction()" class="member-name-link">getRollingFriction</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return this object's rolling friction (native field: m_rollingFriction).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScale(com.jme3.math.Vector3f)" class="member-name-link">getScale</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScale(com.jme3.math.Vector3f)" class="member-name-link">getScale</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy the scale of this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpinningFriction()" class="member-name-link">getSpinningFriction</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpinningFriction()" class="member-name-link">getSpinningFriction</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return this object's spinning friction (native field:
  m_spinningFriction).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTransform(com.jme3.math.Transform)" class="member-name-link">getTransform</a><wbr>(<a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTransform(com.jme3.math.Transform)" class="member-name-link">getTransform</a><wbr>(<a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Copy the coordinate transform of this object, including the scale of its
+ shape.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/TransformDp.html" title="class in com.jme3.math">TransformDp</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTransformDp(com.jme3.math.TransformDp)" class="member-name-link">getTransformDp</a><wbr>(<a href="../../math/TransformDp.html" title="class in com.jme3.math">TransformDp</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy the coordinate transform of this object, including the scale of its
  shape.</div>
@@ -461,116 +476,129 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether this object is static (immobile).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#listIgnoredIds()" class="member-name-link">listIgnoredIds</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Enumerate the native IDs of all collision objects in this object's ignore
- list.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>long[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#listIgnoredIds()" class="member-name-link">listIgnoredIds</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#listIgnoredPcos()"><code>listIgnoredPcos()</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#proxyGroup()" class="member-name-link">proxyGroup</a>()</code></div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#listIgnoredPcos()" class="member-name-link">listIgnoredPcos</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Return the collision group of this object's broadphase proxy.</div>
+<div class="block">Enumerate all collision objects in this object's ignore list.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#proxyMask()" class="member-name-link">proxyMask</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#proxyGroup()" class="member-name-link">proxyGroup</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return the collision group of this object's broadphase proxy.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#proxyMask()" class="member-name-link">proxyMask</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Return the collision mask of this object's broadphase proxy.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeCollideWithGroup(int)" class="member-name-link">removeCollideWithGroup</a><wbr>(int&nbsp;collisionGroup)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeCollideWithGroup(int)" class="member-name-link">removeCollideWithGroup</a><wbr>(int&nbsp;collisionGroup)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove collision groups from the set with which this object can collide.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeFromIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">removeFromIgnoreList</a><wbr>(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;otherPco)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeFromIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">removeFromIgnoreList</a><wbr>(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;otherPco)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove a collision object from this object's ignore list and vice versa.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setActivationState(long,int)" class="member-name-link">setActivationState</a><wbr>(long&nbsp;objectId,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setActivationState(long,int)" class="member-name-link">setActivationState</a><wbr>(long&nbsp;objectId,
  int&nbsp;desiredState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Alter the activation state of this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAnisotropicFriction(com.jme3.math.Vector3f,int)" class="member-name-link">setAnisotropicFriction</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;components,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAnisotropicFriction(com.jme3.math.Vector3f,int)" class="member-name-link">setAnisotropicFriction</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;components,
  int&nbsp;mode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter this object's anisotropic friction (native field:
  m_anisotropicFriction).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCcdMotionThreshold(float)" class="member-name-link">setCcdMotionThreshold</a><wbr>(float&nbsp;threshold)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCcdMotionThreshold(float)" class="member-name-link">setCcdMotionThreshold</a><wbr>(float&nbsp;threshold)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the amount of motion required to trigger continuous collision
  detection (CCD) (native field: m_ccdMotionThreshold).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCcdSweptSphereRadius(float)" class="member-name-link">setCcdSweptSphereRadius</a><wbr>(float&nbsp;radius)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCcdSweptSphereRadius(float)" class="member-name-link">setCcdSweptSphereRadius</a><wbr>(float&nbsp;radius)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the continuous collision detection (CCD) swept-sphere radius for
  this object (native field: m_ccdSweptSphereRadius).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollideWithGroups(int)" class="member-name-link">setCollideWithGroups</a><wbr>(int&nbsp;collisionGroups)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollideWithGroups(int)" class="member-name-link">setCollideWithGroups</a><wbr>(int&nbsp;collisionGroups)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Directly alter the collision groups with which this object can collide.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCollisionFlags(long,int)" class="member-name-link">setCollisionFlags</a><wbr>(long&nbsp;objectId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCollisionFlags(long,int)" class="member-name-link">setCollisionFlags</a><wbr>(long&nbsp;objectId,
  int&nbsp;desiredFlags)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Alter the collision flags of this object (native field:
  m_collisionFlags).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollisionGroup(int)" class="member-name-link">setCollisionGroup</a><wbr>(int&nbsp;collisionGroup)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollisionGroup(int)" class="member-name-link">setCollisionGroup</a><wbr>(int&nbsp;collisionGroup)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter which collision group this object belongs to.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollisionShape(com.jme3.bullet.collision.shapes.CollisionShape)" class="member-name-link">setCollisionShape</a><wbr>(<a href="shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a>&nbsp;collisionShape)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCollisionShape(com.jme3.bullet.collision.shapes.CollisionShape)" class="member-name-link">setCollisionShape</a><wbr>(<a href="shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a>&nbsp;collisionShape)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Apply the specified shape to this object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactDamping(float)" class="member-name-link">setContactDamping</a><wbr>(float&nbsp;damping)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactDamping(float)" class="member-name-link">setContactDamping</a><wbr>(float&nbsp;damping)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the contact damping (native field: m_contactDamping).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactProcessingThreshold(float)" class="member-name-link">setContactProcessingThreshold</a><wbr>(float&nbsp;distance)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactProcessingThreshold(float)" class="member-name-link">setContactProcessingThreshold</a><wbr>(float&nbsp;distance)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the contact-processing threshold (native field:
  m_contactProcessingThreshold).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactStiffness(float)" class="member-name-link">setContactStiffness</a><wbr>(float&nbsp;stiffness)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContactStiffness(float)" class="member-name-link">setContactStiffness</a><wbr>(float&nbsp;stiffness)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the contact stiffness (native field: m_contactStiffness).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeactivationTime(float)" class="member-name-link">setDeactivationTime</a><wbr>(float&nbsp;time)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeactivationTime(float)" class="member-name-link">setDeactivationTime</a><wbr>(float&nbsp;time)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the deactivation time (native field: m_deactivationTime).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFriction(float)" class="member-name-link">setFriction</a><wbr>(float&nbsp;friction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFriction(float)" class="member-name-link">setFriction</a><wbr>(float&nbsp;friction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter this object's friction (native field: m_friction).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setIgnoreCollisionCheck(long,long,boolean)" class="member-name-link">setIgnoreCollisionCheck</a><wbr>(long&nbsp;object1Id,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setIgnoreCollisionCheck(long,long,boolean)" class="member-name-link">setIgnoreCollisionCheck</a><wbr>(long&nbsp;object1Id,
  long&nbsp;object2Id,
  boolean&nbsp;setting)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Alter the ignore list for collisions.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#setIgnoreList(long%5B%5D)" class="member-name-link">setIgnoreList</a><wbr>(long[]&nbsp;idList)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject%5B%5D)"><code>setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject[])</code></a></div>
+</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIgnoreList(long%5B%5D)" class="member-name-link">setIgnoreList</a><wbr>(long[]&nbsp;idList)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject%5B%5D)" class="member-name-link">setIgnoreList</a><wbr>(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>[]&nbsp;desiredList)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Alter the ignore list.</div>
+<div class="block">Replace the ignore list.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLocationAndBasis(com.jme3.math.Vector3f,com.jme3.math.Matrix3f)" class="member-name-link">setLocationAndBasis</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;centerLocation,
@@ -904,8 +932,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;()">
 <h3>PhysicsCollisionObject</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PhysicsCollisionObject</span>()</div>
-<div class="block">A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">PhysicsCollisionObject</span>()</div>
+<div class="block">Instantiate a collision object with no tracker and no assigned native
+ object.</div>
 </section>
 </li>
 </ul>
@@ -954,7 +983,8 @@ loadScripts(document, 'script');</script>
  ignore list doesn't affect them.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>otherPco</code> - the other collision object (not null, not this, modified)</dd>
+<dd><code>otherPco</code> - the other collision object (not null, not <code>this</code>,
+ modified)</dd>
 </dl>
 </section>
 </li>
@@ -980,6 +1010,18 @@ loadScripts(document, 'script');</script>
 <h3>clearIgnoreList</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearIgnoreList</span>()</div>
 <div class="block">Clear this object's ignore list.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="collisionFlags()">
+<h3>collisionFlags</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">collisionFlags</span>()</div>
+<div class="block">Return the collision flags. Flag values are defined in
+ <a href="CollisionFlag.html" title="class in com.jme3.bullet.collision"><code>CollisionFlag</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the values of all flags that are set, ORed together</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -1014,7 +1056,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="findInstance(long)">
 <h3>findInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></span>&nbsp;<span class="element-name">findInstance</span><wbr><span class="parameters">(long&nbsp;pcoId)</span></div>
-<div class="block">Find the PhysicCollisionObject with the specified ID. Native method.</div>
+<div class="block">Find the collision object with the specified ID. Native method.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>pcoId</code> - the native identifier (not zero)</dd>
@@ -1218,13 +1260,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getPhysicsLocation(com.jme3.math.Vector3f)">
 <h3>getPhysicsLocation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getPhysicsLocation</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Copy the location of this object's center.</div>
+<div class="block">Copy the location of this object's center to a Vector3f.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
 <dd>a location vector (in physics-space coordinates, either
- storeResult or a new vector, not null)</dd>
+ storeResult or a new vector, finite)</dd>
 </dl>
 </section>
 </li>
@@ -1232,13 +1274,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getPhysicsLocationDp(com.simsilica.mathd.Vec3d)">
 <h3>getPhysicsLocationDp</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a></span>&nbsp;<span class="element-name">getPhysicsLocationDp</span><wbr><span class="parameters">(<a href="../../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;storeResult)</span></div>
-<div class="block">Copy the location of this object's center.</div>
+<div class="block">Copy the location of this object's center to a Vec3d.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
 <dd>a location vector (in physics-space coordinates, either
- storeResult or a new vector, not null)</dd>
+ storeResult or a new vector, not null, finite)</dd>
 </dl>
 </section>
 </li>
@@ -1275,7 +1317,22 @@ loadScripts(document, 'script');</script>
 <h3>getPhysicsRotationMatrix</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></span>&nbsp;<span class="element-name">getPhysicsRotationMatrix</span><wbr><span class="parameters">(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</span></div>
 <div class="block">Copy the orientation of this object (the basis of its local coordinate
- system) to a 3x3 matrix.</div>
+ system) to a Matrix3f.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>a rotation matrix (in physics-space coordinates, either
+ storeResult or a new matrix, not null)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPhysicsRotationMatrixDp(com.simsilica.mathd.Matrix3d)">
+<h3>getPhysicsRotationMatrixDp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../simsilica/mathd/Matrix3d.html" title="class in com.simsilica.mathd">Matrix3d</a></span>&nbsp;<span class="element-name">getPhysicsRotationMatrixDp</span><wbr><span class="parameters">(<a href="../../../simsilica/mathd/Matrix3d.html" title="class in com.simsilica.mathd">Matrix3d</a>&nbsp;storeResult)</span></div>
+<div class="block">Copy the orientation of this object (the basis of its local coordinate
+ system) to a Matrix3d.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
@@ -1344,6 +1401,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTransform(com.jme3.math.Transform)">
 <h3>getTransform</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></span>&nbsp;<span class="element-name">getTransform</span><wbr><span class="parameters">(<a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</span></div>
+<div class="block">Copy the coordinate transform of this object, including the scale of its
+ shape.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>a coordinate transform (in physics-space coordinates, either
+ storeResult or a new Transform, not null)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTransformDp(com.jme3.math.TransformDp)">
+<h3>getTransformDp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/TransformDp.html" title="class in com.jme3.math">TransformDp</a></span>&nbsp;<span class="element-name">getTransformDp</span><wbr><span class="parameters">(<a href="../../math/TransformDp.html" title="class in com.jme3.math">TransformDp</a>&nbsp;storeResult)</span></div>
 <div class="block">Copy the coordinate transform of this object, including the scale of its
  shape.</div>
 <dl class="notes">
@@ -1458,9 +1530,30 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="listIgnoredIds()">
 <h3>listIgnoredIds</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long[]</span>&nbsp;<span class="element-name">listIgnoredIds</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">long[]</span>&nbsp;<span class="element-name">listIgnoredIds</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#listIgnoredPcos()"><code>listIgnoredPcos()</code></a></div>
+</div>
 <div class="block">Enumerate the native IDs of all collision objects in this object's ignore
  list.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new array (not null, may be empty)</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)"><code>addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="listIgnoredPcos()">
+<h3>listIgnoredPcos</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>[]</span>&nbsp;<span class="element-name">listIgnoredPcos</span>()</div>
+<div class="block">Enumerate all collision objects in this object's ignore list.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a new array (not null, may be empty)</dd>
@@ -1617,7 +1710,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setContactDamping(float)">
 <h3>setContactDamping</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setContactDamping</span><wbr><span class="parameters">(float&nbsp;damping)</span></div>
-<div class="block">Alter the contact damping (native field: m_contactDamping).
+<div class="block">Alter the contact damping (native field: m_contactDamping). Also affects
+ the collision flags.
  <p>
  Contact damping doesn't affect a PhysicsCharacter or PhysicsGhostObject.</div>
 <dl class="notes">
@@ -1646,7 +1740,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setContactStiffness(float)">
 <h3>setContactStiffness</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setContactStiffness</span><wbr><span class="parameters">(float&nbsp;stiffness)</span></div>
-<div class="block">Alter the contact stiffness (native field: m_contactStiffness).
+<div class="block">Alter the contact stiffness (native field: m_contactStiffness). Also
+ affects the collision flags.
  <p>
  Contact stiffness doesn't affect a PhysicsCharacter or
  PhysicsGhostObject.</div>
@@ -1686,12 +1781,28 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setIgnoreList(long[])">
 <h3>setIgnoreList</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIgnoreList</span><wbr><span class="parameters">(long[]&nbsp;idList)</span></div>
-<div class="block">Alter the ignore list.</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIgnoreList</span><wbr><span class="parameters">(long[]&nbsp;idList)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject%5B%5D)"><code>setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject[])</code></a></div>
+</div>
+<div class="block">Replace the ignore list.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>idList</code> - the collision-object IDs to ignore (not null, may be empty,
  unaffected)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject[])">
+<h3>setIgnoreList</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIgnoreList</span><wbr><span class="parameters">(<a href="PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>[]&nbsp;desiredList)</span></div>
+<div class="block">Replace the ignore list.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>desiredList</code> - collision objects to ignore (not null, may be empty,
+ may contain nulls or duplicates or <code>this</code>, unaffected)</dd>
 </dl>
 </section>
 </li>
@@ -1792,20 +1903,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getCollisionFlags(long)">
-<h3>getCollisionFlags</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCollisionFlags</span><wbr><span class="parameters">(long&nbsp;objectId)</span></div>
-<div class="block">Return the collision flags of this object. Flag values are defined in
- <a href="CollisionFlag.html" title="class in com.jme3.bullet.collision"><code>CollisionFlag</code></a>. Native method.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>objectId</code> - the ID of the btCollisionObject (not zero)</dd>
-<dt>Returns:</dt>
-<dd>the flags that are set, ORed together</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getInternalType(long)">
 <h3>getInternalType</h3>
 <div class="member-signature"><span class="modifiers">protected static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInternalType</span><wbr><span class="parameters">(long&nbsp;objectId)</span></div>
@@ -1869,7 +1966,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIgnoreCollisionCheck</span><wbr><span class="parameters">(long&nbsp;object1Id,
  long&nbsp;object2Id,
  boolean&nbsp;setting)</span></div>
-<div class="block">Alter the ignore list for collisions.</div>
+<div class="block">Alter the ignore list for collisions. TODO privatize</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>object1Id</code> - the ID of the first btCollisionObject (not zero)</dd>

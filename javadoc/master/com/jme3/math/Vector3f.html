@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
-<script type="text/javascript" src="../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -84,10 +84,10 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Cloneable.html" title="class or interface in java.lang" class="external-link">Cloneable</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
 <div class="block">A vector composed of 3 single-precision components, used to represent
- locations, offsets, and directions in 3-dimensional space.
+ locations, offsets, velocities, and directions in 3-dimensional space.
 
  <p>Methods with names ending in "Local" modify the current instance. They are
- used to cut down on the creation of new instances.</div>
+ used to to avoid creating temporary vectors.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -264,8 +264,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  float&nbsp;y,
  float&nbsp;z)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Divides component-wise by the specified components and returns the quotient
- as a new instance.</div>
+<div class="block">Divides component-wise by the specified components and returns the
+ quotient as a new instance.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#divide(com.jme3.math.Vector3f)" class="member-name-link">divide</a><wbr>(<a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;divisor)</code></div>
@@ -455,7 +455,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns a string representation.</div>
+<div class="block">Returns a string representation of the vector, which is unaffected.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#zero()" class="member-name-link">zero</a>()</code></div>
@@ -739,8 +739,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
      <code>result</code>)</dd>
 <dd><code>result</code> - storage for the product, or null for a new Vector3f</dd>
 <dt>Returns:</dt>
-<dd><code>this</code> cross <code>v</code> (either
-     <code>result</code> or a new Vector3f)</dd>
+<dd><code>this</code> cross <code>v</code> (either <code>result</code> or a new
+     Vector3f)</dd>
 </dl>
 </section>
 </li>
@@ -761,8 +761,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>otherZ</code> - the Z component of the right factor</dd>
 <dd><code>result</code> - storage for the product, or null for a new Vector3f</dd>
 <dt>Returns:</dt>
-<dd><code>this</code> cross <code>v</code> (either
-     <code>result</code> or a new Vector3f)</dd>
+<dd><code>this</code> cross (X,Y,Z) (either <code>result</code> or a new
+     Vector3f)</dd>
 </dl>
 </section>
 </li>
@@ -1013,8 +1013,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">divide</span><wbr><span class="parameters">(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</span></div>
-<div class="block">Divides component-wise by the specified components and returns the quotient
- as a new instance. The current instance is unaffected.</div>
+<div class="block">Divides component-wise by the specified components and returns the
+ quotient as a new instance. The current instance is unaffected.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - the divisor for the X component</dd>
@@ -1033,7 +1033,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  instance.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>divisor</code> - the divisor (not null, unaffected)</dd>
+<dd><code>divisor</code> - the divisor (not null, unaffected unless it's
+ <code>this</code>)</dd>
 <dt>Returns:</dt>
 <dd>the (modified) current instance (for chaining)</dd>
 </dl>
@@ -1083,8 +1084,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  the argument is null, null is returned.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>vec</code> - the vector to subtract (unaffected unless it's
-     <code>this</code>) or null for none</dd>
+<dd><code>vec</code> - the vector to subtract (unaffected unless it's <code>this</code>)
+     or null for none</dd>
 <dt>Returns:</dt>
 <dd>the (modified) current instance or null</dd>
 </dl>
@@ -1208,7 +1209,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dt>Parameters:</dt>
 <dd><code>o</code> - the object to compare (may be null, unaffected)</dd>
 <dt>Returns:</dt>
-<dd>true if equal, otherwise false</dd>
+<dd>true if <code>this</code> and <code>o</code> have identical values,
+     otherwise false</dd>
 </dl>
 </section>
 </li>
@@ -1216,13 +1218,13 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="hashCode()">
 <h3>hashCode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
-<div class="block">Returns a hash code. If two vectors are logically equivalent, they will
- return the same hash code. The current instance is unaffected.</div>
+<div class="block">Returns a hash code. If two vectors have identical values, they will
+ have the same hash code. The current instance is unaffected.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 <dt>Returns:</dt>
-<dd>the hash code value</dd>
+<dd>a 32-bit value for use in hashing</dd>
 </dl>
 </section>
 </li>
@@ -1230,15 +1232,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="toString()">
 <h3>toString</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
-<div class="block">Returns a string representation. The current instance is unaffected. The
- format is:
-
- <p>(XX.XXXX, YY.YYYY, ZZ.ZZZZ)</div>
+<div class="block">Returns a string representation of the vector, which is unaffected.
+ For example, the +X direction vector is represented by:
+ <pre>
+ (1.0, 0.0, 0.0)
+ </pre></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 <dt>Returns:</dt>
-<dd>the string representation</dd>
+<dd>the string representation (not null, not empty)</dd>
 </dl>
 </section>
 </li>

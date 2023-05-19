@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
-<script type="text/javascript" src="../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -217,7 +217,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRayTestFlags()" class="member-name-link">getRayTestFlags</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Read the flags used in ray tests (native field: m_flags).</div>
+<div class="block">Return the flags used in ray tests (native field: m_flags).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMax(com.jme3.math.Vector3f)" class="member-name-link">getWorldMax</a><wbr>(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
@@ -254,10 +254,22 @@ loadScripts(document, 'script');</script>
 <div class="block">Test whether this space is empty.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUsingDeterministicDispatch()" class="member-name-link">isUsingDeterministicDispatch</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isForceUpdateAllAabbs()" class="member-name-link">isForceUpdateAllAabbs</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Test whether the bounding boxes of inactive collision objects should be
+ recomputed during each <code>update()</code> (native field:
+ m_forceUpdateAllAabbs).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUsingDeterministicDispatch()" class="member-name-link">isUsingDeterministicDispatch</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether the "deterministic overlapping pairs" option is enabled in
  the collision dispatcher (native field: m_deterministicOverlappingPairs).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jniEnvId()" class="member-name-link">jniEnvId</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return the address of the JNIEnv that this space uses for callbacks.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#needsCollision(com.jme3.bullet.collision.PhysicsCollisionObject,com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">needsCollision</a><wbr>(<a href="collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;pcoA,
@@ -289,29 +301,44 @@ loadScripts(document, 'script');</script>
  hitFraction.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rayTestRaw(com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">rayTestRaw</a><wbr>(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;from,
- <a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;to)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rayTestDp(com.simsilica.mathd.Vec3d,com.simsilica.mathd.Vec3d,java.util.List)" class="member-name-link">rayTestDp</a><wbr>(<a href="../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;from,
+ <a href="../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;&nbsp;results)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Perform a ray-collision test (raycast) and return the results in
- arbitrary order.</div>
+<div class="block">Perform a ray-collision test (raycast) and sort the results by ascending
+ hitFraction.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rayTestRaw(com.jme3.math.Vector3f,com.jme3.math.Vector3f,java.util.List)" class="member-name-link">rayTestRaw</a><wbr>(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;from,
- <a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;to,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;&nbsp;results)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rayTestRaw(com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">rayTestRaw</a><wbr>(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;from,
+ <a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;to)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform a ray-collision test (raycast) and return the results in
  arbitrary order.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(java.lang.Object)" class="member-name-link">remove</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rayTestRaw(com.jme3.math.Vector3f,com.jme3.math.Vector3f,java.util.List)" class="member-name-link">rayTestRaw</a><wbr>(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;from,
+ <a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;&nbsp;results)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Remove the specified object from this space.</div>
+<div class="block">Perform a ray-collision test (raycast) and return the results in
+ arbitrary order.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeCollisionObject(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">removeCollisionObject</a><wbr>(<a href="collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;pco)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(java.lang.Object)" class="member-name-link">remove</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Remove the specified object from this space.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeCollisionObject(com.jme3.bullet.collision.PhysicsCollisionObject)" class="member-name-link">removeCollisionObject</a><wbr>(<a href="collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a>&nbsp;pco)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove the specified collision object from this space.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setForceUpdateAllAabbs(boolean)" class="member-name-link">setForceUpdateAllAabbs</a><wbr>(boolean&nbsp;desiredSetting)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Alter whether the bounding boxes of inactive collision objects should be
+ recomputed during each <code>update()</code> (native field:
+ m_forceUpdateAllAabbs).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRayTestFlags(int)" class="member-name-link">setRayTestFlags</a><wbr>(int&nbsp;flags)</code></div>
@@ -325,7 +352,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsSweepTestResult.html" title="class in com.jme3.bullet.collision">PhysicsSweepTestResult</a>&gt;&nbsp;results,
  float&nbsp;allowedCcdPenetration)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Perform a sweep-collision test and store the results in an existing list.</div>
+<div class="block">Perform a sweep-collision test and store the results in an existing list,
+ in arbitrary order.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#useDeterministicDispatch(boolean)" class="member-name-link">useDeterministicDispatch</a><wbr>(boolean&nbsp;desiredSetting)</code></div>
@@ -547,7 +575,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getRayTestFlags()">
 <h3>getRayTestFlags</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRayTestFlags</span>()</div>
-<div class="block">Read the flags used in ray tests (native field: m_flags).</div>
+<div class="block">Return the flags used in ray tests (native field: m_flags).</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>which flags are used</dd>
@@ -632,6 +660,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="isForceUpdateAllAabbs()">
+<h3>isForceUpdateAllAabbs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isForceUpdateAllAabbs</span>()</div>
+<div class="block">Test whether the bounding boxes of inactive collision objects should be
+ recomputed during each <code>update()</code> (native field:
+ m_forceUpdateAllAabbs).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true to recompute all AABBs, false to skip inactive objects</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="isUsingDeterministicDispatch()">
 <h3>isUsingDeterministicDispatch</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isUsingDeterministicDispatch</span>()</div>
@@ -640,6 +681,18 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>true if using sorted/deterministic order, otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="jniEnvId()">
+<h3>jniEnvId</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">jniEnvId</span>()</div>
+<div class="block">Return the address of the JNIEnv that this space uses for callbacks. For
+ debugging and testing.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the virtual address of the (native) object (not zero)</dd>
 </dl>
 </section>
 </li>
@@ -720,6 +773,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="rayTestDp(com.simsilica.mathd.Vec3d,com.simsilica.mathd.Vec3d,java.util.List)">
+<h3>rayTestDp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;</span>&nbsp;<span class="element-name">rayTestDp</span><wbr><span class="parameters">(<a href="../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;from,
+ <a href="../../simsilica/mathd/Vec3d.html" title="class in com.simsilica.mathd">Vec3d</a>&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;&nbsp;results)</span></div>
+<div class="block">Perform a ray-collision test (raycast) and sort the results by ascending
+ hitFraction.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>from</code> - the starting location (in physics-space coordinates, not
+ null, unaffected)</dd>
+<dd><code>to</code> - the ending location (in physics-space coordinates, not null,
+ unaffected)</dd>
+<dd><code>results</code> - the list to hold results (not null, modified)</dd>
+<dt>Returns:</dt>
+<dd>results (sorted)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="rayTestRaw(com.jme3.math.Vector3f,com.jme3.math.Vector3f)">
 <h3>rayTestRaw</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a>&gt;</span>&nbsp;<span class="element-name">rayTestRaw</span><wbr><span class="parameters">(<a href="../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;from,
@@ -780,6 +853,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setForceUpdateAllAabbs(boolean)">
+<h3>setForceUpdateAllAabbs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setForceUpdateAllAabbs</span><wbr><span class="parameters">(boolean&nbsp;desiredSetting)</span></div>
+<div class="block">Alter whether the bounding boxes of inactive collision objects should be
+ recomputed during each <code>update()</code> (native field:
+ m_forceUpdateAllAabbs).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>desiredSetting</code> - true &rarr; recompute all AABBs, false &rarr; skip
+ inactive objects (default=true)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="setRayTestFlags(int)">
 <h3>setRayTestFlags</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRayTestFlags</span><wbr><span class="parameters">(int&nbsp;flags)</span></div>
@@ -804,7 +891,8 @@ loadScripts(document, 'script');</script>
  <a href="../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;end,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="collision/PhysicsSweepTestResult.html" title="class in com.jme3.bullet.collision">PhysicsSweepTestResult</a>&gt;&nbsp;results,
  float&nbsp;allowedCcdPenetration)</span></div>
-<div class="block">Perform a sweep-collision test and store the results in an existing list.
+<div class="block">Perform a sweep-collision test and store the results in an existing list,
+ in arbitrary order.
  <p>
  The starting and ending locations must be at least 0.4 physics-space
  units apart.

@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
-<script type="text/javascript" src="../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -113,12 +113,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="constructor-summary" id="constructor-summary">
 <h2>Constructor Summary</h2>
 <div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">NativePhysicsObject</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">A no-arg constructor to avoid javadoc warnings from JDK 18.</div>
+<div class="block">Instantiate with no tracker and no assigned native object.</div>
 </div>
 </div>
 </section>
@@ -172,7 +174,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nativeId()" class="member-name-link">nativeId</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Read the ID of the assigned native object, assuming that one is assigned.</div>
+<div class="block">Return the ID of the assigned native object, assuming that one is
+ assigned.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reassignNativeId(long)" class="member-name-link">reassignNativeId</a><wbr>(long&nbsp;nativeId)</code></div>
@@ -238,8 +241,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <li>
 <section class="detail" id="&lt;init&gt;()">
 <h3>NativePhysicsObject</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NativePhysicsObject</span>()</div>
-<div class="block">A no-arg constructor to avoid javadoc warnings from JDK 18. TODO protect</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">NativePhysicsObject</span>()</div>
+<div class="block">Instantiate with no tracker and no assigned native object.</div>
 </section>
 </li>
 </ul>
@@ -254,7 +257,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="countTrackers()">
 <h3>countTrackers</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">countTrackers</span>()</div>
-<div class="block">Count how many native objects are being tracked.</div>
+<div class="block">Count how many native objects are being tracked. This method is intended
+ for debugging.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the count (&ge;0)</dd>
@@ -265,7 +269,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="dumpTrackers()">
 <h3>dumpTrackers</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dumpTrackers</span>()</div>
-<div class="block">Dump all native-object trackers to <code>System.out</code>.</div>
+<div class="block">Dump all native-object trackers to <code>System.out</code>. This method is
+ intended for debugging.</div>
 </section>
 </li>
 <li>
@@ -290,7 +295,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="nativeId()">
 <h3>nativeId</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">nativeId</span>()</div>
-<div class="block">Read the ID of the assigned native object, assuming that one is assigned.</div>
+<div class="block">Return the ID of the assigned native object, assuming that one is
+ assigned.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the native identifier (not zero)</dd>
@@ -338,8 +344,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <h3>unassignNativeObject</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unassignNativeObject</span>()</div>
 <div class="block">Unassign (but don't free) the assigned native object, assuming that one
- is assigned. Typically invoked while cloning a subclass, followed by
- setNativeId().</div>
+ is assigned.</div>
 </section>
 </li>
 <li>
@@ -367,9 +372,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>otherObject</code> - the object to compare to (may be null, unaffected)</dd>
+<dd><code>otherObject</code> - the object to compare (may be null, unaffected)</dd>
 <dt>Returns:</dt>
-<dd>true if the objects have the same ID, otherwise false</dd>
+<dd>true if <code>this</code> and <code>otherObject</code> have the same ID,
+ otherwise false</dd>
 </dl>
 </section>
 </li>

@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../../script.js"></script>
-<script type="text/javascript" src="../../../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -188,15 +188,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether this shape can be split by an arbitrary plane.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#correctAxes(com.jme3.math.Transform)" class="member-name-link">correctAxes</a><wbr>(<a href="../../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;paTransform)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#connectivityMatrix(com.jme3.bullet.CollisionSpace)" class="member-name-link">connectivityMatrix</a><wbr>(<a href="../../CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a>&nbsp;space)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Generate a connectivity matrix for the children.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#correctAxes(com.jme3.math.Transform)" class="member-name-link">correctAxes</a><wbr>(<a href="../../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;paTransform)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Apply the inverse of the specified Transform to each child shape.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countChildren()" class="member-name-link">countChildren</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countChildren()" class="member-name-link">countChildren</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Count the child shapes.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countGroups(com.jme3.bullet.CollisionSpace,int%5B%5D)" class="member-name-link">countGroups</a><wbr>(<a href="../../CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a>&nbsp;space,
+ int[]&nbsp;storeMap)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Enumerate disconnected groups of connected children.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findIndex(com.jme3.bullet.collision.shapes.CollisionShape)" class="member-name-link">findIndex</a><wbr>(<a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a>&nbsp;childShape)</code></div>
@@ -275,7 +286,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.jme3.bullet.collision.shapes.CollisionShape">Methods inherited from class&nbsp;com.jme3.bullet.collision.shapes.<a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></h3>
-<code><a href="CollisionShape.html#aabbCenter(com.jme3.math.Vector3f)">aabbCenter</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#getDefaultMargin()">getDefaultMargin</a>, <a href="CollisionShape.html#getMargin()">getMargin</a>, <a href="CollisionShape.html#getScale(com.jme3.math.Vector3f)">getScale</a>, <a href="CollisionShape.html#getShapeType()">getShapeType</a>, <a href="CollisionShape.html#getShapeType(long)">getShapeType</a>, <a href="CollisionShape.html#isConcave()">isConcave</a>, <a href="CollisionShape.html#isContactFilterEnabled()">isContactFilterEnabled</a>, <a href="CollisionShape.html#isConvex()">isConvex</a>, <a href="CollisionShape.html#isInfinite()">isInfinite</a>, <a href="CollisionShape.html#isNonMoving()">isNonMoving</a>, <a href="CollisionShape.html#isPolyhedral()">isPolyhedral</a>, <a href="CollisionShape.html#setContactFilterEnabled(boolean)">setContactFilterEnabled</a>, <a href="CollisionShape.html#setDefaultMargin(float)">setDefaultMargin</a>, <a href="CollisionShape.html#setMargin(float)">setMargin</a>, <a href="CollisionShape.html#setNativeId(long)">setNativeId</a>, <a href="CollisionShape.html#setScale(float)">setScale</a>, <a href="CollisionShape.html#toString()">toString</a>, <a href="CollisionShape.html#updateScale()">updateScale</a></code></div>
+<code><a href="CollisionShape.html#aabbCenter(com.jme3.math.Vector3f)">aabbCenter</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#getDefaultMargin()">getDefaultMargin</a>, <a href="CollisionShape.html#getMargin()">getMargin</a>, <a href="CollisionShape.html#getScale(com.jme3.math.Vector3f)">getScale</a>, <a href="CollisionShape.html#getScaleDp(com.simsilica.mathd.Vec3d)">getScaleDp</a>, <a href="CollisionShape.html#getShapeType()">getShapeType</a>, <a href="CollisionShape.html#getShapeType(long)">getShapeType</a>, <a href="CollisionShape.html#isConcave()">isConcave</a>, <a href="CollisionShape.html#isContactFilterEnabled()">isContactFilterEnabled</a>, <a href="CollisionShape.html#isConvex()">isConvex</a>, <a href="CollisionShape.html#isInfinite()">isInfinite</a>, <a href="CollisionShape.html#isNonMoving()">isNonMoving</a>, <a href="CollisionShape.html#isPolyhedral()">isPolyhedral</a>, <a href="CollisionShape.html#setContactFilterEnabled(boolean)">setContactFilterEnabled</a>, <a href="CollisionShape.html#setDefaultMargin(float)">setDefaultMargin</a>, <a href="CollisionShape.html#setMargin(float)">setMargin</a>, <a href="CollisionShape.html#setNativeId(long)">setNativeId</a>, <a href="CollisionShape.html#setScale(float)">setScale</a>, <a href="CollisionShape.html#toString()">toString</a>, <a href="CollisionShape.html#updateScale()">updateScale</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.jme3.bullet.NativePhysicsObject">Methods inherited from class&nbsp;com.jme3.bullet.<a href="../../NativePhysicsObject.html" title="class in com.jme3.bullet">NativePhysicsObject</a></h3>
 <code><a href="../../NativePhysicsObject.html#compareTo(com.jme3.bullet.NativePhysicsObject)">compareTo</a>, <a href="../../NativePhysicsObject.html#countTrackers()">countTrackers</a>, <a href="../../NativePhysicsObject.html#dumpTrackers()">dumpTrackers</a>, <a href="../../NativePhysicsObject.html#equals(java.lang.Object)">equals</a>, <a href="../../NativePhysicsObject.html#freeUnusedObjects()">freeUnusedObjects</a>, <a href="../../NativePhysicsObject.html#hasAssignedNativeObject()">hasAssignedNativeObject</a>, <a href="../../NativePhysicsObject.html#hashCode()">hashCode</a>, <a href="../../NativePhysicsObject.html#nativeId()">nativeId</a>, <a href="../../NativePhysicsObject.html#reassignNativeId(long)">reassignNativeId</a>, <a href="../../NativePhysicsObject.html#setNativeIdNotTracked(long)">setNativeIdNotTracked</a>, <a href="../../NativePhysicsObject.html#unassignNativeObject()">unassignNativeObject</a></code></div>
@@ -417,6 +428,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="connectivityMatrix(com.jme3.bullet.CollisionSpace)">
+<h3>connectivityMatrix</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean[][]</span>&nbsp;<span class="element-name">connectivityMatrix</span><wbr><span class="parameters">(<a href="../../CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a>&nbsp;space)</span></div>
+<div class="block">Generate a connectivity matrix for the children.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>space</code> - the space to use for tests, or null to create a new space</dd>
+<dt>Returns:</dt>
+<dd>an N-by-N matrix where e(i,j) is true if and only if the ith
+ child intersects with the jth child</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="correctAxes(com.jme3.math.Transform)">
 <h3>correctAxes</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">correctAxes</span><wbr><span class="parameters">(<a href="../../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;paTransform)</span></div>
@@ -437,6 +462,26 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the count (&ge;0)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="countGroups(com.jme3.bullet.CollisionSpace,int[])">
+<h3>countGroups</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">countGroups</span><wbr><span class="parameters">(<a href="../../CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a>&nbsp;space,
+ int[]&nbsp;storeMap)</span></div>
+<div class="block">Enumerate disconnected groups of connected children.
+ <p>
+ A graph-coloring algorithm is applied to the connectivity matrix. Each
+ node in the graph represents a child, and each color represents a group
+ of connected children.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>space</code> - the space to use for tests, or null to create a new space</dd>
+<dd><code>storeMap</code> - storage for the mapping from children to groups (not
+ null, length = number of children, modified)</dd>
+<dt>Returns:</dt>
+<dd>the number of groups found (&ge;0, &le;number of children)</dd>
 </dl>
 </section>
 </li>

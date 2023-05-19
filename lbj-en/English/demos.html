@@ -3,23 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Debugging physics issues :: The Libbulletjme project</title>
-    <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/debug.html">
-    <link rel="prev" href="softbody.html">
-    <link rel="next" href="misc.html">
-    <meta name="generator" content="Antora 3.1.1">
-    <link rel="stylesheet" href="../_/css/site.css">
-<meta property="og:image" content="../_/img/iconx128.png">
-<meta property="og:description" content="Debugging physics issues">
+    <title>An overview of the demo applications :: The Libbulletjme project</title>
+    <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/demos.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<meta property="og:image" content="../../_/img/iconx128.png">
+<meta property="og:description" content="An overview of the demo applications">
 <meta property="og:title" content="The Libbulletjme project">
-<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
   </head>
   <body class="article">
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://stephengold.github.io/Libbulletjme">
-        <img alt="" src="../_/img/iconx128.png" width="32" type="image/x-icon" style="margin-right:16px">
+        <img alt="" src="../../_/img/iconx128.png" width="32" type="image/x-icon" style="margin-right:16px">
         The Libbulletjme project
       </a>
       <button class="navbar-burger" data-target="topbar-nav">
@@ -47,7 +45,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="lbj-en" data-version="master">
+<div class="nav-container" data-component="lbj-en" data-version="English">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -90,8 +88,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="softbody.html">Soft bodies</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="debug.html">Debug aids</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="debug.html">Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="misc.html">Miscellany</a>
@@ -101,7 +99,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="build.html">Build procedures</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="demos.html">Demo apps</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -133,7 +131,7 @@
     <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues">Issue tracker</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues/new">File an issue</a>
+    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues/new">Report an issue</a>
   </li>
 </ul>
   </li>
@@ -154,7 +152,7 @@
     <a class="nav-link" href="https://repo1.maven.org/maven2/com/github/stephengold/Libbulletjme">Maven Central download</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://search.maven.org/artifact/com.github.stephengold/Libbulletjme">Maven Central search</a>
+    <a class="nav-link" href="https://central.sonatype.com/search?q=Libbulletjme&amp;namespace=com.github.stephengold">Maven Central search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://jitpack.io/#stephengold/Libbulletjme">JitPack (unofficial)</a>
@@ -217,14 +215,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">The Libbulletjme project</span>
-    <span class="version">master</span>
+    <span class="version">English</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">The Libbulletjme project</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="overview.html">master</a>
+          <a href="overview.html">English</a>
         </li>
       </ul>
     </li>
@@ -240,181 +238,231 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="overview.html">The Libbulletjme project</a></li>
-    <li>Library tutorials</li>
-    <li><a href="debug.html">Debug aids</a></li>
+    <li><a href="demos.html">Demo apps</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/stephengold/LbjExamples/edit/master/docs/en/modules/ROOT/pages/debug.adoc">Edit this page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/stephengold/LbjExamples/edit/master/docs/en/modules/ROOT/pages/demos.adoc">Edit this page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Debugging physics issues</h1>
+<h1 class="page">An overview of the demo applications</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Libbulletjme uses <code>assert</code> statements to verify assumptions made while coding.
-During development, Java assertions should be enabled using:</p>
+<p><em>Demo applications</em> are provided to showcase certain features of Libbulletjme.
+The following demos are found in
+<a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples">the com.github.stephengold.lbjexamples package of the "apps" sub-project</a>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>the "-ea" JVM argument or</p>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/ConveyorDemo.java"><code>ConveyorDemo</code></a>
+demonstrates contact-point modifications</p>
 </li>
 <li>
-<p>the <code>enableAssertions</code> setting of Gradle <code>JavaExec</code> tasks.</p>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/NewtonsCradle.java"><code>NewtonsCradle</code></a>
+demonstrates dynamic restitution and point-to-point joints</p>
+</li>
+<li>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/Pachinko.java"><code>Pachinko</code></a>
+demonstrates compound collision shapes and 2-D physics</p>
+</li>
+<li>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/SplitDemo.java"><code>SplitDemo</code></a>
+demonstrates dynamic splitting of rigid bodies</p>
+</li>
+<li>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/TestGearJoint.java"><code>TestGearJoint</code></a>
+demonstrates a gear joint</p>
+</li>
+<li>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/ThousandCubes.java"><code>ThousandCubes</code></a>
+demonstrates stacking cubes and launching projectiles</p>
+</li>
+<li>
+<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/Windlass.java"><code>Windlass</code></a>
+demonstrates rope simulation using rigid bodies</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Similarly, native-code assertions should be enabled during development,
-by loading a native library of the "debug" type,
-such as "Linux64DebugSp_libbulletjme.so".</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_visualization"><a class="anchor" href="#_visualization"></a>Visualization</h2>
+<h2 id="_user_interface"><a class="anchor" href="#_user_interface"></a>User interface</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Many physics issues can be diagnosed visually.
-For instance, if you neglect to add a collision object to the physics space,
-SPORT will automatically remove it from the visualization.</p>
+<p>The demos are controlled primarily by keyboard input.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The descriptions below assume a keyboard with the "US" (QWERTY) layout.
+On keyboards with other layouts, the keys may be labeled differently.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>SPORT can be used to visualize:</p>
+<p>For convenience, the mapping of keys to actions is partly standardized.
+In most demos:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>collision shapes,</p>
+<p><kbd>.</kbd> and <kbd>Pause</kbd> toggle the simulation between running and paused,</p>
 </li>
 <li>
-<p>vehicle wheels,</p>
+<p><kbd>C</kbd> dumps the camera&#8217;s position to the console, and</p>
 </li>
 <li>
-<p>physics joints,</p>
-</li>
-<li>
-<p>soft bodies,</p>
-</li>
-<li>
-<p>the centers and local axes of collision objects, and</p>
-</li>
-<li>
-<p>the axis-aligned bounding boxes of collision objects.</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_color_conventions"><a class="anchor" href="#_color_conventions"></a>Color conventions</h3>
-<div class="paragraph">
-<p>When visualizing a collision shape,
-SPORT uses colors to distinguish different types of collision objects:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>yellow for an object without contact response,
-including any ghost object,</p>
-</li>
-<li>
-<p>magenta for a rigid body (or collider) that&#8217;s dynamic, responsive, and active,</p>
-</li>
-<li>
-<p>gray for a rigid body or collider
-(with contact response) that&#8217;s static, kinematic, or inactive,</p>
-</li>
-<li>
-<p>brown for a character that&#8217;s grounded, and</p>
-</li>
-<li>
-<p>pink for a character (with contact response) that isn&#8217;t grounded.</p>
+<p><kbd>Esc</kbd> ends the application.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When visualizing a physics joint, SPORT uses:</p>
+<p>For camera control, all demos use <code>Immediate</code> rotation mode.
+This means you can rotate the camera by simply moving the mouse.
+Furthermore:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>green for a "A" end and</p>
+<p><kbd>W</kbd> and <kbd>S</kbd> dolly the camera forward and back, respectively,</p>
 </li>
 <li>
-<p>red for a "B" end.</p>
+<p><kbd>A</kbd> and <kbd>D</kbd> dolly the camera left and right, respectively,</p>
+</li>
+<li>
+<p><kbd>Q</kbd> raises the camera, and</p>
+</li>
+<li>
+<p><kbd>Z</kbd> lowers the camera.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When visualizing a soft body, SPORT uses:</p>
+<p>Additional mappings are specific to each application:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>red for the faces and</p>
-</li>
-<li>
-<p>orange for the links.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>When visualizing coordinate axes, SPORT uses:</p>
-</div>
+<p>In <code>ConveyorDemo</code>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>red for the +X axis,</p>
-</li>
-<li>
-<p>green for the +Y axis, and</p>
-</li>
-<li>
-<p>blue for the +Z axis.</p>
+<p><kbd>Enter</kbd>, <kbd>I</kbd>, <kbd>Ins</kbd>, <kbd>Numpad0</kbd>, and <kbd>Spacebar</kbd>
+drop a box onto the conveyor belt</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>When visualizing bounding boxes, SPORT uses:</p>
-</div>
+</li>
+<li>
+<p>In <code>NewtonsCradle</code>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>red for a ghost object whose overlapping count has increased,</p>
+<p><kbd>F1</kbd>, <kbd>1</kbd>, and <kbd>Numpad1</kbd> restart with a single ball</p>
 </li>
 <li>
-<p>green for a ghost whose count has decreased,</p>
+<p><kbd>F2</kbd>, <kbd>2</kbd>, and <kbd>Numpad2</kbd> restart with 2 balls</p>
 </li>
 <li>
-<p>yellow for a ghost whose count is unchanged, and</p>
+<p><kbd>F3</kbd>, <kbd>3</kbd>, and <kbd>Numpad3</kbd> restart with 3 balls</p>
 </li>
 <li>
-<p>white for a non-ghost collision object.</p>
+<p><kbd>F4</kbd>, <kbd>4</kbd>, and <kbd>Numpad4</kbd> restart with 4 balls</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
-<div class="sectionbody">
+</li>
+<li>
+<p>In <code>Pachinko</code>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>During development, enable Java assertions and use debug-enabled libraries.</p>
+<p><kbd>F4</kbd>, <kbd>4</kbd>, and <kbd>Numpad4</kbd> restart with 4 rows of pins</p>
 </li>
 <li>
-<p>SPORT visualization can be used to diagnose bugs.</p>
+<p><kbd>F5</kbd>, <kbd>5</kbd>, and <kbd>Numpad5</kbd> restart with 5 rows of pins</p>
+</li>
+<li>
+<p><kbd>F6</kbd>, <kbd>6</kbd>, and <kbd>Numpad6</kbd> restart with 6 rows of pins</p>
+</li>
+<li>
+<p><kbd>F7</kbd>, <kbd>7</kbd>, and <kbd>Numpad7</kbd> restart with 7 rows of pins</p>
+</li>
+<li>
+<p><kbd>F8</kbd>, <kbd>8</kbd>, and <kbd>Numpad8</kbd> restart with 8 rows of pins</p>
+</li>
+<li>
+<p><kbd>F9</kbd>, <kbd>9</kbd>, and <kbd>Numpad9</kbd> restart with 9 rows of pins</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In <code>SplitDemo</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><kbd>Tab</kbd> convert all bodies to splittable shapes</p>
+</li>
+<li>
+<p><kbd>Home</kbd>, <kbd>Numpad5</kbd> restart with a random rigid body</p>
+</li>
+<li>
+<p><kbd>Enter</kbd>, <kbd>Numpad0</kbd>, <kbd>Spacebar</kbd> split all shapes</p>
+</li>
+<li>
+<p><kbd>L bracket</kbd>, <kbd>R bracket</kbd> rotate the splitting plane</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In <code>TestGearJoint</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><kbd>R</kbd> and <kbd>Down arrow</kbd> apply +Y torque to the drive shaft</p>
+</li>
+<li>
+<p><kbd>F</kbd> and <kbd>Up arrow</kbd> apply -Y torque to the drive shaft</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In <code>ThousandCubes</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><kbd>E</kbd> launch a red ball</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In <code>Windlass</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><kbd>Down arrow</kbd> turn the barrel counter-clockwise</p>
+</li>
+<li>
+<p><kbd>Up arrow</kbd> turn the barrel clockwise</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<nav class="pagination">
-  <span class="prev"><a href="softbody.html">Soft bodies</a></span>
-  <span class="next"><a href="misc.html">Miscellany</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Page contents" data-levels="2">
   <div class="toc-menu"></div>
@@ -423,9 +471,9 @@ including any ghost object,</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2022 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2023 by Stephen Gold</p>
 </footer>
-<script src="../_/js/site.js"></script>
-<script async src="../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
   </body>
 </html>

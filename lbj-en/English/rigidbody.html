@@ -4,22 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>An introduction to rigid-body physics :: The Libbulletjme project</title>
-    <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/rigidbody.html">
+    <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/rigidbody.html">
     <link rel="prev" href="sport.html">
     <link rel="next" href="shape.html">
-    <meta name="generator" content="Antora 3.1.1">
-    <link rel="stylesheet" href="../_/css/site.css">
-<meta property="og:image" content="../_/img/iconx128.png">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="An introduction to rigid-body physics">
 <meta property="og:title" content="The Libbulletjme project">
-<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
   </head>
   <body class="article">
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://stephengold.github.io/Libbulletjme">
-        <img alt="" src="../_/img/iconx128.png" width="32" type="image/x-icon" style="margin-right:16px">
+        <img alt="" src="../../_/img/iconx128.png" width="32" type="image/x-icon" style="margin-right:16px">
         The Libbulletjme project
       </a>
       <button class="navbar-burger" data-target="topbar-nav">
@@ -47,7 +47,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="lbj-en" data-version="master">
+<div class="nav-container" data-component="lbj-en" data-version="English">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -91,7 +91,7 @@
     <a class="nav-link" href="softbody.html">Soft bodies</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="debug.html">Debug aids</a>
+    <a class="nav-link" href="debug.html">Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="misc.html">Miscellany</a>
@@ -133,7 +133,7 @@
     <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues">Issue tracker</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues/new">File an issue</a>
+    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/issues/new">Report an issue</a>
   </li>
 </ul>
   </li>
@@ -154,7 +154,7 @@
     <a class="nav-link" href="https://repo1.maven.org/maven2/com/github/stephengold/Libbulletjme">Maven Central download</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://search.maven.org/artifact/com.github.stephengold/Libbulletjme">Maven Central search</a>
+    <a class="nav-link" href="https://central.sonatype.com/search?q=Libbulletjme&amp;namespace=com.github.stephengold">Maven Central search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://jitpack.io/#stephengold/Libbulletjme">JitPack (unofficial)</a>
@@ -217,14 +217,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">The Libbulletjme project</span>
-    <span class="version">master</span>
+    <span class="version">English</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">The Libbulletjme project</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="overview.html">master</a>
+          <a href="overview.html">English</a>
         </li>
       </ul>
     </li>
@@ -362,6 +362,18 @@ Unlike a dynamic body,
 a static one is unaffected by forces, torques, and impulses,
 as if its mass were infinite.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Java&#8217;s <code>static</code> keyword is completely unrelated to physics.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloStaticBody.java">HelloStaticBody</a> is a SPORT app
 that combines static and dynamic rigid bodies.
@@ -456,19 +468,8 @@ an irresistible battering ram.</p>
 </div>
 <div class="paragraph">
 <p>There&#8217;s no direct way to instantiate a kinematic rigid body.
-The usual way is to instantiate a dynamic body and then convert it
+The usual way is to instantiate a static or dynamic body and then convert it
 to kinematic using <code>rigidBody.setKinematic(true)</code>.</p>
-</div>
-<div class="paragraph">
-<p>Due to a design flaw, a kinematic rigid body must have positive mass.
-To convert a static rigid body into a kinematic one, set its mass
-to a positive value <strong>before</strong> setting its kinematic flag:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">rigidBody.setMass(1f);
-rigidBody.setKinematic(true);</code></pre>
-</div>
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloKinematics.java">HelloKinematics</a> is a SPORT app
@@ -846,6 +847,47 @@ is calculated by multiplying the parameters of the colliding bodies.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_rigid_body_factors"><a class="anchor" href="#_rigid_body_factors"></a>Rigid-body factors</h3>
+<div class="paragraph">
+<p>All forces, torques, and impulses acting on dynamic rigid bodies
+are multiplied by <em>factors</em> that can be configured for each body.</p>
+</div>
+<div class="paragraph">
+<p>For instance, to prevent a body from rotating:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">body.setAngularFactor(new Vector3f(0f, 0f, 0f)); // default=(1, 1, 1)
+body.setAngularVelocity(new Vector3f(0f, 0f, 0f));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rigid-body factors can also be used to simulate physics in 2 dimensions.
+For instance, one might constrain a body
+to rotate only around axes parallel to the Z axis
+and translate only in directions parallel to the X-Y plane:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">body.setAngularFactor(new Vector3f(0f, 0f, 1f)); // default=(1, 1, 1)
+body.setLinearFactor(new Vector3f(1f, 1f, 0f));  // default=(1, 1, 1)</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Factors are defined in terms of world (physics-space) axes,
+not the body&#8217;s local axes.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -884,19 +926,23 @@ rigidBody.setSleepingThresholds(linearThreshold, angularThreshold);</code></pre>
 </table>
 </div>
 <div class="paragraph">
-<p>To disable deactivation for a particular rigid body,
-use <code>physicsSpace.setEnableSleep(false)</code>.</p>
-</div>
-<div class="paragraph">
 <p>To disable deactivation globally (for all rigid bodies),
 use <code>PhysicsBody.setDeactivationEnabled(false)</code>.</p>
 </div>
 <div class="paragraph">
-<p>To change the deactivation latency (for all rigid bodies),
-use <code>PhysicsBody.setDeactivationDeadline(newInterval)</code>.</p>
+<p>To disable deactivation for a particular rigid body,
+use <code>physicsSpace.setEnableSleep(false)</code>.</p>
 </div>
 <div class="paragraph">
 <p>To test whether a body is deactivated, use <code>rigidBody.isActive()</code>.</p>
+</div>
+<div class="paragraph">
+<p>To globally change the deactivation latency to 5 seconds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">PhysicsBody.setDeactivationDeadline(5f); // default=2</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Deactivated bodies won&#8217;t be simulated (and won&#8217;t move)
@@ -1031,6 +1077,14 @@ passing from one side to the other in a single simulation step.</p>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>By default, CCD tests for
+both dynamic-dynamic collisions and dynamic-static ones.
+For some applications (such as simulation of fast-moving ragdolls),
+testing for dynamic-dynamic collisions is undesirable.
+You can disable dynamic-dynamic CCD
+by invoking <code>physicsSpace.setCcdWithStaticOnly(true)</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1114,7 +1168,7 @@ passing from one side to the other in a single simulation step.</p>
 <p><code>setMass(0f)</code> <code>setKinematic(false)</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>setMass(positive)</code> <code>setKinematic(true)</code></p>
+<p><code>setKinematic(true)</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>setMass(positive)</code> <code>setKinematic(false)</code></p>
@@ -1160,9 +1214,9 @@ of fast-moving dynamic bodies passing through thin obstacles.</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2022 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2023 by Stephen Gold</p>
 </footer>
-<script src="../_/js/site.js"></script>
-<script async src="../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
   </body>
 </html>

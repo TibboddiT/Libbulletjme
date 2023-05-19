@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../script.js"></script>
-<script type="text/javascript" src="../../../../script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="../../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -179,22 +179,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculatedBasisA(com.jme3.math.Matrix3f)" class="member-name-link">calculatedBasisA</a><wbr>(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate the pivot orientation of the A end.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculatedBasisB(com.jme3.math.Matrix3f)" class="member-name-link">calculatedBasisB</a><wbr>(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate the pivot orientation of the B end.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculatedOriginA(com.jme3.math.Vector3f)" class="member-name-link">calculatedOriginA</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determine the translation component of the global transform of the offset
- for body A.</div>
+<div class="block">Calculate the pivot location of the A end (native field:
+ m_calculatedTransformA.m_origin).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculatedOriginB(com.jme3.math.Vector3f)" class="member-name-link">calculatedOriginB</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determine the translation component of the global transform of the offset
- for body B.</div>
+<div class="block">Calculate the pivot location of the B end (native field:
+ m_calculatedTransformB.m_origin).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkRotationOrder()" class="member-name-link">checkRotationOrder</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Compare Bullet's rotation order to the local copy.</div>
+<div class="block">Compare Bullet's rotation order to the JVM copy.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enableSpring(int,boolean)" class="member-name-link">enableSpring</a><wbr>(int&nbsp;dofIndex,
@@ -211,119 +221,131 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAngles(com.jme3.math.Vector3f)" class="member-name-link">getAngles</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Calculate the constraint's rotation angles.</div>
+<div class="block">Calculate the constraint's rotation angles (native field:
+ m_calculatedAxisAngleDiff).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAxis(int,com.jme3.math.Vector3f)" class="member-name-link">getAxis</a><wbr>(int&nbsp;axisIndex,
  <a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Calculate the indexed axis of the Constraint.</div>
+<div class="block">Calculate the indexed axis of the Constraint (native field:
+ m_calculatedAxis).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFrameTransform(com.jme3.bullet.joints.JointEnd,com.jme3.math.Transform)" class="member-name-link">getFrameTransform</a><wbr>(<a href="JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a>&nbsp;end,
  <a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Copy the constraint's frame transform relative to the specified end.</div>
+<div class="block">Copy the constraint's frame transform relative to the specified end
+ (native fields: m_frameInA, m_frameInB).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPivotOffset(com.jme3.math.Vector3f)" class="member-name-link">getPivotOffset</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Copy the constraint's pivot offset.</div>
+<div class="block">Copy the constraint's pivot offset (native field:
+ m_calculatedLinearDiff).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="motors/RotationMotor.html" title="class in com.jme3.bullet.joints.motors">RotationMotor</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotationMotor(int)" class="member-name-link">getRotationMotor</a><wbr>(int&nbsp;axisIndex)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotationMatrix(com.jme3.bullet.joints.JointEnd,com.jme3.math.Matrix3f)" class="member-name-link">getRotationMatrix</a><wbr>(<a href="JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a>&nbsp;end,
+ <a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Copy the the orientation of the constraint in the specified end's
+ coordinate system.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="motors/RotationMotor.html" title="class in com.jme3.bullet.joints.motors">RotationMotor</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotationMotor(int)" class="member-name-link">getRotationMotor</a><wbr>(int&nbsp;axisIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Access the indexed RotationMotor of this constraint, the motor which
  influences rotation around the indexed axis.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotationOrder()" class="member-name-link">getRotationOrder</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Read the order in which axis rotations are applied.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="motors/TranslationMotor.html" title="class in com.jme3.bullet.joints.motors">TranslationMotor</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTranslationMotor()" class="member-name-link">getTranslationMotor</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotationOrder()" class="member-name-link">getRotationOrder</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return the order in which axis rotations are applied (native field:
+ m_rotateOrder).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="motors/TranslationMotor.html" title="class in com.jme3.bullet.joints.motors">TranslationMotor</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTranslationMotor()" class="member-name-link">getTranslationMotor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Access the TranslationMotor of this Constraint, the motor which
  influences translation on all 3 axes.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMotorEnabled(int)" class="member-name-link">isMotorEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMotorEnabled(int)" class="member-name-link">isMotorEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether the motor is enabled for the indexed degree of freedom.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isServoEnabled(int)" class="member-name-link">isServoEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isServoEnabled(int)" class="member-name-link">isServoEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether the servo is enabled for the indexed degree of freedom.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSpringEnabled(int)" class="member-name-link">isSpringEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSpringEnabled(int)" class="member-name-link">isSpringEnabled</a><wbr>(int&nbsp;dofIndex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Test whether the spring is enabled for the indexed degree of freedom.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="New6Dof.html" title="class in com.jme3.bullet.joints">New6Dof</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(com.jme3.bullet.objects.PhysicsRigidBody,com.jme3.bullet.objects.PhysicsRigidBody,com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bullet.RotationOrder)" class="member-name-link">newInstance</a><wbr>(<a href="../objects/PhysicsRigidBody.html" title="class in com.jme3.bullet.objects">PhysicsRigidBody</a>&nbsp;rigidBodyA,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="New6Dof.html" title="class in com.jme3.bullet.joints">New6Dof</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(com.jme3.bullet.objects.PhysicsRigidBody,com.jme3.bullet.objects.PhysicsRigidBody,com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bullet.RotationOrder)" class="member-name-link">newInstance</a><wbr>(<a href="../objects/PhysicsRigidBody.html" title="class in com.jme3.bullet.objects">PhysicsRigidBody</a>&nbsp;rigidBodyA,
  <a href="../objects/PhysicsRigidBody.html" title="class in com.jme3.bullet.objects">PhysicsRigidBody</a>&nbsp;rigidBodyB,
  <a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;pivotInWorld,
  <a href="../../math/Quaternion.html" title="class in com.jme3.math">Quaternion</a>&nbsp;rotInWorld,
  <a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a>&nbsp;rotationOrder)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Instantiate a double-ended New6Dof constraint with all rotation DOFs free
  and all translation DOFs locked at zero.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(com.jme3.bullet.joints.motors.MotorParam,int,float)" class="member-name-link">set</a><wbr>(<a href="motors/MotorParam.html" title="enum class in com.jme3.bullet.joints.motors">MotorParam</a>&nbsp;parameter,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(com.jme3.bullet.joints.motors.MotorParam,int,float)" class="member-name-link">set</a><wbr>(<a href="motors/MotorParam.html" title="enum class in com.jme3.bullet.joints.motors">MotorParam</a>&nbsp;parameter,
  int&nbsp;dofIndex,
  float&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the specified parameter for the indexed degree of freedom.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDamping(int,float,boolean)" class="member-name-link">setDamping</a><wbr>(int&nbsp;dofIndex,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDamping(int,float,boolean)" class="member-name-link">setDamping</a><wbr>(int&nbsp;dofIndex,
  float&nbsp;damping,
  boolean&nbsp;limitIfNeeded)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the damping for the indexed degree of freedom.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint()" class="member-name-link">setEquilibriumPoint</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint()" class="member-name-link">setEquilibriumPoint</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the equilibrium points for all degrees of freedom, based on the
  constraint's current location/orientation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint(int)" class="member-name-link">setEquilibriumPoint</a><wbr>(int&nbsp;dofIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint(int)" class="member-name-link">setEquilibriumPoint</a><wbr>(int&nbsp;dofIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the equilibrium point of the indexed degree of freedom, based on
  the constraint's current location/orientation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint(int,float)" class="member-name-link">setEquilibriumPoint</a><wbr>(int&nbsp;dofIndex,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEquilibriumPoint(int,float)" class="member-name-link">setEquilibriumPoint</a><wbr>(int&nbsp;dofIndex,
  float&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the equilibrium point of the indexed degree of freedom.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPivotInA(com.jme3.math.Vector3f)" class="member-name-link">setPivotInA</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;location)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPivotInA(com.jme3.math.Vector3f)" class="member-name-link">setPivotInA</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;location)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the pivot location in A's scaled local coordinates.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPivotInB(com.jme3.math.Vector3f)" class="member-name-link">setPivotInB</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;location)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPivotInB(com.jme3.math.Vector3f)" class="member-name-link">setPivotInB</a><wbr>(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;location)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the pivot location in B's scaled local coordinates.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotationOrder(com.jme3.bullet.RotationOrder)" class="member-name-link">setRotationOrder</a><wbr>(<a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a>&nbsp;rotationOrder)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotationOrder(com.jme3.bullet.RotationOrder)" class="member-name-link">setRotationOrder</a><wbr>(<a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a>&nbsp;rotationOrder)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the order in which to apply axis rotations.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStiffness(int,float,boolean)" class="member-name-link">setStiffness</a><wbr>(int&nbsp;dofIndex,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStiffness(int,float,boolean)" class="member-name-link">setStiffness</a><wbr>(int&nbsp;dofIndex,
  float&nbsp;stiffness,
  boolean&nbsp;limitIfNeeded)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Alter the spring stiffness for the indexed degree of freedom.</div>
 </div>
 </div>
@@ -439,44 +461,30 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="checkRotationOrder()">
-<h3>checkRotationOrder</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkRotationOrder</span>()</div>
-<div class="block">Compare Bullet's rotation order to the local copy.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>true if rotation orders are identical, otherwise false</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getAngles(com.jme3.math.Vector3f)">
-<h3>getAngles</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getAngles</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Calculate the constraint's rotation angles.</div>
+<section class="detail" id="calculatedBasisA(com.jme3.math.Matrix3f)">
+<h3>calculatedBasisA</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></span>&nbsp;<span class="element-name">calculatedBasisA</span><wbr><span class="parameters">(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Calculate the pivot orientation of the A end.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the rotation angle for each local axis (in radians, either
- storeResult or a new vector, not null)</dd>
+<dd>the orientation (a rotation matrix in physics-space coordinates,
+ either storeResult or a new matrix, not null)</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getAxis(int,com.jme3.math.Vector3f)">
-<h3>getAxis</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getAxis</span><wbr><span class="parameters">(int&nbsp;axisIndex,
- <a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Calculate the indexed axis of the Constraint.</div>
+<section class="detail" id="calculatedBasisB(com.jme3.math.Matrix3f)">
+<h3>calculatedBasisB</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></span>&nbsp;<span class="element-name">calculatedBasisB</span><wbr><span class="parameters">(<a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Calculate the pivot orientation of the B end.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>axisIndex</code> - the axis index of the desired motor: 0&rarr;X, 1&rarr;Y,
- 2&rarr;Z</dd>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the rotation angle for each local axis (in radians, either
- storeResult or a new vector, not null)</dd>
+<dd>the orientation (a rotation matrix in physics-space coordinates,
+ either storeResult or a new matrix, not null)</dd>
 </dl>
 </section>
 </li>
@@ -484,14 +492,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="calculatedOriginA(com.jme3.math.Vector3f)">
 <h3>calculatedOriginA</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">calculatedOriginA</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Determine the translation component of the global transform of the offset
- for body A.</div>
+<div class="block">Calculate the pivot location of the A end (native field:
+ m_calculatedTransformA.m_origin).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the origin location (either storeResult or a new vector, not
- null)</dd>
+<dd>a location vector (in physics-space coordinates, either
+ storeResult or a new vector, not null)</dd>
 </dl>
 </section>
 </li>
@@ -499,29 +507,25 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="calculatedOriginB(com.jme3.math.Vector3f)">
 <h3>calculatedOriginB</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">calculatedOriginB</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Determine the translation component of the global transform of the offset
- for body B.</div>
+<div class="block">Calculate the pivot location of the B end (native field:
+ m_calculatedTransformB.m_origin).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the origin location (either storeResult or a new vector, not
- null)</dd>
+<dd>a location vector (in physics-space coordinates, either
+ storeResult or a new vector, not null)</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getFrameTransform(com.jme3.bullet.joints.JointEnd,com.jme3.math.Transform)">
-<h3>getFrameTransform</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></span>&nbsp;<span class="element-name">getFrameTransform</span><wbr><span class="parameters">(<a href="JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a>&nbsp;end,
- <a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</span></div>
-<div class="block">Copy the constraint's frame transform relative to the specified end.</div>
+<section class="detail" id="checkRotationOrder()">
+<h3>checkRotationOrder</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkRotationOrder</span>()</div>
+<div class="block">Compare Bullet's rotation order to the JVM copy.</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>end</code> - which end (not null)</dd>
-<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the transform of the constraint space relative to the end</dd>
+<dd>true if rotation orders are identical, otherwise false</dd>
 </dl>
 </section>
 </li>
@@ -558,16 +562,88 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getAngles(com.jme3.math.Vector3f)">
+<h3>getAngles</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getAngles</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Calculate the constraint's rotation angles (native field:
+ m_calculatedAxisAngleDiff).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>the rotation angle for each local axis (in radians, either
+ storeResult or a new vector, not null)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAxis(int,com.jme3.math.Vector3f)">
+<h3>getAxis</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getAxis</span><wbr><span class="parameters">(int&nbsp;axisIndex,
+ <a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Calculate the indexed axis of the Constraint (native field:
+ m_calculatedAxis).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>axisIndex</code> - the axis index of the desired motor: 0&rarr;X, 1&rarr;Y,
+ 2&rarr;Z</dd>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>the rotation angle for each local axis (in radians, either
+ storeResult or a new vector, not null)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getFrameTransform(com.jme3.bullet.joints.JointEnd,com.jme3.math.Transform)">
+<h3>getFrameTransform</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a></span>&nbsp;<span class="element-name">getFrameTransform</span><wbr><span class="parameters">(<a href="JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a>&nbsp;end,
+ <a href="../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</span></div>
+<div class="block">Copy the constraint's frame transform relative to the specified end
+ (native fields: m_frameInA, m_frameInB).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>end</code> - which end (not null)</dd>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>the transform of the constraint space relative to the end</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getPivotOffset(com.jme3.math.Vector3f)">
 <h3>getPivotOffset</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">getPivotOffset</span><wbr><span class="parameters">(<a href="../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
-<div class="block">Copy the constraint's pivot offset.</div>
+<div class="block">Copy the constraint's pivot offset (native field:
+ m_calculatedLinearDiff).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
 <dd>the relative pivot position on each local axis (in physics-space
  units, either storeResult or a new vector, not null)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRotationMatrix(com.jme3.bullet.joints.JointEnd,com.jme3.math.Matrix3f)">
+<h3>getRotationMatrix</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a></span>&nbsp;<span class="element-name">getRotationMatrix</span><wbr><span class="parameters">(<a href="JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a>&nbsp;end,
+ <a href="../../math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Copy the the orientation of the constraint in the specified end's
+ coordinate system.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>end</code> - which end (not null)</dd>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>a rotation matrix (either storeResult or a new instance)</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="Constraint.html#getPivot(com.jme3.bullet.joints.JointEnd,com.jme3.math.Vector3f)"><code>Constraint.getPivot(com.jme3.bullet.joints.JointEnd, com.jme3.math.Vector3f)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -590,7 +666,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getRotationOrder()">
 <h3>getRotationOrder</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a></span>&nbsp;<span class="element-name">getRotationOrder</span>()</div>
-<div class="block">Read the order in which axis rotations are applied.</div>
+<div class="block">Return the order in which axis rotations are applied (native field:
+ m_rotateOrder).</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>an enum value (not null)</dd>
