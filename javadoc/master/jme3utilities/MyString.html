@@ -94,6 +94,28 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#axisName(int)" class="member-name-link">axisName</a><wbr>(int&nbsp;axisIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Describe a coordinate axis.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#describe(float)" class="member-name-link">describe</a><wbr>(float&nbsp;fValue)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Generate a textual description of a single-precision floating-point
+ value.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#describeFraction(float)" class="member-name-link">describeFraction</a><wbr>(float&nbsp;fValue)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Generate a textual description of a single-precision floating-point value
+ using at most 3 decimal places.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#describeMatrix(com.jme3.math.Matrix3f)" class="member-name-link">describeMatrix</a><wbr>(<a href="../com/jme3/math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;matrix)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Generate a textual description of a Matrix3f value.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#escape(java.lang.CharSequence)" class="member-name-link">escape</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;unescaped)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Replace all tab, quote, newline, and backslash characters in the
@@ -134,6 +156,60 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="axisName(int)">
+<h3>axisName</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">axisName</span><wbr><span class="parameters">(int&nbsp;axisIndex)</span></div>
+<div class="block">Describe a coordinate axis.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>axisIndex</code> - the index of the axis: 0&rarr;X, 1&rarr;Y, 2&rarr;Z</dd>
+<dt>Returns:</dt>
+<dd>a textual description (not null, not empty)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="describe(float)">
+<h3>describe</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">describe</span><wbr><span class="parameters">(float&nbsp;fValue)</span></div>
+<div class="block">Generate a textual description of a single-precision floating-point
+ value.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fValue</code> - the value to describe</dd>
+<dt>Returns:</dt>
+<dd>a description (not null, not empty)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="describeFraction(float)">
+<h3>describeFraction</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">describeFraction</span><wbr><span class="parameters">(float&nbsp;fValue)</span></div>
+<div class="block">Generate a textual description of a single-precision floating-point value
+ using at most 3 decimal places.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fValue</code> - the value to describe</dd>
+<dt>Returns:</dt>
+<dd>a description (not null, not empty)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="describeMatrix(com.jme3.math.Matrix3f)">
+<h3>describeMatrix</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">describeMatrix</span><wbr><span class="parameters">(<a href="../com/jme3/math/Matrix3f.html" title="class in com.jme3.math">Matrix3f</a>&nbsp;matrix)</span></div>
+<div class="block">Generate a textual description of a Matrix3f value.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>matrix</code> - the value to describe (may be null, unaffected)</dd>
+<dt>Returns:</dt>
+<dd>a description (not null, not empty)</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="escape(java.lang.CharSequence)">
 <h3>escape</h3>

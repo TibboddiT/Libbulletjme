@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">MyMath</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Mathematical utility methods. TODO method to combine 2 transforms</div>
+<div class="block">Mathematical utility methods.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -132,6 +132,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Clamp a double-precision value between 2 limits.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clamp(int,int,int)" class="member-name-link">clamp</a><wbr>(int&nbsp;iValue,
+ int&nbsp;min,
+ int&nbsp;max)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clamp an integer value between 2 limits.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#combine(com.jme3.math.Transform,com.jme3.math.Transform,com.jme3.math.Transform)" class="member-name-link">combine</a><wbr>(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;child,
+ <a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;parent,
+ <a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Combine the specified transforms.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cube(float)" class="member-name-link">cube</a><wbr>(float&nbsp;fValue)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -149,12 +163,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hypotenuse(float...)" class="member-name-link">hypotenuse</a><wbr>(float...&nbsp;fValues)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Determine the root sum of squares of some single-precision values.</div>
+<div class="block">Return the root sum of squares of some single-precision values.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hypotenuseDouble(double...)" class="member-name-link">hypotenuseDouble</a><wbr>(double...&nbsp;dValues)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Determine the root sum of squares of some double-precision values.</div>
+<div class="block">Return the root sum of squares of some double-precision values.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isBetween(float,float,float)" class="member-name-link">isBetween</a><wbr>(float&nbsp;a,
@@ -195,13 +209,23 @@ loadScripts(document, 'script');</script>
  float&nbsp;y0,
  float&nbsp;y1)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Interpolate between (or extrapolate from) 2 single-precision values using
- linear (Lerp) *polation.</div>
+<div class="block">Interpolate linearly between (or extrapolate linearly from) 2
+ single-precision values.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#max(float...)" class="member-name-link">max</a><wbr>(float...&nbsp;fValues)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#log2(int)" class="member-name-link">log2</a><wbr>(int&nbsp;iValue)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculate the floor of the base-2 logarithm of the input value.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#max(float...)" class="member-name-link">max</a><wbr>(float...&nbsp;fValues)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Find the maximum of some single-precision values.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxInt(int...)" class="member-name-link">maxInt</a><wbr>(int...&nbsp;iValues)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find the maximum of some int values.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mid(float,float,float)" class="member-name-link">mid</a><wbr>(float&nbsp;a,
@@ -219,14 +243,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modulo(float,float)" class="member-name-link">modulo</a><wbr>(float&nbsp;fValue,
  float&nbsp;modulus)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Compute the least non-negative value congruent with a single-precision
- value with respect to the specified modulus.</div>
+<div class="block">Return the least non-negative value congruent with the input value with
+ respect to the specified modulus.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#modulo(int,int)" class="member-name-link">modulo</a><wbr>(int&nbsp;iValue,
  int&nbsp;modulus)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Compute the least non-negative value congruent with an integer value with
+<div class="block">Return the least non-negative value congruent with the input value with
  respect to the specified modulus.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
@@ -242,7 +266,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sumOfSquares(float...)" class="member-name-link">sumOfSquares</a><wbr>(float...&nbsp;fValues)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Compute the sum of squares of some single-precision values.</div>
+<div class="block">Return the sum of squares of some single-precision values.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toDegrees(float)" class="member-name-link">toDegrees</a><wbr>(float&nbsp;radians)</code></div>
@@ -254,13 +278,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Convert an angle from degrees to radians.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformInverse(com.jme3.math.Transform,com.jme3.math.Triangle,com.jme3.math.Triangle)" class="member-name-link">transformInverse</a><wbr>(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transform(com.jme3.math.Transform,com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">transform</a><wbr>(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;input,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Apply the specified transform to a Vector3f.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformInverse(com.jme3.math.Transform,com.jme3.math.Triangle,com.jme3.math.Triangle)" class="member-name-link">transformInverse</a><wbr>(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
  <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a>&nbsp;input,
  <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a>&nbsp;storeResult)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Apply the inverse of the specified transform to each vertex of a
  Triangle.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformInverse(com.jme3.math.Transform,com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">transformInverse</a><wbr>(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;input,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Apply the inverse of the specified transform to a Vector3f.</div>
 </div>
 </div>
 </div>
@@ -333,6 +371,49 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="clamp(int,int,int)">
+<h3>clamp</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">clamp</span><wbr><span class="parameters">(int&nbsp;iValue,
+ int&nbsp;min,
+ int&nbsp;max)</span></div>
+<div class="block">Clamp an integer value between 2 limits.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>iValue</code> - input value to be clamped</dd>
+<dd><code>min</code> - the lower limit</dd>
+<dd><code>max</code> - the upper limit</dd>
+<dt>Returns:</dt>
+<dd>the value between min and max inclusive that is closest to iValue</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="combine(com.jme3.math.Transform,com.jme3.math.Transform,com.jme3.math.Transform)">
+<h3>combine</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a></span>&nbsp;<span class="element-name">combine</span><wbr><span class="parameters">(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;child,
+ <a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;parent,
+ <a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;storeResult)</span></div>
+<div class="block">Combine the specified transforms.
+ <p>
+ It is safe for any or all of <code>child</code>, <code>parent</code>, and
+ <code>storeResult</code> to be the same object.
+ <p>
+ Unlike <a href="../../com/jme3/math/Transform.html#combineWithParent(com.jme3.math.Transform)"><code>Transform.combineWithParent(com.jme3.math.Transform)</code></a>, this
+ method works on transforms containing non-normalized quaternions.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>child</code> - the transform applied first (not null, unaffected unless
+ it's <code>storeResult</code>)</dd>
+<dd><code>parent</code> - the transform applied last (not null, unaffected unless
+ it's <code>storeResult</code>)</dd>
+<dd><code>storeResult</code> - (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>a Transform equivalent to <code>child</code> followed by
+ <code>parent</code> (either <code>storeResult</code> or a new instance)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="cube(float)">
 <h3>cube</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">cube</span><wbr><span class="parameters">(float&nbsp;fValue)</span></div>
@@ -362,7 +443,7 @@ loadScripts(document, 'script');</script>
 <dd><code>zAngle</code> - the Z angle (in radians)</dd>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>a rotation matrix (either storeResult or a new instance)</dd>
+<dd>a rotation matrix (either <code>storeResult</code> or a new instance)</dd>
 </dl>
 </section>
 </li>
@@ -370,7 +451,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="hypotenuse(float...)">
 <h3>hypotenuse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">hypotenuse</span><wbr><span class="parameters">(float...&nbsp;fValues)</span></div>
-<div class="block">Determine the root sum of squares of some single-precision values.
+<div class="block">Return the root sum of squares of some single-precision values.
  Double-precision arithmetic is used to reduce the risk of overflow.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -384,7 +465,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="hypotenuseDouble(double...)">
 <h3>hypotenuseDouble</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">hypotenuseDouble</span><wbr><span class="parameters">(double...&nbsp;dValues)</span></div>
-<div class="block">Determine the root sum of squares of some double-precision values.</div>
+<div class="block">Return the root sum of squares of some double-precision values.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dValues</code> - the input values</dd>
@@ -432,8 +513,8 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="../../com/simsilica/mathd/Vec3d.html#isFinite()"><code>Vec3d.isFinite()</code></a></div>
 </div>
-<div class="block">Tests whether the argument is a valid vector, returning false if it's
- null or if any component is NaN or infinite.</div>
+<div class="block">Test whether the argument is a valid vector, returning false if it's null
+ or if any component is NaN or infinite.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>vector</code> - the vector to test (unaffected)</dd>
@@ -476,7 +557,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Test whether an integer value is odd.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>iValue</code> - input value to be tested</dd>
+<dd><code>iValue</code> - the value to be tested</dd>
 <dt>Returns:</dt>
 <dd>true if x is odd, false if it's even</dd>
 </dl>
@@ -488,15 +569,31 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">lerp</span><wbr><span class="parameters">(float&nbsp;t,
  float&nbsp;y0,
  float&nbsp;y1)</span></div>
-<div class="block">Interpolate between (or extrapolate from) 2 single-precision values using
- linear (Lerp) *polation. No rounding error is introduced when y0==y1.</div>
+<div class="block">Interpolate linearly between (or extrapolate linearly from) 2
+ single-precision values.
+ <p>
+ No rounding error is introduced when y0==y1.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>t</code> - descaled parameter value (0&rarr;y0, 1&rarr;y1)</dd>
-<dd><code>y0</code> - function value at t=0</dd>
-<dd><code>y1</code> - function value at t=1</dd>
+<dd><code>t</code> - the weight given to <code>y1</code></dd>
+<dd><code>y0</code> - the function value at t=0</dd>
+<dd><code>y1</code> - the function value at t=1</dd>
 <dt>Returns:</dt>
-<dd>an interpolated function value</dd>
+<dd>the interpolated function value</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="log2(int)">
+<h3>log2</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">log2</span><wbr><span class="parameters">(int&nbsp;iValue)</span></div>
+<div class="block">Calculate the floor of the base-2 logarithm of the input value.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>iValue</code> - the input value (&ge;1)</dd>
+<dt>Returns:</dt>
+<dd>the largest integer N&le;30 for which <code>(1 &lt;&lt; N) &lt;= iValue</code>
+ (&ge;0, &le;30)</dd>
 </dl>
 </section>
 </li>
@@ -514,6 +611,26 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list-long">
 <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Math.html#max(double,double)" title="class or interface in java.lang" class="external-link"><code>Math.max(float, float)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="maxInt(int...)">
+<h3>maxInt</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">maxInt</span><wbr><span class="parameters">(int...&nbsp;iValues)</span></div>
+<div class="block">Find the maximum of some int values.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>iValues</code> - the input values</dd>
+<dt>Returns:</dt>
+<dd>the most positive value</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collections.html#max(java.util.Collection)" title="class or interface in java.util" class="external-link"><code>Collections.max(java.util.Collection)</code></a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Math.html#max(double,double)" title="class or interface in java.lang" class="external-link"><code>Math.max(int, int)</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -560,13 +677,14 @@ loadScripts(document, 'script');</script>
 <h3>modulo</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">modulo</span><wbr><span class="parameters">(int&nbsp;iValue,
  int&nbsp;modulus)</span></div>
-<div class="block">Compute the least non-negative value congruent with an integer value with
- respect to the specified modulus. modulo() differs from remainder for
- negative values of the first argument. For instance, modulo(-1, 4) == 3,
- while -1 % 4 == -1.</div>
+<div class="block">Return the least non-negative value congruent with the input value with
+ respect to the specified modulus.
+ <p>
+ This differs from remainder for negative input values. For instance,
+ modulo(-1, 4) == 3, while -1 % 4 == -1.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>iValue</code> - input value</dd>
+<dd><code>iValue</code> - the input value</dd>
 <dd><code>modulus</code> - (&gt;0)</dd>
 <dt>Returns:</dt>
 <dd>iValue MOD modulus (&lt;modulus, &ge;0)</dd>
@@ -578,13 +696,14 @@ loadScripts(document, 'script');</script>
 <h3>modulo</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">modulo</span><wbr><span class="parameters">(float&nbsp;fValue,
  float&nbsp;modulus)</span></div>
-<div class="block">Compute the least non-negative value congruent with a single-precision
- value with respect to the specified modulus. modulo() differs from
- remainder for negative values of the first argument. For instance,
+<div class="block">Return the least non-negative value congruent with the input value with
+ respect to the specified modulus.
+ <p>
+ This differs from remainder for negative input values. For instance,
  modulo(-1f, 4f) == 3f, while -1f % 4f == -1f.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fValue</code> - input value</dd>
+<dd><code>fValue</code> - the input value</dd>
 <dd><code>modulus</code> - (&gt;0)</dd>
 <dt>Returns:</dt>
 <dd>fValue MOD modulus (&lt;modulus, &ge;0)</dd>
@@ -611,9 +730,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Standardize a rotation angle to the range [-Pi, Pi).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>angle</code> - input (in radians)</dd>
+<dd><code>angle</code> - the input angle (in radians)</dd>
 <dt>Returns:</dt>
-<dd>standardized angle (in radians, &lt;Pi, &ge;-Pi)</dd>
+<dd>the standardized angle (in radians, &lt;Pi, &ge;-Pi)</dd>
 </dl>
 </section>
 </li>
@@ -621,7 +740,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sumOfSquares(float...)">
 <h3>sumOfSquares</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">sumOfSquares</span><wbr><span class="parameters">(float...&nbsp;fValues)</span></div>
-<div class="block">Compute the sum of squares of some single-precision values.
+<div class="block">Return the sum of squares of some single-precision values.
  Double-precision arithmetic is used to reduce the risk of overflow.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -670,21 +789,77 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="transform(com.jme3.math.Transform,com.jme3.math.Vector3f,com.jme3.math.Vector3f)">
+<h3>transform</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">transform</span><wbr><span class="parameters">(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;input,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Apply the specified transform to a Vector3f.
+ <p>
+ It is safe for <code>input</code> and <code>storeResult</code> to be the same
+ object.
+ <p>
+ Unlike <a href="../../com/jme3/math/Transform.html#transformVector(com.jme3.math.Vector3f,com.jme3.math.Vector3f)"><code>Transform.transformVector(com.jme3.math.Vector3f, com.jme3.math.Vector3f)</code></a>, this method works on transforms containing
+ non-normalized quaternions.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>transform</code> - the transform to apply (not null, unaffected unless
+ <code>storeResult</code> is its translation or scaling component)</dd>
+<dd><code>input</code> - the input vector (not null, unaffected unless it's
+ <code>storeResult</code>)</dd>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>the transformed vector (either <code>storeResult</code> or a new
+ instance)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="transformInverse(com.jme3.math.Transform,com.jme3.math.Triangle,com.jme3.math.Triangle)">
 <h3>transformInverse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a></span>&nbsp;<span class="element-name">transformInverse</span><wbr><span class="parameters">(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
  <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a>&nbsp;input,
  <a href="../../com/jme3/math/Triangle.html" title="class in com.jme3.math">Triangle</a>&nbsp;storeResult)</span></div>
 <div class="block">Apply the inverse of the specified transform to each vertex of a
- Triangle.</div>
+ Triangle.
+ <p>
+ It is safe for <code>input</code> and <code>storeResult</code> to be the same
+ object.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>transform</code> - the transform to use (not null, unaffected)</dd>
+<dd><code>transform</code> - the transform to apply (not null, unaffected)</dd>
 <dd><code>input</code> - the input triangle (not null, unaffected unless it's
- <code>storeResult</code></dd>
+ <code>storeResult</code>)</dd>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
-<dd>the transformed triangle (either storeResult or a new instance)</dd>
+<dd>the transformed triangle (either <code>storeResult</code> or a new
+ instance)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="transformInverse(com.jme3.math.Transform,com.jme3.math.Vector3f,com.jme3.math.Vector3f)">
+<h3>transformInverse</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></span>&nbsp;<span class="element-name">transformInverse</span><wbr><span class="parameters">(<a href="../../com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;transform,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;input,
+ <a href="../../com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeResult)</span></div>
+<div class="block">Apply the inverse of the specified transform to a Vector3f.
+ <p>
+ It is safe for <code>input</code> and <code>storeResult</code> to be the same
+ object.
+ <p>
+ Unlike <a href="../../com/jme3/math/Transform.html#transformInverseVector(com.jme3.math.Vector3f,com.jme3.math.Vector3f)"><code>Transform.transformInverseVector(com.jme3.math.Vector3f, com.jme3.math.Vector3f)</code></a>, this method works on transforms containing
+ non-normalized quaternions.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>transform</code> - the transform to un-apply (not null, unaffected unless
+ <code>storeResult</code> is its translation or scaling component)</dd>
+<dd><code>input</code> - the input vector (not null, unaffected unless it's
+ <code>storeResult</code>)</dd>
+<dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
+<dt>Returns:</dt>
+<dd>the transformed vector (either <code>storeResult</code> or a new
+ instance)</dd>
 </dl>
 </section>
 </li>
