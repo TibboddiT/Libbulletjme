@@ -32,12 +32,13 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
+import com.jme3.util.TempVars;
 import com.simsilica.mathd.Vec3d;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 
 /**
- * Mathematical utility methods. TODO method to combine 2 transforms
+ * Mathematical utility methods.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -95,6 +96,81 @@ final public class MyMath {
     }
 
     /**
+     * Clamp an integer value between 2 limits.
+     *
+     * @param iValue input value to be clamped
+     * @param min the lower limit
+     * @param max the upper limit
+     * @return the value between min and max inclusive that is closest to iValue
+     */
+    public static int clamp(int iValue, int min, int max) {
+        int result;
+        if (iValue < min) {
+            result = min;
+        } else if (iValue > max) {
+            result = max;
+        } else {
+            result = iValue;
+        }
+
+        return result;
+    }
+
+    /**
+     * Combine the specified transforms.
+     * <p>
+     * It is safe for any or all of {@code child}, {@code parent}, and
+     * {@code storeResult} to be the same object.
+     * <p>
+     * Unlike {@link
+     * com.jme3.math.Transform#combineWithParent(com.jme3.math.Transform)}, this
+     * method works on transforms containing non-normalized quaternions.
+     *
+     * @param child the transform applied first (not null, unaffected unless
+     * it's {@code storeResult})
+     * @param parent the transform applied last (not null, unaffected unless
+     * it's {@code storeResult})
+     * @param storeResult (modified if not null)
+     * @return a Transform equivalent to {@code child} followed by
+     * {@code parent} (either {@code storeResult} or a new instance)
+     */
+    public static Transform combine(
+            Transform child, Transform parent, Transform storeResult) {
+        TempVars tempVars = TempVars.get();
+        Vector3f combTranslation = tempVars.vect1; // alias
+        Quaternion combRotation = tempVars.quat1; // alias
+        Vector3f combScale = tempVars.vect2; // alias
+
+        Vector3f parentTranslation = parent.getTranslation(); // alias
+        Quaternion parentRotation = parent.getRotation(); // alias
+        Vector3f parentScale = parent.getScale(); // alias
+
+        // Combine the scales.
+        child.getScale().mult(parentScale, combScale);
+
+        // Combine the (intrinsic) rotations and re-normalize.
+        Quaternion childRotation = child.getRotation(); // alias
+        parentRotation.mult(childRotation, combRotation);
+        MyQuaternion.normalizeLocal(combRotation);
+        /*
+         * The combined translation is the parent's scale, rotation,
+         * and translation applied (in that order) to the child's translation.
+         */
+        child.getTranslation().mult(parentScale, combTranslation);
+        MyQuaternion.rotate(parentRotation, combTranslation, combTranslation);
+        combTranslation.addLocal(parentTranslation);
+
+        Transform result
+                = (storeResult == null) ? new Transform() : storeResult;
+        result.setTranslation(combTranslation);
+        result.setRotation(combRotation);
+        result.setScale(combScale);
+        tempVars.release();
+
+        return result;
+    }
+
+    /**
      * Cube the specified single-precision value. Logs a warning in case of
      * overflow.
      *
@@ -119,7 +195,7 @@ final public class MyMath {
      * @param yAngle the Y angle (in radians)
      * @param zAngle the Z angle (in radians)
      * @param storeResult storage for the result (modified if not null)
-     * @return a rotation matrix (either storeResult or a new instance)
+     * @return a rotation matrix (either {@code storeResult} or a new instance)
      */
     public static Matrix3f fromAngles(
             float xAngle, float yAngle, float zAngle, Matrix3f storeResult) {
@@ -148,7 +224,7 @@ final public class MyMath {
     }
 
     /**
-     * Determine the root sum of squares of some single-precision values.
+     * Return the root sum of squares of some single-precision values.
      * Double-precision arithmetic is used to reduce the risk of overflow.
      *
      * @param fValues the input values
@@ -167,7 +243,7 @@ final public class MyMath {
     }
 
     /**
-     * Determine the root sum of squares of some double-precision values.
+     * Return the root sum of squares of some double-precision values.
      *
      * @param dValues the input values
      * @return the positive square root of the sum of squares (&ge;0)
@@ -222,8 +298,8 @@ final public class MyMath {
     }
 
     /**
-     * Tests whether the argument is a valid vector, returning false if it's
-     * null or if any component is NaN or infinite.
+     * Test whether the argument is a valid vector, returning false if it's null
+     * or if any component is NaN or infinite.
      *
      * @param vector the vector to test (unaffected)
      * @return true if non-null and finite, otherwise false
@@ -281,7 +357,7 @@ final public class MyMath {
     /**
      * Test whether an integer value is odd.
      *
-     * @param iValue input value to be tested
+     * @param iValue the value to be tested
      * @return true if x is odd, false if it's even
      */
     public static boolean isOdd(int iValue) {
@@ -290,13 +366,15 @@ final public class MyMath {
     }
 
     /**
-     * Interpolate between (or extrapolate from) 2 single-precision values using
-     * linear (Lerp) *polation. No rounding error is introduced when y0==y1.
+     * Interpolate linearly between (or extrapolate linearly from) 2
+     * single-precision values.
+     * <p>
+     * No rounding error is introduced when y0==y1.
      *
-     * @param t descaled parameter value (0&rarr;y0, 1&rarr;y1)
-     * @param y0 function value at t=0
-     * @param y1 function value at t=1
-     * @return an interpolated function value
+     * @param t the weight given to {@code y1}
+     * @param y0 the function value at t=0
+     * @param y1 the function value at t=1
+     * @return the interpolated function value
      */
     public static float lerp(float t, float y0, float y1) {
         float result;
@@ -311,6 +389,19 @@ final public class MyMath {
     }
 
     /**
+     * Calculate the floor of the base-2 logarithm of the input value.
+     *
+     * @param iValue the input value (&ge;1)
+     * @return the largest integer N&le;30 for which {@code (1 << N) <= iValue}
+     * (&ge;0, &le;30)
+     */
+    public static int log2(int iValue) {
+        Validate.positive(iValue, "input value");
+        int result = 31 - Integer.numberOfLeadingZeros(iValue);
+        return result;
+    }
+
+    /**
      * Find the maximum of some single-precision values.
      *
      * @param fValues the input values
@@ -320,6 +411,25 @@ final public class MyMath {
     public static float max(float... fValues) {
         float result = Float.NEGATIVE_INFINITY;
         for (float value : fValues) {
+            if (value > result) {
+                result = value;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Find the maximum of some int values.
+     *
+     * @param iValues the input values
+     * @return the most positive value
+     * @see java.util.Collections#max(java.util.Collection)
+     * @see java.lang.Math#max(int, int)
+     */
+    public static int maxInt(int... iValues) {
+        int result = Integer.MIN_VALUE;
+        for (int value : iValues) {
             if (value > result) {
                 result = value;
             }
@@ -373,12 +483,13 @@ final public class MyMath {
     }
 
     /**
-     * Compute the least non-negative value congruent with an integer value with
-     * respect to the specified modulus. modulo() differs from remainder for
-     * negative values of the first argument. For instance, modulo(-1, 4) == 3,
-     * while -1 % 4 == -1.
+     * Return the least non-negative value congruent with the input value with
+     * respect to the specified modulus.
+     * <p>
+     * This differs from remainder for negative input values. For instance,
+     * modulo(-1, 4) == 3, while -1 % 4 == -1.
      *
-     * @param iValue input value
+     * @param iValue the input value
      * @param modulus (&gt;0)
      * @return iValue MOD modulus (&lt;modulus, &ge;0)
      */
@@ -399,12 +510,13 @@ final public class MyMath {
     }
 
     /**
-     * Compute the least non-negative value congruent with a single-precision
-     * value with respect to the specified modulus. modulo() differs from
-     * remainder for negative values of the first argument. For instance,
+     * Return the least non-negative value congruent with the input value with
+     * respect to the specified modulus.
+     * <p>
+     * This differs from remainder for negative input values. For instance,
      * modulo(-1f, 4f) == 3f, while -1f % 4f == -1f.
      *
-     * @param fValue input value
+     * @param fValue the input value
      * @param modulus (&gt;0)
      * @return fValue MOD modulus (&lt;modulus, &ge;0)
      */
@@ -442,8 +554,8 @@ final public class MyMath {
     /**
      * Standardize a rotation angle to the range [-Pi, Pi).
      *
-     * @param angle input (in radians)
-     * @return standardized angle (in radians, &lt;Pi, &ge;-Pi)
+     * @param angle the input angle (in radians)
+     * @return the standardized angle (in radians, &lt;Pi, &ge;-Pi)
      */
     public static float standardizeAngle(float angle) {
         Validate.finite(angle, "angle");
@@ -459,7 +571,7 @@ final public class MyMath {
     }
 
     /**
-     * Compute the sum of squares of some single-precision values.
+     * Return the sum of squares of some single-precision values.
      * Double-precision arithmetic is used to reduce the risk of overflow.
      *
      * @param fValues the input values
@@ -501,24 +613,111 @@ final public class MyMath {
     }
 
     /**
+     * Apply the specified transform to a Vector3f.
+     * <p>
+     * It is safe for {@code input} and {@code storeResult} to be the same
+     * object.
+     * <p>
+     * Unlike {@link
+     * com.jme3.math.Transform#transformVector(com.jme3.math.Vector3f,
+     * com.jme3.math.Vector3f)}, this method works on transforms containing
+     * non-normalized quaternions.
+     *
+     * @param transform the transform to apply (not null, unaffected unless
+     * {@code storeResult} is its translation or scaling component)
+     * @param input the input vector (not null, unaffected unless it's
+     * {@code storeResult})
+     * @param storeResult storage for the result (modified if not null)
+     * @return the transformed vector (either {@code storeResult} or a new
+     * instance)
+     */
+    public static Vector3f transform(
+            Transform transform, Vector3f input, Vector3f storeResult) {
+        Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
+        Vector3f translation = transform.getTranslation(); // alias
+        if (translation == result) {
+            translation = translation.clone();
+        }
+
+        // scale
+        Vector3f scale = transform.getScale(); // alias
+        input.mult(scale, result);
+
+        // rotate
+        Quaternion rotation = transform.getRotation(); // alias
+        MyQuaternion.rotate(rotation, result, result);
+
+        // translate
+        result.addLocal(translation);
+
+        return result;
+    }
+
+    /**
      * Apply the inverse of the specified transform to each vertex of a
      * Triangle.
+     * <p>
+     * It is safe for {@code input} and {@code storeResult} to be the same
+     * object.
      *
-     * @param transform the transform to use (not null, unaffected)
+     * @param transform the transform to apply (not null, unaffected)
      * @param input the input triangle (not null, unaffected unless it's
-     * {@code storeResult}
+     * {@code storeResult})
      * @param storeResult storage for the result (modified if not null)
-     * @return the transformed triangle (either storeResult or a new instance)
+     * @return the transformed triangle (either {@code storeResult} or a new
+     * instance)
      */
     public static Triangle transformInverse(
             Transform transform, Triangle input, Triangle storeResult) {
         Triangle result = (storeResult == null) ? new Triangle() : storeResult;
+
         Vector3f tmpVector = new Vector3f();
         for (int vertexIndex = 0; vertexIndex < 3; ++vertexIndex) {
             Vector3f inputVector = input.get(vertexIndex); // alias
-            transform.transformInverseVector(inputVector, tmpVector);
+            MyMath.transformInverse(transform, inputVector, tmpVector);
             result.set(vertexIndex, tmpVector);
         }
+
+        return result;
+    }
+
+    /**
+     * Apply the inverse of the specified transform to a Vector3f.
+     * <p>
+     * It is safe for {@code input} and {@code storeResult} to be the same
+     * object.
+     * <p>
+     * Unlike {@link
+     * com.jme3.math.Transform#transformInverseVector(com.jme3.math.Vector3f,
+     * com.jme3.math.Vector3f)}, this method works on transforms containing
+     * non-normalized quaternions.
+     *
+     * @param transform the transform to un-apply (not null, unaffected unless
+     * {@code storeResult} is its translation or scaling component)
+     * @param input the input vector (not null, unaffected unless it's
+     * {@code storeResult})
+     * @param storeResult storage for the result (modified if not null)
+     * @return the transformed vector (either {@code storeResult} or a new
+     * instance)
+     */
+    public static Vector3f transformInverse(
+            Transform transform, Vector3f input, Vector3f storeResult) {
+        Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
+        Vector3f scale = transform.getScale(); // alias
+        if (scale == result) {
+            scale = scale.clone();
+        }
+
+        // un-translate
+        Vector3f translation = transform.getTranslation(); // alias
+        input.subtract(translation, result);
+
+        // un-rotate
+        Quaternion rotation = transform.getRotation(); // alias
+        MyQuaternion.rotateInverse(rotation, result, result);
+
+        // de-scale
+        result.divideLocal(scale);
 
         return result;
     }

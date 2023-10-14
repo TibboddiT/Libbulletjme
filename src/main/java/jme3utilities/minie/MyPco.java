@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2022, Stephen Gold
+ Copyright (c) 2017-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -24,63 +24,62 @@
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package jme3utilities.lbj;
+package jme3utilities.minie;
 
-import java.nio.FloatBuffer;
+import com.jme3.bullet.objects.PhysicsRigidBody;
+import java.util.logging.Logger;
+import jme3utilities.MyString;
 
 /**
- * A generic mesh for visualizing a soft body.
+ * Utility methods that operate on physics collision objects.
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public interface Mesh {
+final public class MyPco {
+    // *************************************************************************
+    // constants and loggers
+
+    /**
+     * message logger for this class
+     */
+    final public static Logger logger = Logger.getLogger(MyPco.class.getName());
+    // *************************************************************************
+    // constructors
+
+    /**
+     * A private constructor to inhibit instantiation of this class.
+     */
+    private MyPco() {
+    }
     // *************************************************************************
     // new methods exposed
 
     /**
-     * Access the index buffer.
+     * Briefly describe a rigid body for PhysicsDumper.
      *
-     * @return the pre-existing instance (not null)
+     * @param body (not null, unaffected)
+     * @return a descriptive string (not null, not empty)
      */
-    IndexBuffer getIndexBuffer();
+    public static String describe(PhysicsRigidBody body) {
+        String result;
+        if (body.isStatic()) {
+            result = "Sta";
+        } else if (body.isKinematic()) {
+            result = "Kin";
+        } else {
+            float mass = body.getMass();
+            String massText = MyString.describe(mass);
+            String activeText = body.isActive() ? "" : "/inactive";
+            result = String.format("Dyn(mass=%s)%s", massText, activeText);
+        }
 
-    /**
-     * Access the normals data buffer.
-     *
-     * @return the pre-existing direct buffer (not null)
-     */
-    FloatBuffer getNormalsData();
+        if (!body.isContactResponse()) {
+            result += "/NOresponse";
+        }
+        if (!body.isInWorld()) {
+            result += "/NOspace";
+        }
 
-    /**
-     * Access the positions data buffer.
-     *
-     * @return the pre-existing direct buffer (not null)
-     */
-    FloatBuffer getPositionsData();
-
-    /**
-     * Test whether the mesh consists of lines in list mode. In the context of
-     * OpenGL, this means the draw mode is GL_LINES. Indexing is ignored.
-     *
-     * @return true if lines in list mode, otherwise false
-     */
-    boolean isPureLines();
-
-    /**
-     * Test whether the mesh consists of triangles in list mode. In the context
-     * of OpenGL, this means the draw mode is GL_TRIANGLES. Indexing is ignored.
-     *
-     * @return true if triangles in list mode, otherwise false
-     */
-    boolean isPureTriangles();
-
-    /**
-     * Indicate that the normals data buffer is dirty.
-     */
-    void setNormalsModified();
-
-    /**
-     * Indicate that the positions data buffer is dirty.
-     */
-    void setPositionsModified();
+        return result;
+    }
 }

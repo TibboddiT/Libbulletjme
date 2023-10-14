@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2022, Stephen Gold
+ Copyright (c) 2013-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,7 @@ package jme3utilities.math;
 
 import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
+import jme3utilities.MyString;
 import jme3utilities.Validate;
 
 /**
@@ -124,14 +125,94 @@ final public class MyVector3f {
      * @param input the vector to scale and add (not null, unaffected)
      * @param scale scale factor to apply to the input
      */
-    public static void accumulateScaled(Vector3f total, Vector3f input,
-            float scale) {
+    public static void accumulateScaled(
+            Vector3f total, Vector3f input, float scale) {
         assert Validate.nonNull(total, "total");
         assert Validate.nonNull(input, "input");
 
         total.x += input.x * scale;
         total.y += input.y * scale;
         total.z += input.z * scale;
+    }
+
+    /**
+     * Generate a textual description of a Vector3f value.
+     *
+     * @param vector the value to describe (may be null, unaffected)
+     * @return a description (not null, not empty)
+     */
+    public static String describe(Vector3f vector) {
+        String result;
+        if (vector == null) {
+            result = "null";
+
+        } else if (isScaleUniform(vector)) {
+            result = "xyz=" + MyString.describe(vector.x);
+
+        } else {
+            StringBuilder builder = new StringBuilder(40);
+            if (vector.x != 0f) {
+                builder.append("x=");
+                String x = MyString.describe(vector.x);
+                builder.append(x);
+            }
+            if (vector.y != 0f) {
+                if (builder.length() > 0) {
+                    builder.append(' ');
+                }
+                builder.append("y=");
+                String y = MyString.describe(vector.y);
+                builder.append(y);
+            }
+            if (vector.z != 0f) {
+                if (builder.length() > 0) {
+                    builder.append(' ');
+                }
+                builder.append("z=");
+                String z = MyString.describe(vector.z);
+                builder.append(z);
+            }
+
+            result = builder.toString();
+        }
+
+        assert result != null;
+        assert !result.isEmpty();
+        return result;
+    }
+
+    /**
+     * Generate a textual description of a direction vector.
+     *
+     * @param v the value to describe (may be null, unaffected)
+     * @return a description (not null, not empty)
+     */
+    public static String describeDirection(Vector3f v) {
+        String result;
+        if (v == null) {
+            result = "null";
+
+        } else {
+            StringBuilder builder = new StringBuilder(40);
+
+            builder.append("dx=");
+            String x = MyString.describeFraction(v.x);
+            builder.append(x);
+
+            builder.append(" dy=");
+            String y = MyString.describeFraction(v.y);
+            builder.append(y);
+
+            builder.append(" dz=");
+            String z = MyString.describeFraction(v.z);
+            builder.append(z);
+
+            result = builder.toString();
+        }
+
+        assert result != null;
+        assert !result.isEmpty();
+        return result;
     }
 
     /**
@@ -163,8 +244,8 @@ final public class MyVector3f {
      * @param store2 storage for the 2nd basis vector (not null, modified)
      * @param store3 storage for the 3rd basis vector (not null, modified)
      */
-    public static void generateBasis(Vector3f in1, Vector3f store2,
-            Vector3f store3) {
+    public static void generateBasis(
+            Vector3f in1, Vector3f store2, Vector3f store3) {
         assert Validate.nonZero(in1, "starting direction");
         assert Validate.nonNull(store2, "2nd basis vector");
         assert Validate.nonNull(store3, "3nd basis vector");
@@ -269,7 +350,8 @@ final public class MyVector3f {
 
     /**
      * Determine the squared length of a vector. Unlike
-     * {@link com.jme3.math.Vector3f#lengthSquared()}, this method returns a
+     * {@link com.jme3.math.Vector3f#lengthSquared()}, this method uses
+     * double-precision arithmetic to reduce the risk of overflow and returns a
      * double-precision value for precise comparison of lengths.
      *
      * @param vector input (not null, unaffected)
@@ -281,25 +363,27 @@ final public class MyVector3f {
     }
 
     /**
-     * Interpolate between (or extrapolate from) 2 vectors using linear (Lerp)
-     * *polation. No rounding error is introduced when v1==v2.
+     * Interpolate linearly between (or extrapolate linearly from) 2 vectors.
+     * <p>
+     * No rounding error is introduced when v1==v2.
      *
-     * @param t descaled parameter value (0&rarr;v0, 1&rarr;v1)
-     * @param v0 function value at t=0 (not null, unaffected unless it's also
-     * storeResult)
-     * @param v1 function value at t=1 (not null, unaffected unless it's also
-     * storeResult)
+     * @param t the weight given to {@code v1}
+     * @param v0 the function value at t=0 (not null, unaffected unless it's
+     * also {@code storeResult})
+     * @param v1 the function value at t=1 (not null, unaffected unless it's
+     * also {@code storeResult})
      * @param storeResult storage for the result (modified if not null, may be
-     * v0 or v1)
-     * @return an interpolated vector (either storeResult or a new instance)
+     * {@code v0} or {@code v1})
+     * @return the interpolated value (either {@code storeResult} or a new
+     * instance)
      */
-    public static Vector3f lerp(float t, Vector3f v0, Vector3f v1,
-            Vector3f storeResult) {
-        assert Validate.nonNull(v0, "v0");
-        assert Validate.nonNull(v1, "v1");
+    public static Vector3f lerp(
+            float t, Vector3f v0, Vector3f v1, Vector3f storeResult) {
         Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
 
-        result.x = MyMath.lerp(t, v0.x, v1.x);
+        float v0x = v0.x;
+        float v1x = v1.x;
+        result.x = MyMath.lerp(t, v0x, v1x);
         result.y = MyMath.lerp(t, v0.y, v1.y);
         result.z = MyMath.lerp(t, v0.z, v1.z);
 
@@ -314,11 +398,12 @@ final public class MyVector3f {
      * @param vector2 coordinates of the 2nd location (not null, unaffected
      * unless it's storeResult)
      * @param storeResult storage for the result (modified if not null, may be
-     * vector1 or vector2)
-     * @return a coordinate vector (either storeResult or a new instance)
+     * {@code vector1} or {@code vector2})
+     * @return a coordinate vector (either {@code storeResult} or a new
+     * instance)
      */
-    public static Vector3f midpoint(Vector3f vector1, Vector3f vector2,
-            Vector3f storeResult) {
+    public static Vector3f midpoint(
+            Vector3f vector1, Vector3f vector2, Vector3f storeResult) {
         assert Validate.finite(vector1, "first location");
         assert Validate.finite(vector2, "2nd location");
 
@@ -357,10 +442,11 @@ final public class MyVector3f {
         assert Validate.nonNull(input, "input");
 
         double lengthSquared = lengthSquared(input);
-        double dScale = Math.sqrt(lengthSquared);
-        float fScale = (float) dScale;
-        if (fScale != 0f && fScale != 1f) {
-            input.divideLocal(fScale);
+        if (lengthSquared < 0.9999998 || lengthSquared > 1.0000002) {
+            float fScale = (float) Math.sqrt(lengthSquared);
+            if (fScale != 0f) {
+                input.divideLocal(fScale);
+            }
         }
     }
 
@@ -369,7 +455,7 @@ final public class MyVector3f {
      *
      * @param input (not null, unaffected unless it's also storeResult)
      * @param storeResult storage for the result (modified if not null, may be
-     * input)
+     * {@code input})
      * @return an equivalent vector without any negative zero components (either
      * storeResult or a new instance)
      */

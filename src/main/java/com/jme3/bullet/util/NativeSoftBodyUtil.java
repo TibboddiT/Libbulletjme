@@ -33,6 +33,7 @@ package com.jme3.bullet.util;
 
 import com.jme3.bullet.collision.shapes.infos.IndexedMesh;
 import com.jme3.bullet.objects.PhysicsSoftBody;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.util.BufferUtils;
@@ -49,6 +50,8 @@ import jme3utilities.lbj.IndexBuffer;
 import jme3utilities.lbj.Mesh;
 import jme3utilities.math.IntPair;
 import jme3utilities.math.MyBuffer;
+import jme3utilities.math.MyMath;
+import jme3utilities.math.MyQuaternion;
 import jme3utilities.math.MyVector3f;
 
 /**
@@ -432,7 +435,7 @@ final public class NativeSoftBodyUtil {
                 tempVector.x = positionBuffer.get();
                 tempVector.y = positionBuffer.get();
                 tempVector.z = positionBuffer.get();
-                physicsToMesh.transformVector(tempVector, tempVector);
+                MyMath.transform(physicsToMesh, tempVector, tempVector);
 
                 positionBuffer.reset();
                 positionBuffer.put(tempVector.x);
@@ -441,13 +444,14 @@ final public class NativeSoftBodyUtil {
             }
 
             if (normalBuffer != null) { // Rotate the normals.
+                Quaternion p2mr = physicsToMesh.getRotation(); // alias
                 normalBuffer.rewind();
                 while (normalBuffer.hasRemaining()) {
                     normalBuffer.mark();
                     tempVector.x = normalBuffer.get();
                     tempVector.y = normalBuffer.get();
                     tempVector.z = normalBuffer.get();
-                    physicsToMesh.getRotation().mult(tempVector, tempVector);
+                    MyQuaternion.rotate(p2mr, tempVector, tempVector);
 
                     normalBuffer.reset();
                     normalBuffer.put(tempVector.x);

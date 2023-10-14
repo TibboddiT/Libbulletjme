@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2022, Stephen Gold
+ Copyright (c) 2014, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -25,6 +25,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * Generic objects for visualizing soft bodies.
+ * Reusable classes for testing and debugging applications based on
+ * jMonkeyEngine3.
  */
-package jme3utilities.lbj;
+package jme3utilities.debug;

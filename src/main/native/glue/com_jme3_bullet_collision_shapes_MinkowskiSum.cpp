@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 jMonkeyEngine
+ * Copyright (c) 2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,44 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/**
- * Auxiliary classes that relate to collision shapes.
+
+/*
+ * Author: Stephen Gold
  */
-package com.jme3.bullet.collision.shapes.infos;
+#include "com_jme3_bullet_collision_shapes_MinkowskiSum.h"
+#include "jmeClasses.h"
+#include "BulletCollision/CollisionShapes/btMinkowskiSumShape.h"
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_MinkowskiSum
+ * Method:    createShape
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_MinkowskiSum_createShape
+(JNIEnv *pEnv, jclass, jlong shapeAId, jlong shapeBId) {
+    jmeClasses::initJavaClasses(pEnv);
+
+    const btCollisionShape *pShapeA
+            = reinterpret_cast<btCollisionShape *> (shapeAId);
+    NULL_CHK(pEnv, pShapeA, "Shape A does not exist.", 0)
+    if (!pShapeA->isConvex()) {
+        pEnv->ThrowNew(jmeClasses::IllegalArgumentException,
+                "Shape A isn't convex.");
+        return 0;
+    }
+    const btConvexShape *pConvexA = (btConvexShape *) pShapeA;
+
+    const btCollisionShape *pShapeB
+            = reinterpret_cast<btCollisionShape *> (shapeBId);
+    NULL_CHK(pEnv, pShapeB, "Shape B does not exist.", 0)
+    if (!pShapeB->isConvex()) {
+        pEnv->ThrowNew(jmeClasses::IllegalArgumentException,
+                "Shape B isn't convex.");
+        return 0;
+    }
+    const btConvexShape *pConvexB = (btConvexShape *) pShapeB;
+
+    btMinkowskiSumShape *pResult
+            = new btMinkowskiSumShape(pConvexA, pConvexB); //dance016
+    return reinterpret_cast<jlong> (pResult);
+}

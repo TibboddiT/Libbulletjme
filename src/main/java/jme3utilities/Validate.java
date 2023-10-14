@@ -26,6 +26,7 @@
  */
 package jme3utilities;
 
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.simsilica.mathd.Quatd;
@@ -205,8 +206,8 @@ final public class Validate {
      * @throws IllegalArgumentException if the value is outside the range [min,
      * max]
      */
-    public static boolean inRange(int iValue, String description,
-            int min, int max) {
+    public static boolean inRange(
+            int iValue, String description, int min, int max) {
         if (iValue < min) {
             String what;
             if (description == null) {
@@ -246,8 +247,8 @@ final public class Validate {
      * @return true
      * @throws IllegalArgumentException if the value is outside the range
      */
-    public static boolean inRange(float fValue, String description,
-            float min, float max) {
+    public static boolean inRange(
+            float fValue, String description, float min, float max) {
         if (!(fValue >= min)) {
             String what;
             if (description == null) {
@@ -287,8 +288,8 @@ final public class Validate {
      * @return true
      * @throws IllegalArgumentException if the value is outside the range
      */
-    public static boolean inRange(double dValue, String description,
-            double min, double max) {
+    public static boolean inRange(
+            double dValue, String description, double min, double max) {
         if (!(dValue >= min)) {
             String what;
             if (description == null) {
@@ -513,7 +514,7 @@ final public class Validate {
      * illegal uses of the null object." To throw an IllegalArgumentException
      * instead, set {@link #throwNpe} to false.
      * <p>
-     * Compare with {@code Objects.requireNonNull()}.
+     * Compare with {@code java.util.Objects.requireNonNull()}.
      *
      * @param object the reference to validate
      * @param description a description of the argument
@@ -740,6 +741,20 @@ final public class Validate {
             throw new IllegalArgumentException(message);
         }
 
+        return true;
+    }
+
+    /**
+     * Validate a standardized angle as a method argument.
+     *
+     * @param fValue the value to validate
+     * @param description a description of the argument
+     * @return true
+     * @throws IllegalArgumentException if the value is outside the range [-PI,
+     * PI]
+     */
+    public static boolean standardAngle(float fValue, String description) {
+        inRange(fValue, description, -FastMath.PI, FastMath.PI);
         return true;
     }
 }

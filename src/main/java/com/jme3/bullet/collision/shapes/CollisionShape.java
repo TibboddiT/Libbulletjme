@@ -227,8 +227,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * @return the margin distance (in physics-space units, &ge;0)
      */
     public float getMargin() {
-        assert margin > 0f : margin;
-        assert margin == getMargin(nativeId());
+        assert margin >= 0f : margin;
+        assert margin == nativeMargin() : margin + " != " + nativeMargin();
         return margin;
     }
 
@@ -467,9 +467,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
         Validate.nonNegative(scale, "scale");
         if (!canScale(scale)) {
             String typeName = getClass().getCanonicalName();
-            String msg = String.format("%s cannot be scaled to (%s,%s,%s)",
+            String message = String.format("%s cannot be scaled to (%s,%s,%s)",
                     typeName, scale.x, scale.y, scale.z);
-            throw new IllegalArgumentException(msg);
+            throw new IllegalArgumentException(message);
         }
 
         long shapeId = nativeId();
@@ -500,6 +500,19 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * @return the type value (from Bullet's {@code enum BroadphaseNativeTypes})
      */
     final native protected static int getShapeType(long shapeId);
+
+    /**
+     * Return the native collision margin of this shape.
+     *
+     * @return the margin distance (in physics-space units, &ge;0)
+     */
+    final protected float nativeMargin() {
+        long shapeId = nativeId();
+        float result = getMargin(shapeId);
+
+        assert result >= 0f : result;
+        return margin;
+    }
 
     /**
      * Recalculate this shape's bounding box if necessary. Meant to be

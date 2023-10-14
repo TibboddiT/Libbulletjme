@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2021 jMonkeyEngine
+ * Copyright (c) 2009-2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -130,6 +130,17 @@ public final class Transform implements Cloneable, java.io.Serializable {
      * @param scale the desired scale factors (not null, unaffected)
      * @return the (modified) current instance (for chaining)
      */
+    public Transform setScale(Vector3f scale) {
+        this.scale.set(scale);
+        return this;
+    }
+
+    /**
+     * Sets the scaling component to the argument. This yields uniform scaling.
+     *
+     * @param scale the desired scale factor for all local axes
+     * @return the (modified) current instance (for chaining)
+     */
     public Transform setScale(float scale) {
         this.scale.set(scale, scale, scale);
         return this;
@@ -156,10 +167,14 @@ public final class Transform implements Cloneable, java.io.Serializable {
     /**
      * Combines with the argument and returns the (modified) current instance.
      *
-     * @param parent the parent transform (not null, unaffected unless it's
-     *     <code>this</code>)
+     * @param parent the parent transform (not null, {@code parent.rot.norm()}
+     *     approximately equal to 1, unaffected unless it's <code>this</code>)
      * @return the (modified) current instance (for chaining)
+     * @deprecated use {@link
+     *     jme3utilities.math.MyMath#combine(com.jme3.math.Transform,
+     *     com.jme3.math.Transform, com.jme3.math.Transform)}
      */
+    @Deprecated
     public Transform combineWithParent(Transform parent) {
         //applying parent scale to local scale
         scale.multLocal(parent.scale);
@@ -181,12 +196,20 @@ public final class Transform implements Cloneable, java.io.Serializable {
      * <code>store</code>. If the <code>store</code> is null, a new Vector3f is
      * created to hold the value. Either way, the current instance is
      * unaffected, unless <code>store</code> is its translation or scaling.
+     * <p>
+     * The transform's quaternion is assumed to be normalized. No error checking
+     * is performed; the caller should ensure that {@code rot.norm()} is
+     * approximately equal to 1.
      *
      * @param in the coordinates to transform (not null, unaffected)
      * @param store storage for the result (modified if not null)
      * @return the transformed coordinates (either <code>store</code> or a new
      *     Vector3f)
+     * @deprecated use {@link
+     *     jme3utilities.math.MyMath#transform(com.jme3.math.Transform,
+     *     com.jme3.math.Vector3f, com.jme3.math.Vector3f)}
      */
+    @Deprecated
     public Vector3f transformVector(final Vector3f in, Vector3f store) {
         if (store == null) {
             store = new Vector3f();
@@ -203,13 +226,21 @@ public final class Transform implements Cloneable, java.io.Serializable {
      * new Vector3f is created to hold the value. Either way, the current
      * instance is unaffected, unless <code>store</code> is its translation or
      * scaling.
+     * <p>
+     * The transform's quaternion is assumed to be normalized. No error checking
+     * is performed; the caller should ensure that {@code rot.norm()} is
+     * approximately equal to 1.
      *
      * @param in the coordinates to transform (not null, unaffected unless it's
      *     <code>store</code>)
      * @param store storage for the result (modified if not null)
      * @return the transformed coordinates (either <code>store</code> or a new
      *     Vector3f)
+     * @deprecated use {@link
+     *     jme3utilities.math.MyMath#transformInverse(com.jme3.math.Transform,
+     *     com.jme3.math.Vector3f, com.jme3.math.Vector3f)}
      */
+    @Deprecated
     public Vector3f transformInverseVector(final Vector3f in, Vector3f store) {
         if (store == null) {
             store = new Vector3f();

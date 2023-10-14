@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 jMonkeyEngine
+ * Copyright (c) 2023 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,18 +32,18 @@
 package com.jme3.bullet.collision.shapes;
 
 import com.jme3.math.Vector3f;
-import java.nio.FloatBuffer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.MyVector3f;
 
 /**
- * A convex collision shape optimized for 2-D, based on Bullet's
- * {@code btConvex2dShape}. For a rectangle, use Box2dShape instead.
+ * A convex collision shape to represent the Minkowki sum of 2 convex shapes,
+ * based on Bullet's {@code btMinkowskiSumShape}.
  *
  * @author Stephen Gold sgold@sonic.net
  */
-public class Convex2dShape extends ConvexShape {
+public class MinkowskiSum extends ConvexShape {
     // *************************************************************************
     // constants and loggers
 
@@ -51,64 +51,63 @@ public class Convex2dShape extends ConvexShape {
      * message logger for this class
      */
     final public static Logger logger2
-            = Logger.getLogger(Convex2dShape.class.getName());
+            = Logger.getLogger(MinkowskiSum.class.getName());
     // *************************************************************************
     // fields
 
     /**
-     * shape on which this shape is based, must be convex and lie entirely in
-     * the X-Y plane
+     * first shape on which this shape is based
      */
-    final private ConvexShape base;
+    final private ConvexShape shapeA;
+    /**
+     * 2nd shape on which this shape is based
+     */
+    final private ConvexShape shapeB;
     // *************************************************************************
     // constructors
 
     /**
-     * Instantiate a shape based on the specified convex shape.
+     * Instantiate the Minkowki sum of the specified shapes.
      *
-     * @param base the base shape (not null, convex, alias created)
+     * @param shapeA the first base shape (not null, convex, alias created)
+     * @param shapeB the 2nd base shape (not null, convex, alias created)
      */
-    public Convex2dShape(ConvexShape base) {
-        Validate.nonNull(base, "base");
+    public MinkowskiSum(ConvexShape shapeA, ConvexShape shapeB) {
+        Validate.nonNull(shapeA, "shape A");
+        Validate.nonNull(shapeA, "shape B");
 
-        this.base = base;
-        createShape();
-    }
-
-    /**
-     * Instantiate a 2-D hull shape based on a flipped buffer containing
-     * coordinates.
-     *
-     * @param flippedBuffer the coordinates on which to base the shape (not
-     * null, not empty, length a multiple of 3, Z=0, unaffected)
-     */
-    public Convex2dShape(FloatBuffer flippedBuffer) {
-        Validate.nonNull(flippedBuffer, "flipped buffer");
-        int numFloats = flippedBuffer.limit();
-        Validate.positive(numFloats, "buffer limit");
-        Validate.require(numFloats % MyVector3f.numAxes == 0,
-                "buffer limit a multiple of 3");
-
-        this.base = new HullCollisionShape(flippedBuffer);
+        this.shapeA = shapeA;
+        this.shapeB = shapeB;
         createShape();
     }
     // *************************************************************************
     // new methods exposed
 
     /**
-     * Access the base shape.
+     * Access the first base shape.
      *
      * @return the pre-existing shape (not null)
      */
-    public ConvexShape getBaseShape() {
-        assert base != null;
-        return base;
+    public ConvexShape getShapeA() {
+        assert shapeA != null;
+        return shapeA;
+    }
+
+    /**
+     * Access the 2nd base shape.
+     *
+     * @return the pre-existing shape (not null)
+     */
+    public ConvexShape getShapeB() {
+        assert shapeB != null;
+        return shapeB;
     }
     // *************************************************************************
     // ConvexShape methods
 
     /**
      * Test whether the specified scale factors can be applied to this shape.
+     * For MinkowskiSum shapes, scaling must be unity.
      *
      * @param scale the desired scale factor for each local axis (may be null,
      * unaffected)
@@ -116,46 +115,54 @@ public class Convex2dShape extends ConvexShape {
      */
     @Override
     public boolean canScale(Vector3f scale) {
-        boolean result = base.canScale(scale);
+        boolean canScale = super.canScale(scale)
+                && MyVector3f.isScaleIdentity(scale);
+        return canScale;
+    }
+
+    /**
+     * Return the collision margin for this shape.
+     *
+     * @return the margin distance (in physics-space units, &ge;0)
+     */
+    @Override
+    public float getMargin() {
+        this.margin = shapeA.nativeMargin() + shapeB.nativeMargin();
+        float result = super.getMargin();
+
         return result;
     }
 
     /**
-     * Alter the scale of this shape and its base. CAUTION: Not all shapes can
-     * be scaled arbitrarily.
-     * <p>
-     * Note that if shapes are shared (between collision objects and/or compound
-     * shapes) changes can have unintended consequences.
+     * Alter the collision margin of this shape. This feature is disabled for
+     * MinkowskiSum shapes. The margin of a MinkowskiSum is simply the sum of
+     * the (native) margins of the base shapes.
      *
-     * @param scale the desired scale factor for each local axis (not null, no
-     * negative component, unaffected, default=(1,1,1))
+     * @param margin the desired margin distance (in physics-space units)
      */
     @Override
-    public void setScale(Vector3f scale) {
-        super.setScale(scale);
-        /*
-         * Update the base shape to keep its copied scale factors
-         * in synch with the native ones.
-         */
-        base.updateScale();
+    public void setMargin(float margin) {
+        logger2.log(Level.WARNING,
+                "Cannot directly alter the margin of a MinkowskiSum");
     }
     // *************************************************************************
     // Java private methods
 
     /**
-     * Instantiate a {@code btConvex2dShape} based on {@code base}.
+     * Instantiate a {@code btMinkowskiSumShape}.
      */
     private void createShape() {
-        long childId = base.nativeId();
-        long shapeId = createShape(childId);
+        long shapeAId = shapeA.nativeId();
+        long shapeBId = shapeB.nativeId();
+        long shapeId = createShape(shapeAId, shapeBId);
         setNativeId(shapeId);
 
         setContactFilterEnabled(enableContactFilter);
         setScale(scale);
-        setMargin(margin);
+        this.margin = shapeA.getMargin() + shapeB.getMargin();
     }
     // *************************************************************************
     // native private methods
 
-    native private static long createShape(long childId);
+    native private static long createShape(long shapeAId, long shapeBId);
 }

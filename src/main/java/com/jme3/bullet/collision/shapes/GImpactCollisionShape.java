@@ -43,6 +43,9 @@ import jme3utilities.math.MyVector3f;
 /**
  * A mesh collisions shape based on Bullet's {@code btGImpactMeshShape}.
  *
+ * Collisions between GImpactCollisionShape and PlaneCollisionShape objects are
+ * never detected.
+ *
  * @author normenhansen
  */
 public class GImpactCollisionShape extends CollisionShape {
@@ -90,6 +93,16 @@ public class GImpactCollisionShape extends CollisionShape {
     }
     // *************************************************************************
     // new methods exposed
+
+    /**
+     * Count how many triangles are in the mesh.
+     *
+     * @return the count (&ge;0)
+     */
+    public int countMeshTriangles() {
+        int result = nativeMesh.countTriangles();
+        return result;
+    }
 
     /**
      * Count how many vertices are in the mesh.

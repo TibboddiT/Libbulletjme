@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2022, Stephen Gold
+ Copyright (c) 2019-2023, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,55 @@
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package jme3utilities.minie;
+
 /**
- * Generic objects for visualizing soft bodies.
+ * Enumerate the flags used to configure a PhysicsDumper.
+ *
+ * @author Stephen Gold sgold@sonic.net
  */
-package jme3utilities.lbj;
+public enum DumpFlags {
+    // *************************************************************************
+    // values
+
+    /**
+     * children in compound collision shapes
+     */
+    ChildShapes,
+    /**
+     * clusters in soft bodies
+     */
+    ClustersInSofts,
+    /**
+     * ignored objects in collision objects
+     */
+    Ignores,
+    /**
+     * physics joints in rigid bodies
+     */
+    JointsInBodies,
+    /**
+     * joints in physics spaces
+     */
+    JointsInSpaces,
+    /**
+     * motors in physics joints
+     */
+    Motors,
+    /**
+     * soft-body nodes in clusters
+     */
+    NodesInClusters,
+    /**
+     * native IDs of physics objects
+     */
+    NativeIDs,
+    /**
+     * nodes in soft bodies
+     */
+    NodesInSofts,
+    /**
+     * collision objects in physics spaces
+     */
+    Pcos
+}
