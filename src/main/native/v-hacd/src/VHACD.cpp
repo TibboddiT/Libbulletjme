@@ -22,6 +22,7 @@
 #include <iomanip>
 #include <limits>
 #include <sstream>
+#include <cstdint>
 #if _OPENMP
 #include <omp.h>
 #endif // _OPENMP

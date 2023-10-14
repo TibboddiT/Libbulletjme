@@ -6,6 +6,7 @@
 #include <atomic>
 #include <mutex>
 #include <string>
+#include <cstdint>
 #include <float.h>
 
 #define ENABLE_ASYNC 1

@@ -18,6 +18,7 @@
 #include "vhacdMesh.h"
 #include "vhacdVector.h"
 #include <assert.h>
+#include <cstdint>
 
 #ifdef _MSC_VER
 #pragma warning(push)
