@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 jMonkeyEngine
+ * Copyright (c) 2009-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,12 +47,14 @@
  */
 ATTRIBUTE_ALIGNED16(class)
 jmeKcc : public btKinematicCharacterController {
-    public:
+public:
     BT_DECLARE_ALIGNED_ALLOCATOR();
-
+    /*
+     * constructor:
+     */
     jmeKcc(btPairCachingGhostObject *ghost, btConvexShape *shape,
             btScalar stepHeight)
-            : btKinematicCharacterController(ghost, shape, stepHeight) {
+    : btKinematicCharacterController(ghost, shape, stepHeight) {
     }
 
     const btVector3 & getWalkOffset() const {
@@ -61,7 +63,7 @@ jmeKcc : public btKinematicCharacterController {
 
     // Use the following method in place of onGround() to solve issue #18.
     bool isOnGround() const {
-        return !m_wasJumping;
+        return !m_wasJumping && onGround();
     }
 
     bool isUsingGhostSweepTest() const {

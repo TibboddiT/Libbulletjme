@@ -47,6 +47,7 @@ jclass jmeClasses::RuntimeException;
 jmethodID jmeClasses::List_addMethod;
 
 jmethodID jmeClasses::CollisionSpace_notifyCollisionGroupListeners;
+jmethodID jmeClasses::CustomConvexShape_locateSupport;
 
 jmethodID jmeClasses::PhysicsSpace_preTick;
 jmethodID jmeClasses::PhysicsSpace_postTick;
@@ -184,10 +185,10 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
              * Invoke NativeLibrary.reinitialization()
              * in order to perform incremental cleanup.
              */
-            pEnv->CallStaticVoidMethod(NativeLibrary_Class,
-                    NativeLibrary_reinitialization);
+            pEnv->CallStaticVoidMethod(
+                    NativeLibrary_Class, NativeLibrary_reinitialization);
+            // no check for exceptions!
         }
-
         return;
     }
 
@@ -203,12 +204,15 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
 #ifdef BT_USE_DOUBLE_PRECISION
         printf("Dp_");
 #endif
+
 #if BT_THREADSAFE
         printf("Mt_");
 #endif
+
 #ifdef BT_ENABLE_PROFILE
         printf("Quickprof_");
 #endif
+
         printf("Libbulletjme version %s initializing\n", LIBBULLETJME_VERSION);
         fflush(stdout);
     }
@@ -220,6 +224,7 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
 #endif // BT_THREADSAFE
 
     pEnv->GetJavaVM(&vm);
+    // no check for exceptions!
 
     GLOBAL_CLASS(IllegalArgumentException,
             "java/lang/IllegalArgumentException");
@@ -236,6 +241,12 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
             "notifyCollisionGroupListeners",
             "(Lcom/jme3/bullet/collision/PhysicsCollisionObject;Lcom/jme3/bullet/collision/PhysicsCollisionObject;)Z"
     );
+
+    jclass customConvexShape
+            = pEnv->FindClass("com/jme3/bullet/collision/shapes/CustomConvexShape");
+    EXCEPTION_CHK(pEnv,);
+    GLOBAL_METHOD(CustomConvexShape_locateSupport, customConvexShape,
+            "locateSupport", "(FFF)Lcom/jme3/math/Vector3f;");
 
     jclass physicsSpace = pEnv->FindClass("com/jme3/bullet/PhysicsSpace");
     EXCEPTION_CHK(pEnv,);
@@ -358,7 +369,6 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
     jclass debugMeshCallback
             = pEnv->FindClass("com/jme3/bullet/util/DebugMeshCallback");
     EXCEPTION_CHK(pEnv,);
-
     GLOBAL_METHOD(DebugMeshCallback_addVector,
             debugMeshCallback, "addVector", "(FFFII)V");
 
@@ -412,13 +422,10 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
 
     jclass transform = pEnv->FindClass("com/jme3/math/Transform");
     EXCEPTION_CHK(pEnv,);
-
     GLOBAL_METHOD(Transform_rotation,
             transform, "getRotation", "()Lcom/jme3/math/Quaternion;");
-
     GLOBAL_METHOD(Transform_scale,
             transform, "getScale", "()Lcom/jme3/math/Vector3f;");
-
     GLOBAL_METHOD(Transform_translation,
             transform, "getTranslation", "()Lcom/jme3/math/Vector3f;");
 
@@ -443,4 +450,5 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
             NativeLibrary_Class, "postInitialization", "()V");
     EXCEPTION_CHK(pEnv,);
     pEnv->CallStaticVoidMethod(NativeLibrary_Class, postInitialization);
+    // no check for exceptions!
 }

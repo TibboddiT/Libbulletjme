@@ -841,29 +841,6 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
-     * Enumerate the native IDs of all collision objects in this object's ignore
-     * list.
-     *
-     * @return a new array (not null, may be empty)
-     * @see #addToIgnoreList(com.jme3.bullet.collision.PhysicsCollisionObject)
-     * @deprecated use {@link #listIgnoredPcos()}
-     */
-    @Deprecated
-    public long[] listIgnoredIds() {
-        long objectId = nativeId();
-        int numIgnoredObjects = getNumObjectsWithoutCollision(objectId);
-        long[] result = new long[numIgnoredObjects];
-
-        for (int listIndex = 0; listIndex < numIgnoredObjects; ++listIndex) {
-            long otherId = getObjectWithoutCollision(objectId, listIndex);
-            assert otherId != 0L;
-            result[listIndex] = otherId;
-        }
-
-        return result;
-    }
-
-    /**
      * Enumerate all collision objects in this object's ignore list.
      *
      * @return a new array (not null, may be empty)
@@ -1124,25 +1101,6 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Replace the ignore list.
      *
-     * @param idList the collision-object IDs to ignore (not null, may be empty,
-     * unaffected)
-     * @deprecated use {@link #setIgnoreList(
-     * com.jme3.bullet.collision.PhysicsCollisionObject[])}
-     */
-    @Deprecated
-    public void setIgnoreList(long[] idList) {
-        Validate.nonNull(idList, "ID list");
-
-        clearIgnoreList();
-        for (long otherId : idList) {
-            PhysicsCollisionObject otherPco = findInstance(otherId);
-            addToIgnoreList(otherPco);
-        }
-    }
-
-    /**
-     * Replace the ignore list.
-     *
      * @param desiredList collision objects to ignore (not null, may be empty,
      * may contain nulls or duplicates or {@code this}, unaffected)
      */
@@ -1290,16 +1248,6 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      */
     native protected static void
             setCollisionFlags(long objectId, int desiredFlags);
-
-    /**
-     * Alter the ignore list for collisions. TODO privatize
-     *
-     * @param object1Id the ID of the first btCollisionObject (not zero)
-     * @param object2Id the ID of the 2nd btCollisionObject (not zero)
-     * @param setting true to ignore, false to stop ignoring
-     */
-    native protected static void setIgnoreCollisionCheck(
-            long object1Id, long object2Id, boolean setting);
 
     /**
      * Directly alter this object's location and basis.
@@ -1469,6 +1417,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     native private static void setDeactivationTime(long objectId, float time);
 
     native private static void setFriction(long objectId, float friction);
+
+    native private static void setIgnoreCollisionCheck(
+            long object1Id, long object2Id, boolean setting);
 
     native private static void setLocationAndBasis(
             long objectId, Vector3f location, Matrix3f basis);

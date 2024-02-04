@@ -284,23 +284,6 @@ public class PhysicsSpace
     }
 
     /**
-     * Register the specified listener for new contacts.
-     * <p>
-     * During distributeEvents(), registered listeners are notified of all new
-     * contacts since the previous distributeEvents().
-     *
-     * @param listener the listener to register (not null, alias created)
-     * @deprecated Override the ContactListener methods instead.
-     */
-    @Deprecated
-    public void addCollisionListener(PhysicsCollisionListener listener) {
-        Validate.nonNull(listener, "listener");
-        assert !contactStartedListeners.contains(listener);
-
-        contactStartedListeners.add(listener);
-    }
-
-    /**
      * Add the specified PhysicsJoint to this space.
      *
      * @param joint the joint to add (not null, alias created)
@@ -345,23 +328,6 @@ public class PhysicsSpace
     }
 
     /**
-     * Register the specified listener for ongoing contacts.
-     * <p>
-     * During distributeEvents(), registered listeners are notified of all
-     * ongoing contacts EXCEPT Sphere-Sphere contacts.
-     *
-     * @param listener the listener to register (not null, alias created)
-     * @deprecated Override the ContactListener methods instead.
-     */
-    @Deprecated
-    public void addOngoingCollisionListener(PhysicsCollisionListener listener) {
-        Validate.nonNull(listener, "listener");
-        assert !contactProcessedListeners.contains(listener);
-
-        contactProcessedListeners.add(listener);
-    }
-
-    /**
      * Register the specified tick listener with this space.
      * <p>
      * Tick listeners are notified before and after each simulation step. A
@@ -389,17 +355,6 @@ public class PhysicsSpace
         long jointId = joint.nativeId();
         boolean result = jointMap.containsKey(jointId);
 
-        return result;
-    }
-
-    /**
-     * Count how many collision listeners are registered with this space.
-     *
-     * @return the count (&ge;0)
-     */
-    public int countCollisionListeners() {
-        int result = contactProcessedListeners.size()
-                + contactStartedListeners.size();
         return result;
     }
 
@@ -446,29 +401,6 @@ public class PhysicsSpace
     public int countTickListeners() {
         int count = tickListeners.size();
         return count;
-    }
-
-    /**
-     * Distribute queued collision events to registered listeners.
-     *
-     * @deprecated Override the ContactListener methods instead.
-     */
-    @Deprecated
-    public void distributeEvents() {
-        while (!contactStartedEvents.isEmpty()) {
-            PhysicsCollisionEvent event = contactStartedEvents.pop();
-            for (PhysicsCollisionListener listener : contactStartedListeners) {
-                listener.collision(event);
-            }
-        }
-
-        while (!contactProcessedEvents.isEmpty()) {
-            PhysicsCollisionEvent event = contactProcessedEvents.pop();
-            for (PhysicsCollisionListener listener
-                    : contactProcessedListeners) {
-                listener.collision(event);
-            }
-        }
     }
 
     /**
@@ -647,22 +579,6 @@ public class PhysicsSpace
     }
 
     /**
-     * De-register the specified listener for new contacts.
-     *
-     * @see
-     * #addCollisionListener(com.jme3.bullet.collision.PhysicsCollisionListener)
-     * @param listener the listener to de-register (not null)
-     * @deprecated Override the ContactListener methods instead.
-     */
-    @Deprecated
-    public void removeCollisionListener(PhysicsCollisionListener listener) {
-        Validate.nonNull(listener, "listener");
-
-        boolean success = contactStartedListeners.remove(listener);
-        assert success;
-    }
-
-    /**
      * Remove the specified PhysicsJoint from this space.
      *
      * @param joint the joint to remove (not null)
@@ -688,23 +604,6 @@ public class PhysicsSpace
             long spaceId = nativeId();
             removeConstraint(spaceId, jointId);
         }
-    }
-
-    /**
-     * De-register the specified listener for ongoing contacts.
-     *
-     * @see #addOngoingCollisionListener(
-     * com.jme3.bullet.collision.PhysicsCollisionListener)
-     * @param listener the listener to de-register (not null)
-     * @deprecated Override the ContactListener methods instead.
-     */
-    @Deprecated
-    public void removeOngoingCollisionListener(
-            PhysicsCollisionListener listener) {
-        Validate.nonNull(listener, "listener");
-
-        boolean success = contactProcessedListeners.remove(listener);
-        assert success;
     }
 
     /**
@@ -794,7 +693,8 @@ public class PhysicsSpace
 
     /**
      * Update this space. Can be used to single-step the physics simulation, if
-     * maxSubSteps is set to 0 or 1.
+     * maxSubSteps is set to 0 or 1. This method should be invoked from the
+     * thread that created the space.
      *
      * @see #setMaxSubSteps(int)
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
@@ -813,7 +713,8 @@ public class PhysicsSpace
     }
 
     /**
-     * Update this space.
+     * Update this space. This method should be invoked from the thread that
+     * created the space.
      *
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
      * @param maxSteps the maximum number of steps of size {@code accuracy}
@@ -1067,7 +968,7 @@ public class PhysicsSpace
     // ContactListener methods
 
     /**
-     * Invoked by native code immediately after a contact manifold is removed.
+     * Invoked by native code immediately after a contact manifold is destroyed.
      * Skipped if stepSimulation() was invoked with doEnded=false.
      * <p>
      * Override this method to customize how contacts are handled.
@@ -1082,7 +983,7 @@ public class PhysicsSpace
 
     /**
      * Invoked by native code immediately after a contact point is refreshed
-     * without being removed. Skipped for Sphere-Sphere contacts. Skipped if
+     * without being destroyed. Skipped for Sphere-Sphere contacts. Skipped if
      * stepSimulation() was invoked with doProcessed=false.
      * <p>
      * Override this method to customize how contacts are handled.
@@ -1096,10 +997,13 @@ public class PhysicsSpace
             PhysicsCollisionObject pcoB, long pointId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
 
-        PhysicsCollisionEvent event
-                = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
-        // Queue the event to be handled later by distributeEvents().
-        contactProcessedEvents.add(event);
+        if (!contactProcessedListeners.isEmpty()) {
+            PhysicsCollisionEvent event
+                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
+
+            // Queue the event to be handled later by distributeEvents().
+            contactProcessedEvents.add(event);
+        }
     }
 
     /**
@@ -1115,6 +1019,9 @@ public class PhysicsSpace
     public void onContactStarted(long manifoldId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
 
+        if (contactStartedListeners.isEmpty()) {
+            return;
+        }
         int numPoints = PersistentManifolds.countPoints(manifoldId);
         if (numPoints == 0) {
             return;

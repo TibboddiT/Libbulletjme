@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2023, Stephen Gold
+ Copyright (c) 2013-2024, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -783,9 +783,8 @@ public class PhysicsDumper extends Dumper {
             stream.printf("%s maxSS=%d", accuDesc, maxSS);
         }
 
-        int cCount = space.countCollisionListeners();
         int tCount = space.countTickListeners();
-        stream.printf("] listeners[c=%d t=%d]", cCount, tCount);
+        stream.printf("] listeners=%d", tCount);
 
         // 3rd line: solver type and info
         addLine(indent);
@@ -1419,8 +1418,8 @@ public class PhysicsDumper extends Dumper {
         int numNodes = softBody.countNodes();
         int numLinks = softBody.countLinks();
         for (int nodeIndex = 0; nodeIndex < numNodes; ++nodeIndex) {
-            int degree = MyBuffer
-                    .frequency(linkIndices, 0, 2 * numLinks, nodeIndex);
+            int degree = MyBuffer.frequency(
+                    linkIndices, 0, 2 * numLinks, nodeIndex);
             float nodeMass = masses.get(nodeIndex);
             String locString = describeVector(locations, nodeIndex);
             String vString = describeVector(velocities, nodeIndex);

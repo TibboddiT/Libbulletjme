@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 jMonkeyEngine
+ * Copyright (c) 2009-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -242,8 +242,10 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
     }
 
     /**
-     * Sets the quaternion from the specified rotation matrix. Does not verify
-     * that the argument is a valid rotation matrix.
+     * Sets the quaternion from the specified rotation matrix.
+     *
+     * <p>Does not verify that the argument is a valid rotation matrix.
+     * Positive scaling is compensated for, but not reflection or shear.
      *
      * @param matrix the input matrix (not null, unaffected)
      * @return the (modified) current instance (for chaining)
@@ -255,7 +257,9 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
 
     /**
      * Sets the quaternion from a rotation matrix with the specified elements.
-     * Does not verify that the arguments form a valid rotation matrix.
+     *
+     * <p>Does not verify that the arguments form a valid rotation matrix.
+     * Positive scaling is compensated for, but not reflection or shear.
      *
      * @param m00 the matrix element in row 0, column 0
      * @param m01 the matrix element in row 0, column 1
@@ -271,7 +275,7 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
     public Quaternion fromRotationMatrix(float m00, float m01, float m02,
             float m10, float m11, float m12, float m20, float m21, float m22) {
         // first normalize the forward (F), up (U) and side (S) vectors of the rotation matrix
-        // so that the scale does not affect the rotation
+        // so that positive scaling does not affect the rotation
         float lengthSquared = m00 * m00 + m10 * m10 + m20 * m20;
         if (lengthSquared != 1f && lengthSquared != 0f) {
             lengthSquared = 1.0f / FastMath.sqrt(lengthSquared);
@@ -450,7 +454,7 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
      * current instance is unaffected.
      *
      * <p>Note: preserves the translation and scaling components of
-     * {@code result}.
+     * {@code result} unless {@code result} includes reflection.
      *
      * <p>Note: the result is created from a normalized version of the current
      * instance.
@@ -607,38 +611,6 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
     }
 
     /**
-     * Rotates the argument vector. Despite the name, the current instance is
-     * unaffected.
-     *
-     * <p>The quaternion is assumed to be normalized (norm=1). No error checking
-     * is performed; the caller must ensure that the norm is approximately equal
-     * to 1.
-     *
-     * <p>Despite the name, the result differs from the mathematical definition
-     * of vector-quaternion multiplication.
-     *
-     * @param v the vector to rotate (not null)
-     * @return the (modified) vector {@code v}
-     * @deprecated use {@link
-     *     jme3utilities.math.MyQuaternion#rotate(com.jme3.math.Quaternion,
-     *     com.jme3.math.Vector3f, com.jme3.math.Vector3f)}
-     */
-    @Deprecated
-    public Vector3f multLocal(Vector3f v) {
-        float tempX, tempY;
-        tempX = w * w * v.x + 2 * y * w * v.z - 2 * z * w * v.y + x * x * v.x
-                + 2 * y * x * v.y + 2 * z * x * v.z - z * z * v.x - y * y * v.x;
-        tempY = 2 * x * y * v.x + y * y * v.y + 2 * z * y * v.z + 2 * w * z
-                * v.x - z * z * v.y + w * w * v.y - 2 * x * w * v.z - x * x
-                * v.y;
-        v.z = 2 * x * z * v.x + 2 * y * z * v.y + z * z * v.z - 2 * w * y * v.x
-                - y * y * v.z + 2 * w * x * v.y - x * x * v.z + w * w * v.z;
-        v.x = tempX;
-        v.y = tempY;
-        return v;
-    }
-
-    /**
      * Multiplies by the argument and returns the (modified) current instance.
      *
      * <p>This method is used to combine rotations. Note that quaternion
@@ -680,49 +652,6 @@ public final class Quaternion implements Cloneable, java.io.Serializable {
         y = y1;
         z = z1;
         return this;
-    }
-
-    /**
-     * Rotates a specified vector and returns the result in another vector. The
-     * current instance is unaffected.
-     *
-     * <p>The quaternion is assumed to be normalized (norm=1). No error checking
-     * is performed; the caller must ensure that the norm is approximately equal
-     * to 1.
-     *
-     * <p>It is safe for {@code v} and {@code store} to be the same object.
-     *
-     * <p>Despite the name, the result differs from the mathematical definition
-     * of vector-quaternion multiplication.
-     *
-     * @param v the vector to rotate (not null, unaffected unless it's
-     *     {@code store})
-     * @param store storage for the result, or null for a new Vector3f
-     * @return the rotated vector (either {@code store} or a new Vector3f)
-     * @deprecated use {@link
-     *     jme3utilities.math.MyQuaternion#rotate(com.jme3.math.Quaternion,
-     *     com.jme3.math.Vector3f, com.jme3.math.Vector3f)}
-     */
-    @Deprecated
-    public Vector3f mult(Vector3f v, Vector3f store) {
-        if (store == null) {
-            store = new Vector3f();
-        }
-        if (v.x == 0 && v.y == 0 && v.z == 0) {
-            store.set(0, 0, 0);
-        } else {
-            float vx = v.x, vy = v.y, vz = v.z;
-            store.x = w * w * vx + 2 * y * w * vz - 2 * z * w * vy + x * x
-                    * vx + 2 * y * x * vy + 2 * z * x * vz - z * z * vx - y
-                    * y * vx;
-            store.y = 2 * x * y * vx + y * y * vy + 2 * z * y * vz + 2 * w
-                    * z * vx - z * z * vy + w * w * vy - 2 * x * w * vz - x
-                    * x * vy;
-            store.z = 2 * x * z * vx + 2 * y * z * vy + z * z * vz - 2 * w
-                    * y * vx - y * y * vz + 2 * w * x * vy - x * x * vz + w
-                    * w * vz;
-        }
-        return store;
     }
 
     /**

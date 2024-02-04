@@ -58,7 +58,7 @@ protected:
      * interface pointer for the thread that created this space:
      */
     JNIEnv *m_pCreateEnv;
-    jobject m_javaSpace;
+    jweak m_javaSpace;
     /*
      * exclusive access to the JavaVM and JNIEnv during parallel for loops:
      */
@@ -69,6 +69,9 @@ protected:
             const btVector3 & max, int broadphaseId);
 
 public:
+    /*
+     * constructor:
+     */
     jmeCollisionSpace(JNIEnv *, jobject javaSpace);
 
     virtual ~jmeCollisionSpace();

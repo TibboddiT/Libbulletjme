@@ -102,13 +102,13 @@ jobs:
           - tools
       script:
         - date
+        - sdkmanager --list
         - echo y | sdkmanager "ndk;21.3.6528147" > /dev/null
-        - echo y | sdkmanager "patcher;v4" > /dev/null
         - ./gradlew copyToDist --build-file=android.gradle --console=plain --no-daemon
 
     # MacOSX_ARM64 (job .9):
     - os: osx
-      osx_image: xcode12.3
+      osx_image: xcode14.2
       script:
         - date
         - ./gradlew assemble --console=plain --no-daemon -Ptravis=osx_arm
@@ -128,13 +128,16 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
-# Deploy using personal access token expiring on Sep 16 2023
+# Deploy using personal access token (classic) expiring on Mar 9 2024
 # Browse to GitHub user pulldown -> Settings -> "Developer settings"
+# cd Libbulletjme
+# travis encrypt {token}
+# cat /dev/null > ~/.bash_history && history -c && exit
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: "axVabBE+ozDP7AD9wVNj3bRZZayYSVhCBvwMNTETnjAsYN5MENPwZSGLyouTAYL+ss86Ge6I6UvSizGnmbVrw5asqEnbuovVOazwvYArg4kHaiQfRsZrmjpO82scZV7n7k0SjqKtbNR6I9w5N641nLImLjl9qdirBsaU7y0g8YU9VjGThCJ65M+dwmQ713c9cJXSA5JpNLEPHVHMM0ajajnQ0hUwA35Bfbtpa8jOQ94vhSyumWwgZSs2kxUhr1bJzheKr4s+drd2x6xZvoAck2hDx/vDveVgp3dqLrBPOpohe95TlxGAY6HQbGUqNCfDdB15xC+dkRCo5/5iteD+6anvmVM2lrQ3UcdwqCTbZX7tMcotRM7W2aGYpj+5poJdLpS5jZkKeQJGoGpQcDkv6aatIO0QnKAjeJfUFXFKWl4KuUeO32jBcGtVZLgpvGjesjCRdaiVty++gBELjBhL6RikurYu1iWaEcFguV3S0shcJjgO6tqIT11hTNh+QFwGsyPwLw2nFiBOKUx/VlK87LFnGjBPpqofon7jP4bTzh8C9U5cHeXF+dONU7jN/lomYWq1owFJE75Xw66dsBX3mMf0zCWF/OsPGvP62FvdWkwtVb+fjtzU8Z+ii5K+cnIBguWSE03PcpRvtQckn2vT30rG4yP2RhRwDszHMVwicjc="
+    secure: "VbdA/FrqL9L41i815x0wUD8Zy0gb3jhURUXUPkyEl8Uc+Y1rIsn2wcjKQl1Ni71trfH7ePMiQRfLyqsLkdskiFwfsDqkXIO2dKr4v2oPDqpcc6dZSnVxtQTY0pDU60sUrUPC9Osu7fyLyWdRZs01DXTPrMq81wAOQslrr9YNxFYR1ci1OmnvkF29w0f1jpxaTBs1AF90MvwcEIiXzRTgvFSkT0WDiqpjK+4CsJCfiu9qW5pOwBQhZnI0uSGtwGIvjv9V9K9/bvmNStiGJc2uKt3CgzcJ2Lrdk98V2QfLFHpxvoTgC3gRXtmqcAn4hf4XADtHXI+UxGGmm2qu3IoHTHEaIi/XY9g9WYeG233EtzAZ8sffVRuqCbAE1edp+xq6GkvrrZz+sNeR05eyOxIbywIPTeVpu9UrFaR5iovFkd5wBWQV8Viw2/71UbpOcnYKeBKThc7b5yZJsVWuXuFobLniO5H4CwjU/fBoMAxRYjx7dK4bN/0SelfVHVJlaCbKUhl5G54bmEQW8RFDxQlvgGntvdWrkzZhs8j7cAnci1Qo1be66brRngCs9l0otk4yPhKsNyHqjj7qQckJUtsKLuK/aD0PdXBXCtHzwVJ2fQOQFoirTmQVjyGYQ5xmktEByLH4qVG1SD5kwUMiQrhFRKcsOhqmQev2tUa7yCt97Ys="
   file:
     - dist/Android_ARM7DebugSp_libbulletjme.so
     - dist/Android_ARM7ReleaseSp_libbulletjme.so

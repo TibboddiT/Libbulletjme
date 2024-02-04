@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 jMonkeyEngine
+ * Copyright (c) 2020-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,9 @@ using namespace VHACD;
 class Callback : public IVHACD::IUserCallback {
 public:
     JNIEnv *pEnv;
-
+    /*
+     * constructor:
+     */
     Callback(JNIEnv *pJNIEnv) {
         pEnv = pJNIEnv;
     }
@@ -65,12 +67,15 @@ public:
         jfloat arg3 = operationPercent;
         pEnv->CallStaticVoidMethod(jmeClasses::Vhacd,
                 jmeClasses::Vhacd_update, arg1, arg2, arg3, arg4, arg5);
+        // no check for exceptions!
     }
 };
 
 class Logger : public IVHACD::IUserLogger {
 public:
-
+    /*
+     * constructor:
+     */
     Logger(bool b) {
         log = b;
     }
@@ -100,7 +105,7 @@ JNIEXPORT void JNICALL Java_vhacd_VHACD_compute
             = (jfloat *) pEnv->GetDirectBufferAddress(positionsBuffer);
     NULL_CHK(pEnv, pPositions, "The positions buffer is not direct.",);
     EXCEPTION_CHK(pEnv,);
-    const jlong numFloats = pEnv->GetDirectBufferCapacity(positionsBuffer);
+    const jlong capacityFloats = pEnv->GetDirectBufferCapacity(positionsBuffer);
     EXCEPTION_CHK(pEnv,);
 
     NULL_CHK(pEnv, indicesBuffer, "The indices buffer does not exist.",);
@@ -108,7 +113,7 @@ JNIEXPORT void JNICALL Java_vhacd_VHACD_compute
             = (jint *) pEnv->GetDirectBufferAddress(indicesBuffer);
     NULL_CHK(pEnv, pIndices, "The indices buffer is not direct.",);
     EXCEPTION_CHK(pEnv,);
-    const jlong numInts = pEnv->GetDirectBufferCapacity(indicesBuffer);
+    const jlong capacityInts = pEnv->GetDirectBufferCapacity(indicesBuffer);
     EXCEPTION_CHK(pEnv,);
 
     IVHACD::Parameters * const pParams
@@ -122,14 +127,14 @@ JNIEXPORT void JNICALL Java_vhacd_VHACD_compute
     pParams->m_logger = &logger;
 
     // on some platforms, jint != uint32_t
-    uint32_t * const pTriangles = new uint32_t[numInts]; //dance001
-    for (jlong i = 0; i < numInts; ++i) {
+    uint32_t * const pTriangles = new uint32_t[capacityInts]; //dance001
+    for (jlong i = 0; i < capacityInts; ++i) {
         pTriangles[i] = (uint32_t) pIndices[i];
     }
 
     IVHACD * const pIvhacd = CreateVHACD();
-    const uint32_t nPoints = numFloats / 3;
-    const uint32_t nTriangles = numInts / 3;
+    const uint32_t nPoints = capacityFloats / 3;
+    const uint32_t nTriangles = capacityInts / 3;
     const bool success = pIvhacd->Compute(pPositions, nPoints, pTriangles,
             nTriangles, *pParams);
 

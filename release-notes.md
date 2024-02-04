@@ -1,5 +1,63 @@
 # Release log for the Libbulletjme project
 
+## Version 20.0.0 released on 22 January 2024
+
++ Changed both APIs (both Java and native) of the `CustomConvexShape` class
+  to better support scaling of custom shapes.
++ Added a 3-argument constructor to the `CustomConvexShape` class.
+
+## Version 19.0.0 released on 19 January 2024
+
++ Changed the Java API:
+  + Privatized the `PhysicsCollisionObject.setIgnoreCollisionCheck()` method.
+  + Simplified the signature of `VectorSet.addAll()`.
+  + Deleted 14 previously deprecated methods:
+    + `MyMath.isFinite(Vec3d)`
+    + `PhysicsCollisionObject.listIgnoredIds()`
+    + `PhysicsCollisionObject.setIgnoreList()`
+    + `PhysicsSpace.addCollisionListener()`
+    + `PhysicsSpace.addOngoingCollisionListener()`
+    + `PhysicsSpace.countCollisionListeners()`
+    + `PhysicsSpace.distributeEvents()`
+    + `PhysicsSpace.removeCollisionListener()`
+    + `PhysicsSpace.removeOngoingCollisionListener()`
+    + `Quaternion.multLocal(Vector3f)`
+    + `Quaternion.mult(Vector3f, Vector3f)`
+    + `Transform.combineWithParent()`
+    + `Transform.transformVector()`
+    + `Transform.transformInverseVector()`
++ Added return values to 2 native methods:
+  + `DebugShapeFactory.getTriangles()`
+  + `DebugShapeFactory.getVertices()`
+
++ Added the `CustomConvexShape` class.
++ Added 2 methods to the pre-existing `CompoundMesh` class:
+  + `CompoundMesh.countSubmeshes()`
+  + `CompoundMesh.getSubmesh()`
++ Added runtime checks:
+  + in the `MeshCollisionShape` class, for meshes that are too complex
+  + in the `DebugShapeFactory` class, for `buildHull()` failures
++ Upgraded Node.js to v20.11.0 .
+
+## Version 18.6.1 released on 4 December 2023
+
+Bugfix: BVH algorithm fails
+
+## Version 18.6.0 released on 30 November 2023
+
++ Bugfix: `PhysicsCharacter` disregards ignore lists
++ Deprecated the `PhysicsSpace.countCollisionListeners()` method.
++ Optimized `PhysicsSpace.onContactProcessed()` and `onContactStarted()` to
+  create event objects only when listeners are registered.
++ Added 3 math methods:
+  + `FastMath.atan()`
+  + `MyMath.log2()`
+  + `MyMath.maxInt()`
++ Updated the Bullet source code to match SHA1 ID=6bb8d112
+  of the bullet3 project.
++ Build MacOSX_ARM64 natives for release using Xcode 14.2 .
++ Upgraded Node.js to v20.10.0
+
 ## Version 18.5.2 released on 24 July 2023
 
 + Added a `MyMath.clamp()` method with `int` arguments.
@@ -781,8 +839,8 @@ Added getters for the total force and torque on a rigid body.
 
 ## Version 6.1.0 released on 18 May 2020
 
- + bugfix: crash caused by `ShortBuffer` containing index > 32767
- + bugfix: `CompoundCollisionShape.correctAxes()` gave incorrect results for
+ + Bugfix: crash caused by `ShortBuffer` containing index > 32767
+ + Bugfix: `CompoundCollisionShape.correctAxes()` gave incorrect results for
    some shapes
  + Plugged native memory leaks found in:
    + `Java_vhacd_VHACD_compute()`

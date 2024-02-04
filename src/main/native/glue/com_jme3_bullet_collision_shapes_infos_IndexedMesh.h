@@ -17,6 +17,22 @@ extern "C" {
 #define com_jme3_bullet_collision_shapes_infos_IndexedMesh_vpt 3L
 /*
  * Class:     com_jme3_bullet_collision_shapes_infos_IndexedMesh
+ * Method:    countTriangles
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_IndexedMesh_countTriangles
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_IndexedMesh
+ * Method:    countVertices
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_IndexedMesh_countVertices
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_IndexedMesh
  * Method:    createByte
  * Signature: (Ljava/nio/ByteBuffer;Ljava/nio/FloatBuffer;IIII)J
  */
@@ -45,6 +61,14 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_IndexedMesh_
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_infos_IndexedMesh_finalizeNative
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_IndexedMesh
+ * Method:    triangleIndexStride
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_IndexedMesh_triangleIndexStride
   (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus

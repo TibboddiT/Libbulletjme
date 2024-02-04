@@ -38,7 +38,7 @@
 
 #include <jni.h>
 
-#define LIBBULLETJME_VERSION "18.5.2"
+#define LIBBULLETJME_VERSION "20.0.0"
 
 #define EXCEPTION_CHK(pEnv, retval) \
     if (pEnv->ExceptionCheck()) { \
@@ -74,6 +74,7 @@ public:
     static jmethodID List_addMethod;
 
     static jmethodID CollisionSpace_notifyCollisionGroupListeners;
+    static jmethodID CustomConvexShape_locateSupport;
 
     static jmethodID PhysicsSpace_preTick;
     static jmethodID PhysicsSpace_postTick;
@@ -170,6 +171,9 @@ public:
     static bool reinitializationCallbackFlag;
 
 private:
+    /*
+     * constructor:
+     */
     jmeClasses() {
     }
 

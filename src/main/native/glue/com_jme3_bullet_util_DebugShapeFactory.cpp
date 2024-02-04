@@ -38,13 +38,15 @@
 #include "BulletCollision/CollisionShapes/btShapeHull.h"
 
 class DebugCallback : public btTriangleCallback, public btInternalTriangleIndexCallback {
+    JNIEnv *m_pEnv;
+    jobject m_callback;
 public:
-    JNIEnv *pEnv;
-    jobject callback;
-
+    /*
+     * constructor:
+     */
     DebugCallback(JNIEnv *pEnv, jobject object) {
-        this->pEnv = pEnv;
-        this->callback = object;
+        m_pEnv = pEnv;
+        m_callback = object;
     }
 
     virtual void internalProcessTriangleIndex(btVector3* triangle,
@@ -58,30 +60,31 @@ public:
         vertexA = triangle[0];
         vertexB = triangle[1];
         vertexC = triangle[2];
-        pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
+        m_pEnv->CallVoidMethod(m_callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexA.getX(), vertexA.getY(), vertexA.getZ(),
                 partId, triangleIndex);
-        EXCEPTION_CHK(pEnv,);
-        pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
+        EXCEPTION_CHK(m_pEnv,);
+        m_pEnv->CallVoidMethod(m_callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexB.getX(), vertexB.getY(), vertexB.getZ(),
                 partId, triangleIndex);
-        EXCEPTION_CHK(pEnv,);
-        pEnv->CallVoidMethod(callback, jmeClasses::DebugMeshCallback_addVector,
+        EXCEPTION_CHK(m_pEnv,);
+        m_pEnv->CallVoidMethod(m_callback, jmeClasses::DebugMeshCallback_addVector,
                 vertexC.getX(), vertexC.getY(), vertexC.getZ(),
                 partId, triangleIndex);
+        // no check for exceptions!
     }
 };
 
 /*
  * Class:     com_jme3_bullet_util_DebugShapeFactory
  * Method:    getTriangles
- * Signature: (JILcom/jme3/bullet/util/DebugMeshCallback;)V
+ * Signature: (JILcom/jme3/bullet/util/DebugMeshCallback;)Z
  */
-JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getTriangles
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getTriangles
 (JNIEnv *pEnv, jclass, jlong shapeId, jint resolution, jobject callback) {
     const btCollisionShape * const
             pShape = reinterpret_cast<btCollisionShape *> (shapeId);
-    NULL_CHK(pEnv, pShape, "The btCollisionShape does not exist.",);
+    NULL_CHK(pEnv, pShape, "The btCollisionShape does not exist.", JNI_FALSE);
 
     if (pShape->isConcave()) {
         const btConcaveShape * const pConcave = (btConcaveShape *) pShape;
@@ -99,7 +102,11 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getTriangles
         // Create a hull approximation.
         btShapeHull * const pHull = new btShapeHull(pConvex); //dance027
         float margin = pConvex->getMargin();
-        pHull->buildHull(margin, resolution);
+        bool success = pHull->buildHull(margin, resolution);
+        if (!success) {
+            delete pHull; //dance027
+            return JNI_FALSE;
+        }
 
         int numberOfTriangles = pHull->numTriangles();
         const unsigned int * const pHullIndices = pHull->getIndexPointer();
@@ -117,32 +124,34 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getTriangles
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexA.getX(),
                     vertexA.getY(), vertexA.getZ());
-            EXCEPTION_CHK(pEnv,);
+            EXCEPTION_CHK(pEnv, JNI_FALSE);
 
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexB.getX(),
                     vertexB.getY(), vertexB.getZ());
-            EXCEPTION_CHK(pEnv,);
+            EXCEPTION_CHK(pEnv, JNI_FALSE);
 
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertexC.getX(),
                     vertexC.getY(), vertexC.getZ());
-            EXCEPTION_CHK(pEnv,);
+            EXCEPTION_CHK(pEnv, JNI_FALSE);
         }
         delete pHull; //dance027
     }
+
+    return JNI_TRUE; // success!
 }
 
 /*
  * Class:     com_jme3_bullet_util_DebugShapeFactory
  * Method:    getVertices
- * Signature: (JILcom/jme3/bullet/util/DebugMeshCallback;)V
+ * Signature: (JILcom/jme3/bullet/util/DebugMeshCallback;)Z
  */
-JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getVertices
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getVertices
 (JNIEnv *pEnv, jclass, jlong shapeId, jint resolution, jobject callback) {
     const btCollisionShape * const
             pShape = reinterpret_cast<btCollisionShape *> (shapeId);
-    NULL_CHK(pEnv, pShape, "The btCollisionShape does not exist.",);
+    NULL_CHK(pEnv, pShape, "The btCollisionShape does not exist.", JNI_FALSE);
 
     if (pShape->isConcave()) {
         const btConcaveShape * const pConcave = (btConcaveShape *) pShape;
@@ -160,7 +169,11 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getVertices
         // Create a hull approximation.
         btShapeHull * const pHull = new btShapeHull(pConvex); //dance026
         float margin = pConvex->getMargin();
-        pHull->buildHull(margin, resolution);
+        bool success = pHull->buildHull(margin, resolution);
+        if (!success) {
+            delete pHull; //dance026
+            return JNI_FALSE;
+        }
 
         int numberOfVertices = pHull->numVertices();
         const btVector3 * const pHullVertices = pHull->getVertexPointer();
@@ -172,8 +185,10 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_util_DebugShapeFactory_getVertices
             pEnv->CallVoidMethod(callback,
                     jmeClasses::DebugMeshCallback_addVector, vertex.getX(),
                     vertex.getY(), vertex.getZ());
-            EXCEPTION_CHK(pEnv,);
+            EXCEPTION_CHK(pEnv, JNI_FALSE);
         }
         delete pHull; //dance026
     }
+
+    return JNI_TRUE; // success!
 }

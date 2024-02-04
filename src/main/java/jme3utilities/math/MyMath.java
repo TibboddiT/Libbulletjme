@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2023, Stephen Gold
+ Copyright (c) 2013-2024, Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@ import com.jme3.math.Transform;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.util.TempVars;
-import com.simsilica.mathd.Vec3d;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 
@@ -122,9 +121,7 @@ final public class MyMath {
      * It is safe for any or all of {@code child}, {@code parent}, and
      * {@code storeResult} to be the same object.
      * <p>
-     * Unlike {@link
-     * com.jme3.math.Transform#combineWithParent(com.jme3.math.Transform)}, this
-     * method works on transforms containing non-normalized quaternions.
+     * This method works on transforms containing non-normalized quaternions.
      *
      * @param child the transform applied first (not null, unaffected unless
      * it's {@code storeResult})
@@ -294,26 +291,6 @@ final public class MyMath {
             return false;
         } else {
             return true;
-        }
-    }
-
-    /**
-     * Test whether the argument is a valid vector, returning false if it's null
-     * or if any component is NaN or infinite.
-     *
-     * @param vector the vector to test (unaffected)
-     * @return true if non-null and finite, otherwise false
-     * @deprecated use {@link com.simsilica.mathd.Vec3d#isFinite()}
-     */
-    @Deprecated
-    public static boolean isFinite(Vec3d vector) {
-        if (vector == null) {
-            return false;
-        } else if (isFiniteDouble(vector.x) && isFiniteDouble(vector.y)
-                && isFiniteDouble(vector.z)) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -618,10 +595,7 @@ final public class MyMath {
      * It is safe for {@code input} and {@code storeResult} to be the same
      * object.
      * <p>
-     * Unlike {@link
-     * com.jme3.math.Transform#transformVector(com.jme3.math.Vector3f,
-     * com.jme3.math.Vector3f)}, this method works on transforms containing
-     * non-normalized quaternions.
+     * This method works on transforms containing non-normalized quaternions.
      *
      * @param transform the transform to apply (not null, unaffected unless
      * {@code storeResult} is its translation or scaling component)
@@ -687,10 +661,7 @@ final public class MyMath {
      * It is safe for {@code input} and {@code storeResult} to be the same
      * object.
      * <p>
-     * Unlike {@link
-     * com.jme3.math.Transform#transformInverseVector(com.jme3.math.Vector3f,
-     * com.jme3.math.Vector3f)}, this method works on transforms containing
-     * non-normalized quaternions.
+     * This method works on transforms containing non-normalized quaternions.
      *
      * @param transform the transform to un-apply (not null, unaffected unless
      * {@code storeResult} is its translation or scaling component)
