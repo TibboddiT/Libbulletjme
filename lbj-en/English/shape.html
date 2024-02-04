@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/shape.html">
     <link rel="prev" href="rigidbody.html">
     <link rel="next" href="character.html">
-    <meta name="generator" content="Antora 3.1.4">
+    <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="Choosing collision shapes">
@@ -109,7 +109,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme">Git repository</a>
+    <a class="nav-link" href="https://github.com/stephengold/Libbulletjme">GitHub repository</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/Libbulletjme/releases/latest">Latest release</a>
@@ -449,6 +449,35 @@ objects are never detected.</p>
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_custom_shape_classes"><a class="anchor" href="#_custom_shape_classes"></a>Custom shape classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Furthermore, you can define new shape classes by extending the
+abstract <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CustomConvexShape.html"><code>CustomConvexShape</code></a> class:</p>
+</div>
+<table class="tableblock frame-all grid-none stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CustomConvexShape.html"><code>CustomConvexShape</code></a></p>
+<p class="tableblock">&rarr; convex<br>
+&rarr; positive margin<br>
+&rarr; imprecise<br>
+&rarr; each subclass determines its scalability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/CustomConvex.png" alt="CustomConvex" height="160"></span></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Examples of this are found in
+<a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/shapes/custom">the <code>com.github.stephengold.shapes.custom</code> package</a>.</p>
 </div>
 </div>
 </div>
@@ -960,7 +989,7 @@ CollisionShape shape
 <div class="paragraph">
 <p>The V-HACD algorithm is costly to run, but for many applications it can
 be run in advance and the output stored until needed.
-During simulation, the resulting shape will usually be much far efficient
+During simulation, the resulting shape will usually be much more efficient
 than a GImpact shape.</p>
 </div>
 </div>
@@ -1019,7 +1048,7 @@ either during model construction or using V-HACD.</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2023 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2024 by Stephen Gold</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>
