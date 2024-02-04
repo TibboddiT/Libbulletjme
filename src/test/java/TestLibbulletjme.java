@@ -334,7 +334,7 @@ public class TestLibbulletjme {
         verifyCollisionShapeDefaults(compound);
         Assert.assertEquals(0, compound.countChildren());
         Assert.assertEquals(0.04f, compound.getMargin(), 0f);
-        Assert.assertEquals(31, compound.getShapeType());
+        Assert.assertEquals(32, compound.getShapeType());
         Assert.assertFalse(compound.isConcave());
         Assert.assertFalse(compound.isConvex());
         Assert.assertFalse(compound.isInfinite());
