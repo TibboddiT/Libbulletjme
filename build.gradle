@@ -1,17 +1,18 @@
-// Gradle build script for Maven artifacts and desktop native libraries
+// Gradle script to build Libbulletjme Maven artifacts and desktop native libraries
 
 plugins {
-    id 'checkstyle'
-    id 'cpp'
-    id 'java-library'
-    id 'maven-publish'
-    id 'signing'
+    id 'application'   // to build JVM applications
+    id 'checkstyle'    // to analyze Java sourcecode for style violations
+    id 'cpp'           // to compile C/C++ code and link native libraries
+    id 'java-library'  // to build JVM libraries
+    id 'maven-publish' // to publish artifacts to Maven repositories
+    id 'signing'       // to sign artifacts for publication
 }
 
 ext {
     group = 'com.github.stephengold'
     artifact = 'Libbulletjme'
-    version = '20.0.0'
+    version = '21.2.1'
     baseName = "${artifact}-${version}" // for artifacts
     websiteUrl = 'https://github.com/stephengold/Libbulletjme'
 }
@@ -20,12 +21,11 @@ sourceSets.main.java {
     srcDir 'src/main/java'
     srcDir 'src/main/native' // for IDE access (no Java there)
 }
-
 sourceSets.test.java {
     srcDir 'src/test/java'
 }
 
-// Regenerate all JNI header files before compiling any C++ source code.
+// Regenerate all JNI header files before compiling any C++ code.
 tasks.withType(CppCompile) {
     dependsOn('classes', 'compileTestJava')
 }
@@ -39,15 +39,16 @@ model {
     }
 
     flavors {
+        Dp            // double-precision arithmetic
+        DpMt          // double-precision arithmetic, multithreaded
         Sp            // single-precision arithmetic
         SpMt          // single-precision arithmetic, multithreaded
         SpMtQuickprof // single-precision arithmetic, multithreaded, Quickprof profiling
         SpQuickprof   // single-precision arithmetic, Quickprof profiling
-        Dp   // double-precision arithmetic
-        DpMt // double-precision arithmetic, multithreaded
     }
 
     platforms {
+        // To build native libraries for Android, use "android.gradle" instead.
         Linux32 {
             architecture 'x86'
             operatingSystem 'linux'
@@ -56,7 +57,7 @@ model {
             architecture 'x86_64'
             operatingSystem 'linux'
         }
-        Linux_ARM32 {
+        Linux_ARM32 { // omitted from recent Minie releases
             architecture 'armel'
             operatingSystem 'linux'
         }
@@ -91,35 +92,58 @@ model {
     }
 
     toolChains { // prioritize among the native toolchains
-        visualCpp(VisualCpp)
-        //clang(Clang) // to favor Clang over Gcc
-        gcc(Gcc)
-        gcc6Arm32hf(Gcc) {
+        visualCpp(VisualCpp) // used when compiling on Windows
+        //clang(Clang) // to prefer Clang over Gcc
+
+        //gcc9Arm(Gcc) {
+        //    target('Linux_ARM32') {
+        //        cppCompiler.executable = 'arm-linux-gnueabi-g++-9'
+        //        linker.executable = 'arm-linux-gnueabi-g++-9'
+        //    }
+        //    target('Linux_ARM32hf') {
+        //        cppCompiler.executable = 'arm-linux-gnueabihf-g++-9'
+        //        linker.executable = 'arm-linux-gnueabihf-g++-9'
+        //    }
+        //    target('Linux_ARM64') {
+        //        cppCompiler.executable = 'aarch64-linux-gnu-g++-9'
+        //        linker.executable = 'aarch64-linux-gnu-g++-9'
+        //    }
+        //}
+        //gcc8Arm32hf(Gcc) {
+        //    target('Linux_ARM32hf') {
+        //        cppCompiler.executable = 'arm-linux-gnueabihf-g++-8'
+        //        linker.executable = 'arm-linux-gnueabihf-g++-8'
+        //    }
+        //}
+
+        gcc(Gcc) // used when compiling on Linux
+        gcc6Arm32hf(Gcc) { // used at Travis CI (job .5)
             target('Linux_ARM32hf') {
                 cppCompiler.executable = 'arm-linux-gnueabihf-g++-6'
                 linker.executable = 'arm-linux-gnueabihf-g++-6'
             }
         }
-        gcc6Arm64(Gcc) {
+        gcc6Arm64(Gcc) { // used at Travis CI (jobs .6 and .7)
             target('Linux_ARM64') {
                 cppCompiler.executable = 'aarch64-linux-gnu-g++-6'
                 linker.executable = 'aarch64-linux-gnu-g++-6'
             }
         }
-        gcc7Arm32(Gcc) {
+        gcc7Arm32(Gcc) { // used at Travis CI (job .4)
             target('Linux_ARM32') {
                 cppCompiler.executable = 'arm-linux-gnueabi-g++-7'
                 linker.executable = 'arm-linux-gnueabi-g++-7'
             }
         }
-        clang(Clang)
+        clang(Clang) // used when compiling on macOS
     }
 
     components {
+        // To build native libraries for Android, use "android.gradle" instead.
         bulletjme(NativeLibrarySpec) {
             targetPlatform 'Linux32'
             targetPlatform 'Linux64'
-            targetPlatform 'Linux_ARM32'
+            targetPlatform 'Linux_ARM32' // omitted from recent Minie releases
             targetPlatform 'Linux_ARM32hf'
             targetPlatform 'Linux_ARM64'
             targetPlatform 'MacOSX32'
@@ -135,21 +159,20 @@ model {
                 include '**/*.cpp'
             }
 
-            binaries.withType(StaticLibraryBinarySpec) {
-                buildable = false
-            }
             binaries.withType(SharedLibraryBinarySpec) {
-                Boolean isDebug = (buildType == buildTypes.Debug)
-                Boolean isMt = (flavor == flavors.SpMt || flavor == flavors.SpMtQuickprof || flavor == flavors.DpMt)
                 String pName = targetPlatform.name
                 //println " - $pName  $buildType  $flavor" // to debug this script
 
                 // Decide whether to build for the target platform:
+                Boolean isDebug = (buildType == buildTypes.Debug)
+                Boolean isMt = (flavor == flavors.SpMt || flavor == flavors.SpMtQuickprof || flavor == flavors.DpMt)
                 if (project.hasProperty('github')) {
                     // CI build with -Pgithub= specified on the command line
                     String github = project.ext.github
                     if (github == 'debug64') { // skip all except debug/64-bit/non-ARM
                         buildable = isDebug && pName.contains('64') && !pName.contains('_ARM')
+                    } else if (github == 'debug64arm') { // skip all except debug/64-bit/ARM
+                        buildable = isDebug && pName.contains('64') && pName.contains('_ARM')
                     }
                 } else if (project.hasProperty('travis')) {
                     // CI build with -Ptravis= specified on the command line
@@ -174,6 +197,7 @@ model {
                     buildable = !pName.startsWith('Linux_ARM')
                     //buildable = (pName == 'Linux64') // to build Linux64 only
                     //buildable = (pName == 'Windows64') // to build Windows64 only
+                    //buildable = (pName == 'Linux_ARM32hf') // to build Linux_ARM32hf only
                 }
 
                 Boolean isDp = (flavor == flavors.Dp || flavor == flavors.DpMt)
@@ -194,6 +218,7 @@ model {
                     if (isQuickprof) buildable = false // to skip all Quickprof flavors
                 }
 
+                // flavor-specific CPP defines:
                 if (isDebug) {
                     cppCompiler.define '_DEBUG'
                     //cppCompiler.define 'BT_ADDITIONAL_DEBUG'
@@ -224,10 +249,13 @@ model {
                     cppCompiler.args "/I$projectDir/src/main/native/bullet3/LinearMath"
                     cppCompiler.args "/I$projectDir/src/main/native/v-hacd/inc"
                     cppCompiler.args "/I$projectDir/src/main/native/v-hacd/public"
+                    linker.args 'ws2_32.lib' // for htons()
+
                     if (isDebug) {
-                        cppCompiler.args '/FS' // serialize PDB writes
-                        cppCompiler.args '/MTd' // use LIBCMTD
-                        cppCompiler.args '/Zi' // produce PDB file
+                        cppCompiler.args '/FS' // to serialize PDB-file writes
+                        cppCompiler.args '/MTd' // to use LIBCMTD
+                        cppCompiler.args '/Zi' // to generate a PDB file containing debug info
+                        //cppCompiler.args '/Z7' // to embed debug info in OBJ files
                         linker.args '/DEBUG'
                         if (buildable) {
                             String pdbFile = 'build/libs/bulletjme/shared/'
@@ -253,6 +281,9 @@ model {
                     }
 
                 } else { // toolChain in Clang or Gcc
+                    //cppCompiler.args '-v' // to log compiler details
+                    //linker.args '-v' // to log linker details
+
                     cppCompiler.args '-I', "$javaHome/include"
                     cppCompiler.args '-I', "$projectDir/src/main/native/bullet3"
                     cppCompiler.args '-I', "$projectDir/src/main/native/bullet3/BulletDynamics/Featherstone"
@@ -260,6 +291,8 @@ model {
                     cppCompiler.args '-I', "$projectDir/src/main/native/v-hacd/inc"
                     cppCompiler.args '-I', "$projectDir/src/main/native/v-hacd/public"
                     cppCompiler.args '-std=c++11'
+                    cppCompiler.args '-Werror=return-type'
+
                     if (isDebug) {
                         cppCompiler.args '-O0', '-g3'
                     } else { // buildType == Release
@@ -304,19 +337,29 @@ model {
                     //println 'Do not build ' + q // to debug this script
                 }
             }
+
+            binaries.withType(StaticLibraryBinarySpec) {
+                buildable = false
+            }
         }
     }
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation(libs.junit4)
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 tasks.withType(JavaCompile) { // Java compile-time options:
     options.compilerArgs << '-Xdiags:verbose'
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_20)) {
+        // Suppress warnings that source value 8 is obsolete.
+        options.compilerArgs << '-Xlint:-options'
+    }
     options.compilerArgs << '-Xlint:unchecked'
     options.deprecation = true // to provide detailed deprecation warnings
     options.encoding = 'UTF-8'
@@ -326,11 +369,25 @@ tasks.withType(JavaCompile) { // Java compile-time options:
     }
 }
 
-repositories {
-    mavenCentral()
+application {
+    mainClass = 'jme3utilities.minie.TestApp'
+}
+tasks.withType(JavaExec).configureEach { // Java runtime options:
+    classpath sourceSets.main.runtimeClasspath
+    enableAssertions true
 }
 
+run.dependsOn('assemble')
 test.dependsOn('assemble')
+
+checkstyle {
+    toolVersion libs.versions.checkstyle.get()
+}
+tasks.register('checkstyle') {
+    dependsOn 'checkstyleMain', 'checkstyleTest'
+    description 'Checks the style of all Java sourcecode.'
+}
+checkstyleMain.dependsOn('compileTestJava')
 
 // Register publishing tasks:
 
@@ -349,31 +406,29 @@ tasks.register('copyToDistJars', Copy) {
 
 jar {
     archiveBaseName = project.ext.baseName
+    doLast {
+        println "using Java ${JavaVersion.current()} (${System.getProperty("java.vendor")})"
+    }
     manifest {
         attributes 'Created-By': "${JavaVersion.current()} (${System.getProperty("java.vendor")})"
     }
 }
-tasks.register('javadocJar', Jar) {
-    archiveBaseName = project.ext.baseName
-    archiveClassifier = 'javadoc'
-    dependsOn 'javadoc'
-    description 'Creates a JAR of javadoc.'
-    from javadoc.destinationDir
-}
+
+java.withJavadocJar()
+javadocJar { archiveBaseName = project.ext.baseName }
+
 tasks.register('sourcesJar', Jar) {
     archiveBaseName = project.ext.baseName
     archiveClassifier = 'sources'
     description 'Creates a JAR of Java sourcecode.'
-    from 'src/main/java'
+    from 'src/main/java' // default is ".allSource", which includes resources
 }
 
 // add javadoc/source jar tasks as artifacts
 artifacts {
-    archives jar, javadocJar, sourcesJar
+    archives jar, sourcesJar
 }
 javadoc.dependsOn('compileTestJava')
-
-checkstyleMain.dependsOn('compileTestJava')
 
 assemble.dependsOn('module', 'moduleAsc', 'pom', 'pomAsc')
 tasks.register('module', Copy) {
@@ -457,11 +512,6 @@ tasks.withType(Sign) {
     onlyIf { project.hasProperty('signing.keyId') }
 }
 signMavenPublication.dependsOn('module')
-
-tasks.register('checkstyle') {
-    dependsOn 'checkstyleMain', 'checkstyleTest'
-    description 'Checks the style of all Java sourcecode.'
-}
 
 // Register cleanup tasks:
 

@@ -242,6 +242,10 @@ void btBvhTriangleMeshShape::processAllTriangles(btTriangleCallback* callback, c
 	//brute force traverse all triangles
 	btTriangleMeshShape::processAllTriangles(callback, aabbMin, aabbMax);
 #else
+	if (m_bvh == NULL) {                     // stephengold added 2024-04-27
+		btTriangleMeshShape::processAllTriangles(callback, aabbMin, aabbMax); // stephengold added 2024-04-27
+		return;                          // stephengold added 2024-04-27
+	}                                        // stephengold added 2024-04-27
 
 	//first get all the nodes
 
@@ -333,7 +337,9 @@ void btBvhTriangleMeshShape::setLocalScaling(const btVector3& scaling)
 	if ((getLocalScaling() - scaling).length2() > SIMD_EPSILON)
 	{
 		btTriangleMeshShape::setLocalScaling(scaling);
-		buildOptimizedBvh();
+                if (m_bvh != NULL) { // stephengold modified 2024-04-20
+                        buildOptimizedBvh(); // stephengold modified 2024-04-20
+                } // stephengold modified 2024-04-20
 	}
 }
 

@@ -1,7 +1,7 @@
 ---
 # configure deployment by AppVeyor.com
 
-version: 20.0.0
+version: 21.2.1
 
 image: Visual Studio 2022
 
@@ -11,15 +11,15 @@ build_script:
   - cmd: gradlew.bat build --console=plain --no-daemon
 
 artifacts:
-  - path: dist/Libbulletjme-20.0.0.jar
+  - path: dist/Libbulletjme-21.2.1.jar
     name: classJar
-  - path: dist/Libbulletjme-20.0.0-javadoc.jar
+  - path: dist/Libbulletjme-21.2.1-javadoc.jar
     name: javadocJar
-  - path: dist/Libbulletjme-20.0.0-sources.jar
+  - path: dist/Libbulletjme-21.2.1-sources.jar
     name: sourcesJar
-  - path: dist/Libbulletjme-20.0.0.pom
+  - path: dist/Libbulletjme-21.2.1.pom
     name: pom
-  - path: dist/Libbulletjme-20.0.0.module
+  - path: dist/Libbulletjme-21.2.1.module
     name: module
   - path: dist/Windows32DebugDp_bulletjme.dll
     name: dll32DD
@@ -58,7 +58,7 @@ artifacts:
   - path: dist/Windows64DebugSpMt_bulletjme.pdb
     name: pdb64DSM
 
-# Deploy using personal access token (classic) expiring on Mar 9 2024
+# Deploy using personal access token (classic) expiring on 31 August 2024
 # Browse to GitHub user pulldown -> Settings -> "Developer settings"
 # Browse to AppVeyor menu bar -> "Account" -> "Encrypt YAML"
 deploy:
@@ -66,7 +66,7 @@ deploy:
   artifact: classJar,javadocJar,sourcesJar,pom,module,dll32DD,dll32DS,dll32RD,dll32RS,dll64DD,dll64DDM,dll64DS,dll64DSM,dll64RD,dll64RDM,dll64RS,dll64RSM,pdb32DD,pdb32DS,pdb64DD,pdb64DDM,pdb64DS,pdb64DSM
   provider: GitHub
   auth_token:
-    secure: sKI7PMAdlmIAuARzYFHvP0RXONN5ofiV2J2ZUCuk6B32hUf1EEZy6hVe4XnTEcwF
+    secure: IpAnLRHS2WjpQp2GT+Cbw2xM7x0VO6RQEzMWUWl2M+jcmHcLmFbLoznmLkdW3VDD
   force_update: true               # overwrite existing release if present
   on:
     appveyor_repo_tag: true        # deploy on tag push only

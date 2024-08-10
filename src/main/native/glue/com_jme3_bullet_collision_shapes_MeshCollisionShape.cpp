@@ -34,27 +34,41 @@
  * Author: Normen Hansen
  */
 #include "com_jme3_bullet_collision_shapes_MeshCollisionShape.h"
-#include "jmeClasses.h"
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+#include "jmeBulletUtil.h"
 
 /*
  * Class:     com_jme3_bullet_collision_shapes_MeshCollisionShape
  * Method:    createShape
- * Signature: (J)J
+ * Signature: (ZZJ)J
  */
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_createShape
-(JNIEnv *pEnv, jclass, jboolean isMemoryEfficient, jboolean buildBVH,
-        jlong meshId) {
+(JNIEnv *pEnv, jclass, jboolean quantized, jboolean buildBVH, jlong meshId) {
     jmeClasses::initJavaClasses(pEnv);
 
     btStridingMeshInterface *pMesh
             = reinterpret_cast<btStridingMeshInterface *> (meshId);
     NULL_CHK(pEnv, pMesh, "The btStridingMeshInterface does not exist.", 0)
 
-    btBvhTriangleMeshShape *
-            pShape = new btBvhTriangleMeshShape(pMesh, isMemoryEfficient,
-            buildBVH); //dance016
+    btBvhTriangleMeshShape *pShape
+            = new btBvhTriangleMeshShape(pMesh, quantized, buildBVH); //dance016
     return reinterpret_cast<jlong> (pShape);
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_MeshCollisionShape
+ * Method:    hasBvh
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_hasBvh
+(JNIEnv *pEnv, jclass, jlong shapeId) {
+    btBvhTriangleMeshShape *pShape
+            = reinterpret_cast<btBvhTriangleMeshShape *> (shapeId);
+    NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.", JNI_FALSE);
+    ASSERT_CHK(pEnv, pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE, JNI_FALSE);
+
+    bool result = (pShape->getOptimizedBvh() != NULL);
+    return result;
 }
 
 /*
@@ -74,42 +88,11 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_
 
 /*
  * Class:     com_jme3_bullet_collision_shapes_MeshCollisionShape
- * Method:    saveBVH
- * Signature: (J)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_saveBVH
-(JNIEnv *pEnv, jclass, jlong meshobj) {
-    btBvhTriangleMeshShape *pMesh
-            = reinterpret_cast<btBvhTriangleMeshShape *> (meshobj);
-    NULL_CHK(pEnv, pMesh, "The btBvhTriangleMeshShape does not exist.", 0);
-    ASSERT_CHK(pEnv, pMesh->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE, 0);
-
-    btOptimizedBvh *pBvh = pMesh->getOptimizedBvh();
-    unsigned int ssize = pBvh->calculateSerializeBufferSize();
-    char *pBuffer = (char *) btAlignedAlloc(ssize, 16); //dance015
-    bool success = pBvh->serialize(pBuffer, ssize, true);
-    if (!success) {
-        pEnv->ThrowNew(jmeClasses::RuntimeException,
-                "Unable to serialize, native error reported");
-        return 0;
-    }
-
-    jbyteArray byteArray = pEnv->NewByteArray(ssize);
-    EXCEPTION_CHK(pEnv, 0);
-    pEnv->SetByteArrayRegion(byteArray, 0, ssize, (jbyte *) pBuffer);
-    EXCEPTION_CHK(pEnv, 0);
-    btAlignedFree(pBuffer); //dance015
-
-    return byteArray;
-}
-
-/*
- * Class:     com_jme3_bullet_collision_shapes_MeshCollisionShape
  * Method:    setOptimizedBvh
- * Signature: (JJ)V
+ * Signature: (JJLcom/jme3/math/Vector3f;)V
  */
 JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_setOptimizedBvh
-(JNIEnv *pEnv, jclass, jlong shapeId, jlong bvhId) {
+(JNIEnv *pEnv, jclass, jlong shapeId, jlong bvhId, jobject scaleVector) {
     btBvhTriangleMeshShape * const
             pShape = reinterpret_cast<btBvhTriangleMeshShape *> (shapeId);
     NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.",);
@@ -118,5 +101,9 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_MeshCollisionShape_
     btOptimizedBvh * const pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
     NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);
 
-    pShape->setOptimizedBvh(pBvh);
+    btVector3 scaling;
+    jmeBulletUtil::convert(pEnv, scaleVector, &scaling);
+    EXCEPTION_CHK(pEnv,);
+
+    pShape->setOptimizedBvh(pBvh, scaling);
 }

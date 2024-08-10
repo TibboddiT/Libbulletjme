@@ -1,5 +1,97 @@
 # Release log for the Libbulletjme project
 
+## Version 21.2.1 released on 9 May 2024
+
++ Changed the default setting for collision-shape contact filtering
+  (from enabled to disabled) to address Minie issue 40.
+  This change may cause unwanted behavior for rigid bodies in contact
+  with a gimpact, heightfield, or mesh; see Minie issue 18 for details.
++ Added the `ConicalFrustum` collision shape.
++ Implemented actual-margin debug meshes for concave shapes with
+  `meshResolution == 2`.
++ Added 14 accessors for the native user indices
+  of `CollisionShape`, `MultiBody`, and `PhysicsCollisionObject`.
++ Added 5 other public methods:
+  + `Heightfield.countColumns()`
+  + `Heightfield.countRows()`
+  + `Heightfield.upAxis()`
+  + `IndexedMesh.surfaceArea()`
+  + `MyMath.area(Triangle)`
+
+## Version 21.1.0 released on 28 April 2024
+
++ Bugfix:  crash in `processAllTriangles()` when `m_bvh==NULL` (Minie issue 43)
++ Bugfix:  wrong inertia for a `CustomConvexShape` when `mass != 1`
++ Added the `SphericalSegment` collision shape.
++ Added the `TestApp` application for manual testing.
++ Added 11 public methods:
+  + `BoundingValueHierarchy.copyAabb()`
+  + `BoundingValueHierarchy.copyQuantization()`
+  + `BoundingValueHierarchy.countLeafNodes()`
+  + `BoundingValueHierarchy.countNodes()`
+  + `BoundingValueHierarchy.countSubtreeHeaders()`
+  + `BoundingValueHierarchy.escapeIndex()`
+  + `BoundingValueHierarchy.isLeafNode()`
+  + `BoundingValueHierarchy.partId()`
+  + `BoundingValueHierarchy.setTraversalMode()`
+  + `BoundingValueHierarchy.traversalMode()`
+  + `BoundingValueHierarchy.triangleIndex()`
+
+## Version 21.0.0 released on 22 April 2024
+
++ Made numerous breaking changes to the native API.
++ Deleted the (deprecated) `DebugMeshCallback` class. (API change)
++ Bugfix:  JVM crash while serializing `BoundingValueHierarchy` (Minie issue 41)
++ Added the new `CollisionConfiguration` class and related methods:
+  + `CollisionSpace.getConfiguration()`
+  + `PhysicsDescriber.describe(CollisionConfiguration)`
+  + a 5-argument `CollisionSpace` constructor
+  + a 4-argument `PhysicsSoftSpace` constructor
+  + a pair of 5-argument `PhysicsSpace` constructors
++ Added 2 other public methods:
+  + `BoundingValueHierarchy.isCompressed()`
+  + `MeshCollisionShape.getBvh()`
++ Improved the performance of contact filtering by adding an early return
+  from `FilteredInteriorCountCallback`.
++ Began building Android binaries
+  using OpenJDK 11 (with Android Gradle plugin v7.4.0 and NDK v23.1.7779620)
+  instead of JDK 8 (with Android Gradle plugin v4.2.2 and NDK v21.3.6528147).
++ Began using `htons()` to configure byte swapping when serializing and
+  deserializing a `BoundingValueHierarchy`.  (This would be a breaking
+  change for big-endian platforms, if any were supported!)
++ Updated the Bullet sources to match SHA1 id=e9c461b0 of the bullet3 project,
+  to add a test for constraint pass in btMultiBody.cpp. (Thanks to Ian Chen)
+
+## Version 20.2.0 released on 18 March 2024
+
++ Deprecated the `DebugMeshCallback` class.
++ Deleted the (unused) native portion of the `DebugShapeFactory` class.
++ Added 7 new public methods:
+  + `FastMath.clamp()`
+  + `GImpactCollisionShape.countSubmeshes()`
+  + `GImpactCollisionShape.getSubmesh()`
+  + `MeshCollisionShape.countSubmeshes()`
+  + `MeshCollisionShape.getSubmesh()`
+  + `MyMath.circle(double)`
+  + `MyMath.circle(float)`
++ Updated VHACD v4 to version 4.1 .
++ Added more detail to descriptions of GImpact and mesh shapes.
++ Began building Android binaries on a xenial distro,
+  since trusty is nearing its end of life.
+
+## Version 20.1.0 released on 9 February 2024
+
++ Bugfix: `CharacterController.onGround()` returns false positives after
+  stepping (not jumping) off a cliff
++ Added an `IndexMesh` constructor to efficiently generate visualization meshes
+  for collision shapes; replaced `DebugMeshCallback` with `IndexedMesh` in
+  `DebugShapeFactory`.
++ Added 3 public methods to the `IndexedMesh` class:
+  + `copyTriangles()`
+  + `maxDistance()`
+  + `volumeConvex()`
++ Improved validation of method arguments.
+
 ## Version 20.0.0 released on 22 January 2024
 
 + Changed both APIs (both Java and native) of the `CustomConvexShape` class
@@ -21,11 +113,11 @@
     + `PhysicsSpace.distributeEvents()`
     + `PhysicsSpace.removeCollisionListener()`
     + `PhysicsSpace.removeOngoingCollisionListener()`
-    + `Quaternion.multLocal(Vector3f)`
     + `Quaternion.mult(Vector3f, Vector3f)`
+    + `Quaternion.multLocal(Vector3f)`
     + `Transform.combineWithParent()`
-    + `Transform.transformVector()`
     + `Transform.transformInverseVector()`
+    + `Transform.transformVector()`
 + Added return values to 2 native methods:
   + `DebugShapeFactory.getTriangles()`
   + `DebugShapeFactory.getVertices()`
@@ -592,7 +684,7 @@ Optimized Release-type builds that use Microsoft's Visual C++ compiler.
 ## Version 11.2.0 released on 13 August 2021
 
 + Bugfix: pure virtual call by btGImpactMeshShape destructor (Minie issue #17)
-+ Bugfix: Quickprof reset at the start of every timestep
++ Bugfix: Quickprof reset at the start of every simulation step
 + Bugfix: BT_PROFILE() macro never invokes CProfileManager
 + Added access to Quickprof profiling.
 

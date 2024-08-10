@@ -32,7 +32,11 @@
 package com.jme3.bullet.collision.shapes.infos;
 
 import com.jme3.bullet.NativePhysicsObject;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.util.DebugShapeFactory;
 import com.jme3.math.Plane;
+import com.jme3.math.Transform;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.util.BufferUtils;
@@ -45,7 +49,9 @@ import java.util.logging.Logger;
 import jme3utilities.Validate;
 import jme3utilities.math.DistinctVectorValues;
 import jme3utilities.math.MyBuffer;
+import jme3utilities.math.MyMath;
 import jme3utilities.math.MyVector3f;
+import jme3utilities.math.MyVolume;
 
 /**
  * An indexed triangle mesh based on Bullet's {@code btIndexedMesh}. Immutable.
@@ -200,6 +206,39 @@ public class IndexedMesh extends NativePhysicsObject {
 
         createMesh();
     }
+
+    /**
+     * Instantiate a IndexedMesh to visualize the specified collision shape.
+     *
+     * @param shape shape to visualize (not null, not compound, unaffected)
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
+     */
+    public IndexedMesh(CollisionShape shape, int meshResolution) {
+        Validate.nonNull(shape, "shape");
+        Validate.require(!(shape instanceof CompoundCollisionShape),
+                "not a compound shape");
+        Validate.inRange(meshResolution, "mesh resolution",
+                DebugShapeFactory.lowResolution,
+                DebugShapeFactory.highResolution2);
+
+        long shapeId = shape.nativeId();
+        long meshId = createIntDebug(shapeId, meshResolution);
+        setNativeId(meshId);
+        logger.log(Level.FINE, "Created {0}", this);
+
+        this.numVertices = countVertices(meshId);
+        int numFloats = numVertices * numAxes;
+        this.vertexPositions = BufferUtils.createFloatBuffer(numFloats);
+        this.vertexStride = numAxes * floatBytes;
+
+        this.numTriangles = countTriangles(meshId);
+        int numIndices = numTriangles * vpt;
+        this.indices = BufferUtils.createIntBuffer(numIndices);
+        this.indexStride = vpt * intBytes;
+
+        fillBuffersInt(meshId, vertexPositions, indices);
+    }
     // *************************************************************************
     // new methods exposed
 
@@ -240,6 +279,28 @@ public class IndexedMesh extends NativePhysicsObject {
     }
 
     /**
+     * Copy the unindexed triangle vertices to a new buffer.
+     *
+     * @return a new, direct, unflipped buffer
+     */
+    public FloatBuffer copyTriangles() {
+        int numIndices = numTriangles * vpt;
+        int numFloats = numIndices * numAxes;
+        FloatBuffer result = BufferUtils.createFloatBuffer(numFloats);
+
+        for (int ii = 0; ii < numIndices; ++ii) {
+            int startOffset = indices.get(ii) * numAxes;
+            float x = vertexPositions.get(startOffset);
+            float y = vertexPositions.get(startOffset + 1);
+            float z = vertexPositions.get(startOffset + 2);
+            result.put(x).put(y).put(z);
+        }
+        assert result.position() == result.capacity();
+
+        return result;
+    }
+
+    /**
      * Copy the vertex positions to a new buffer.
      *
      * @return a new, direct, unflipped buffer
@@ -273,6 +334,31 @@ public class IndexedMesh extends NativePhysicsObject {
     public int countVertices() {
         assert numVertices >= 0 : numVertices;
         return numVertices;
+    }
+
+    /**
+     * Calculate how far the mesh extends from some origin.
+     *
+     * @param meshToWorld the transform to apply to vertex locations (not null,
+     * unaffected)
+     * @return the maximum length of the transformed vectors (&ge;0)
+     */
+    public float maxDistance(Transform meshToWorld) {
+        Validate.nonNull(meshToWorld, "meshToWorld");
+
+        double maxSquaredDistance = 0.0;
+        Vector3f tmpVector = new Vector3f(); // garbage
+        for (int i = 0; i < numVertices; ++i) {
+            MyBuffer.get(vertexPositions, numAxes * i, tmpVector);
+            MyMath.transform(meshToWorld, tmpVector, tmpVector);
+            double lengthSquared = MyVector3f.lengthSquared(tmpVector);
+            if (lengthSquared > maxSquaredDistance) {
+                maxSquaredDistance = lengthSquared;
+            }
+        }
+
+        float result = (float) Math.sqrt(maxSquaredDistance);
+        return result;
     }
 
     /**
@@ -335,6 +421,51 @@ public class IndexedMesh extends NativePhysicsObject {
             }
         }
 
+        return result;
+    }
+
+    /**
+     * Calculate the (one-sided) surface area of the mesh.
+     *
+     * @return the area (in square mesh units, &ge;0)
+     */
+    public float surfaceArea() {
+        double total = 0.0;
+
+        Triangle tmpTriangle = new Triangle();
+        for (int triIndex = 0; triIndex < numTriangles; ++triIndex) {
+            copyTriangle(triIndex, tmpTriangle);
+            double triangleArea = MyMath.area(tmpTriangle);
+            total += triangleArea;
+        }
+
+        float result = (float) total;
+        assert result >= 0f : result;
+        return result;
+    }
+
+    /**
+     * Calculate volume of the mesh, assuming it's both closed and convex.
+     *
+     * @return the volume (in cubic mesh units, &ge;0)
+     */
+    public float volumeConvex() {
+        double total = 0.0;
+        if (numTriangles > 0) {
+            Vector3f v0 = new Vector3f();
+            MyBuffer.get(vertexPositions, 0, v0);
+
+            Triangle tri = new Triangle();
+            for (int triIndex = 0; triIndex < numTriangles; ++triIndex) {
+                copyTriangle(triIndex, tri);
+                double tetraVolume = MyVolume.tetrahedronVolume(
+                        tri.get1(), tri.get2(), tri.get3(), v0);
+                total += tetraVolume;
+            }
+        }
+
+        float result = (float) total;
+        assert result >= 0f : result;
         return result;
     }
     // *************************************************************************
@@ -492,9 +623,14 @@ public class IndexedMesh extends NativePhysicsObject {
             FloatBuffer vertexPositions, int numTriangles, int numVertices,
             int vertexStride, int indexStride);
 
+    native private static long createIntDebug(long shapeId, int meshResolution);
+
     native private static long createShort(ShortBuffer indices,
             FloatBuffer vertexPositions, int numTriangles, int numVertices,
             int vertexStride, int indexStride);
+
+    native private static void fillBuffersInt(
+            long meshId, FloatBuffer vertexPositions, IntBuffer indices);
 
     native private static void finalizeNative(long meshId);
 

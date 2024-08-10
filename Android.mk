@@ -194,6 +194,7 @@ $(N)/glue/com_jme3_bullet_collision_shapes_CapsuleCollisionShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_CollisionShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_CompoundCollisionShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_ConeCollisionShape.cpp \
+$(N)/glue/com_jme3_bullet_collision_shapes_ConicalFrustum.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_Convex2dShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_CustomConvexShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_CylinderCollisionShape.cpp \
@@ -210,6 +211,8 @@ $(N)/glue/com_jme3_bullet_collision_shapes_MultiSphere.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_PlaneCollisionShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_SimplexCollisionShape.cpp \
 $(N)/glue/com_jme3_bullet_collision_shapes_SphereCollisionShape.cpp \
+$(N)/glue/com_jme3_bullet_collision_shapes_SphericalSegment.cpp \
+$(N)/glue/com_jme3_bullet_CollisionConfiguration.cpp \
 $(N)/glue/com_jme3_bullet_CollisionSpace.cpp \
 $(N)/glue/com_jme3_bullet_DeformableSpace.cpp \
 $(N)/glue/com_jme3_bullet_joints_Anchor.cpp \
@@ -251,7 +254,6 @@ $(N)/glue/com_jme3_bullet_PhysicsSpace.cpp \
 $(N)/glue/com_jme3_bullet_RotationOrder.cpp \
 $(N)/glue/com_jme3_bullet_SoftBodyWorldInfo.cpp \
 $(N)/glue/com_jme3_bullet_SolverInfo.cpp \
-$(N)/glue/com_jme3_bullet_util_DebugShapeFactory.cpp \
 $(N)/glue/com_jme3_bullet_util_NativeLibrary.cpp \
 $(N)/glue/com_jme3_bullet_util_NativeSoftBodyUtil.cpp \
 $(N)/glue/jmeBulletUtil.cpp \

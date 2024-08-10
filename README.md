@@ -26,7 +26,7 @@ In addition, multithreaded native libraries
 are provided for x86_64 architectures running Windows or Linux.
 
 Libbulletjme is used in
-[the DynamX Physics Mod for Minecraft](https://dynamx.fr).
+[the DynamX Physics Mod for Minecraft][dynamx].
 
 Libbulletjme's native libraries are used in [Minie],
 which integrates Libbulletjme into [the jMonkeyEngine game engine][jme].
@@ -54,7 +54,7 @@ standalone Maven artifacts are provided.
 
 [How to add Libbulletjme to an existing project](https://stephengold.github.io/Libbulletjme/lbj-en/add.html)
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="examples"></a>
@@ -67,7 +67,7 @@ standalone Maven artifacts are provided.
 + [HelloVehicle0](https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/console/HelloVehicle0.java):
   drive a vehicle on a horizontal surface
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="build"></a>
@@ -76,7 +76,7 @@ standalone Maven artifacts are provided.
 
 [How to build Libbulletjme from source](https://stephengold.github.io/Libbulletjme/lbj-en/English/build.html)
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="lexicon"></a>
@@ -85,7 +85,7 @@ standalone Maven artifacts are provided.
 
 [Lexicon of class/enum/struct names](https://stephengold.github.io/Libbulletjme/lbj-en/English/lexicon.html)
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="todo"></a>
@@ -94,7 +94,7 @@ standalone Maven artifacts are provided.
 
 [What's missing](https://stephengold.github.io/Libbulletjme/lbj-en/English/overview.html#_whats_missing)
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="links"></a>
@@ -105,16 +105,18 @@ standalone Maven artifacts are provided.
 + [The Bullet source-code repository](https://github.com/bulletphysics/bullet3) at [GitHub]
 + [The LbjExamples project][examples] at [GitHub]
 + [The Minie project][minie]
-+ [The V-HACD Library][vhacd] at [GitHub]
++ [The V-HACD project][vhacd] at [GitHub]
++ [The SPORT project][sport] at [GitHub]
++ [The V-Sport project][vsport] at [GitHub]
 + [The physics section of the jMonkeyEngine Wiki](https://wiki.jmonkeyengine.org/docs/3.4/physics/physics.html)
 + [The Bullet Forum](https://pybullet.org/Bullet/phpBB3)
 + [The Bullet home page][bullet]
 + [JBullet], a known alternative to Libbulletjme
-+ [Alan Chou's game-physics tutorials](http://allenchou.net/game-physics-series/)
++ [Alan Chou's game-physics tutorials](https://allenchou.net/game-physics-series/)
 + ["Real-time Vehicle Simulation for Video Games Using the Bullet Physics Library" by Hammad Mazhar](https://sbel.wisc.edu/wp-content/uploads/sites/569/2018/05/Real-time-Vehicle-Simulation-for-Video-Games-Using-the-Bullet-Physics-Library.pdf)
 + ["Vehicle Simulation With Bullet" by Kester Maddock](https://docs.google.com/document/d/18edpOwtGgCwNyvakS78jxMajCuezotCU_0iezcwiFQc)
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="history"></a>
@@ -134,7 +136,7 @@ partly on [Riccardo's V-hacd-java-bindings][vhacdBindings],
 and partly on [Minie].
 Minie is, in turn, based on `jme3-bullet`, another jMonkeyEngine library.
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
 <a name="acks"></a>
@@ -153,6 +155,7 @@ The Libbulletjme Project is derived from open-source software:
 
 This project also made use of the following software tools:
 
+  + the [Antora] static website generator
   + the [Checkstyle] tool
   + the [FindBugs] source-code analyzer
   + the [GNU Compiler Collection][gcc] and [Project Debugger][gdb]
@@ -197,15 +200,17 @@ I'm also grateful to my dear Holly, for keeping me sane.
 If I've misattributed anything or left anyone out, please let me know, so I can
 correct the situation: sgold@sonic.net
 
-[Jump to table of contents](#toc)
+[Jump to the table of contents](#toc)
 
 
+[antora]: https://antora.org/ "Antora Project"
 [appveyor]: https://www.appveyor.com "AppVeyor Continuous Integration"
 [bullet]: https://pybullet.org/wordpress "Bullet Real-Time Physics Simulation"
 [checkstyle]: https://checkstyle.org "Checkstyle"
 [chrome]: https://www.google.com/chrome "Chrome"
+[dynamx]: https://dynamx.fr "DynamX Project"
 [examples]: https://github.com/stephengold/LbjExamples "LbjExamples Project"
-[findbugs]: http://findbugs.sourceforge.net "FindBugs Project"
+[findbugs]: https://findbugs.sourceforge.net/ "FindBugs Project"
 [firefox]: https://www.mozilla.org/en-US/firefox "Firefox"
 [gcc]: https://gcc.gnu.org "GNU Compiler Collection"
 [gdb]: https://www.gnu.org/software/gdb/ "GNU Project Debugger"
@@ -216,10 +221,10 @@ correct the situation: sgold@sonic.net
 [heart]: https://github.com/stephengold/Heart "Heart Project"
 [idea]: https://www.jetbrains.com/idea/ "IntelliJ IDEA"
 [imgur]: https://imgur.com/ "Imgur"
-[java]: https://java.com "Java"
+[java]: https://en.wikipedia.org/wiki/Java_(programming_language) "Java programming language"
 [jbullet]: http://jbullet.advel.cz "JBullet"
 [jfrog]: https://www.jfrog.com "JFrog"
-[jme]: https://jmonkeyengine.org  "jMonkeyEngine Project"
+[jme]: https://jmonkeyengine.org "jMonkeyEngine Project"
 [libbulletjme]: https://stephengold.github.io/Libbulletjme "Libbulletjme Project"
 [license]: https://github.com/stephengold/Libbulletjme/blob/master/LICENSE "Libbulletjme license"
 [llvm]: https://www.llvm.org "LLVM Compiler"
@@ -232,6 +237,8 @@ correct the situation: sgold@sonic.net
 [netbeans]: https://netbeans.org "NetBeans Project"
 [simmath]: https://github.com/Simsilica/SimMath "SimMath Library"
 [sonatype]: https://www.sonatype.com "Sonatype"
+[sport]: https://github.com/stephengold/sport "SPORT Project"
 [travis]: https://travis-ci.com "Travis CI"
 [vhacd]: https://github.com/kmammou/v-hacd "V-HACD Library"
 [vhacdBindings]: https://github.com/riccardobl/v-hacd-java-bindings "Riccardo's V-hacd-java-bindings Project"
+[vsport]: https://github.com/stephengold/V-Sport "V-Sport Project"

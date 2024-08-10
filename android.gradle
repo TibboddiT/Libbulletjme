@@ -1,15 +1,8 @@
 // Gradle script to build Android native libraries
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
-    }
+plugins {
+    alias(libs.plugins.android.library)
 }
-apply plugin: 'com.android.library'
 
 String flavor = 'Sp'
 if (project.hasProperty('flavor')) {
@@ -19,6 +12,10 @@ if (project.hasProperty('flavor')) {
 android {
     buildTypes.debug {
         jniDebuggable = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     compileSdkVersion 30
     defaultConfig {
@@ -31,7 +28,12 @@ android {
     externalNativeBuild.ndkBuild {
         path 'Android.mk'
     }
-    ndkVersion '21.3.6528147'
+    namespace 'com.github.stephengold.libbulletjme'
+    ndkVersion '23.1.7779620'
+}
+
+dependencies {
+    implementation(libs.jaxb.api)
 }
 
 tasks.register('copyToDist') {}
@@ -54,11 +56,6 @@ archmap.each { arch ->
             into 'dist'
         }
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
 
 // Register cleanup tasks:

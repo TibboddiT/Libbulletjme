@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 jMonkeyEngine
+ * Copyright (c) 2020-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,10 @@
  */
 package com.jme3.bullet.collision.shapes.infos;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.NativePhysicsObject;
 import com.jme3.bullet.collision.shapes.MeshCollisionShape;
+import com.jme3.math.Vector3f;
 import java.util.logging.Logger;
 import jme3utilities.Validate;
 
@@ -55,8 +57,8 @@ public class BoundingValueHierarchy extends NativePhysicsObject {
     // constructors
 
     /**
-     * Instantiate a reference to the hierarchy of the specified
-     * MeshCollisionShape. Used internally.
+     * Instantiate an (untracked) reference to the hierarchy of the specified
+     * {@code MeshCollisionShape}.
      *
      * @param meshShape the pre-existing shape (not null)
      */
@@ -69,7 +71,11 @@ public class BoundingValueHierarchy extends NativePhysicsObject {
     }
 
     /**
-     * Instantiate a hierarchy from serialized bytes.
+     * Instantiate a (tracked) hierarchy from serialized bytes.
+     * <p>
+     * If the bytes weren't generated on the current {@code Platform} with the
+     * same floating-point precision, the results are undefined (likely a JVM
+     * crash).
      *
      * @param bytes the serialized bytes (not null, unaffected)
      */
@@ -83,7 +89,145 @@ public class BoundingValueHierarchy extends NativePhysicsObject {
     // new methods exposed
 
     /**
-     * Serialize this hierarchy to a byte array.
+     * Copy the bounds of the hierarchy.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return an axis-aligned bounding box (either {@code storeResult} or a new
+     * instance)
+     */
+    public BoundingBox copyAabb(BoundingBox storeResult) {
+        BoundingBox result
+                = (storeResult == null) ? new BoundingBox() : storeResult;
+
+        long bvhId = nativeId();
+        Vector3f maxima = new Vector3f(); // TODO garbage
+        Vector3f minima = new Vector3f();
+        getAabb(bvhId, minima, maxima);
+        result.setMinMax(minima, maxima);
+
+        return result;
+    }
+
+    /**
+     * Copy the quantization vector of the hierarchy.
+     *
+     * @param storeResult storage for the result (modified if not null)
+     * @return an vector (either {@code storeResult} or a new vector)
+     */
+    public Vector3f copyQuantization(Vector3f storeResult) {
+        Vector3f result = (storeResult == null) ? new Vector3f() : storeResult;
+
+        long bvhId = nativeId();
+        getQuantization(bvhId, result);
+
+        return result;
+    }
+
+    /**
+     * Count the leaf nodes in the hierarchy.
+     *
+     * @return the count (&ge;0)
+     */
+    public int countLeafNodes() {
+        long bvhId = nativeId();
+        int result = getNumLeafNodes(bvhId);
+
+        assert result >= 0 : result;
+        return result;
+    }
+
+    /**
+     * Count all nodes in the hierarchy.
+     *
+     * @return the count (&ge;0)
+     */
+    public int countNodes() {
+        long bvhId = nativeId();
+        int result = getNumNodes(bvhId);
+
+        assert result >= 0 : result;
+        return result;
+    }
+
+    /**
+     * Count the subtree headers in the hierarchy (native field:
+     * m_SubtreeHeaders).
+     *
+     * @return the count (&ge;0)
+     */
+    public int countSubtreeHeaders() {
+        long bvhId = nativeId();
+        int result = getNumSubtreeHeaders(bvhId);
+
+        assert result >= 0 : result;
+        return result;
+    }
+
+    /**
+     * Return the escape index of the specified node.
+     *
+     * @param nodeIndex the index of the node (&ge;0)
+     * @return the escape index (&ge;0) or -1 if the node is a leaf
+     */
+    public int escapeIndex(int nodeIndex) {
+        long bvhId = nativeId();
+        int lastNode = getNumNodes(bvhId) - 1;
+        Validate.inRange(nodeIndex, "node index", 0, lastNode);
+        int result = getEscapeIndex(bvhId, nodeIndex);
+
+        assert result >= -1 : result;
+        return result;
+    }
+
+    /**
+     * Test whether the hierarchy uses quantized AABB compression.
+     *
+     * @return true if compressed, otherwise false
+     */
+    public boolean isCompressed() {
+        long bvhId = nativeId();
+        boolean result = isCompressed(bvhId);
+        return result;
+    }
+
+    /**
+     * Test whether the specified node is a leaf.
+     *
+     * @param nodeIndex the index of the node (&ge;0)
+     * @return true if a leaf, false if an internal node
+     */
+    public boolean isLeafNode(int nodeIndex) {
+        long bvhId = nativeId();
+        int lastNode = getNumNodes(bvhId) - 1;
+        Validate.inRange(nodeIndex, "node index", 0, lastNode);
+
+        boolean result = isLeafNode(bvhId, nodeIndex);
+        return result;
+    }
+
+    /**
+     * Return the part index of the specified node.
+     *
+     * @param nodeIndex the index of the node (&ge;0)
+     * @return the part index (&ge;0) or -1 if the node isn't a leaf
+     */
+    public int partId(int nodeIndex) {
+        long bvhId = nativeId();
+        int lastNode = getNumNodes(bvhId) - 1;
+        Validate.inRange(nodeIndex, "node index", 0, lastNode);
+        int result = getPartId(bvhId, nodeIndex);
+
+        assert result >= -1 : result;
+        return result;
+    }
+
+    /**
+     * Serialize the hierarchy to a byte array.
+     * <p>
+     * Serialization can be used to avoid re-generating the BVH of a
+     * `MeshCollisionShape` each time it is instantiated. The resulting bytes
+     * are specific to a particular `MeshCollisionShape`. They are also specific
+     * to the current {@code Platform} and floating-point precision.
      *
      * @return a new array containing serialized bytes (not null)
      */
@@ -92,6 +236,49 @@ public class BoundingValueHierarchy extends NativePhysicsObject {
         byte[] result = serialize(bvhId);
 
         assert result != null;
+        return result;
+    }
+
+    /**
+     * Alter the traversal mode (native field: m_traversalMode).
+     *
+     * @param mode 0 for "stackless" or 1 for "stackless cache-friendly" or 2
+     * for "recursive" (default=0)
+     */
+    public void setTraversalMode(int mode) {
+        Validate.inRange(mode, "mode", 0, 2);
+
+        long bvhId = nativeId();
+        setTraversalMode(bvhId, mode);
+    }
+
+    /**
+     * Return the traversal mode (native field: m_traversalMode).
+     *
+     * @return 0 for "stackless" or 1 for "stackless cache-friendly" or 2 for
+     * "recursive"
+     */
+    public int traversalMode() {
+        long bvhId = nativeId();
+        int result = getTraversalMode(bvhId);
+
+        assert result >= 0 && result <= 2 : result;
+        return result;
+    }
+
+    /**
+     * Return the triangle index of the specified node.
+     *
+     * @param nodeIndex the index of the node (&ge;0)
+     * @return the triangle index (&ge;0) or -1 if the node isn't a leaf
+     */
+    public int triangleIndex(int nodeIndex) {
+        long bvhId = nativeId();
+        int lastNode = getNumNodes(bvhId) - 1;
+        Validate.inRange(nodeIndex, "node index", 0, lastNode);
+        int result = getTriangleIndex(bvhId, nodeIndex);
+
+        assert result >= -1 : result;
         return result;
     }
     // *************************************************************************
@@ -113,7 +300,33 @@ public class BoundingValueHierarchy extends NativePhysicsObject {
 
     native private static void finalizeNative(long bvhId);
 
+    native private static void getAabb(
+            long bvhId, Vector3f storeMinima, Vector3f storeMaxima);
+
+    native private static int getEscapeIndex(long bvhId, int nodeIndex);
+
+    native private static int getNumLeafNodes(long bvhId);
+
+    native private static int getNumNodes(long bvhId);
+
+    native private static int getNumSubtreeHeaders(long bvhId);
+
     native private static long getOptimizedBvh(long shapeId);
 
+    native private static int getPartId(long bvhId, int nodeIndex);
+
+    native private static void getQuantization(
+            long bvhId, Vector3f storeVector);
+
+    native private static int getTraversalMode(long bvhId);
+
+    native private static int getTriangleIndex(long bvhId, int nodeIndex);
+
+    native private static boolean isCompressed(long bvhId);
+
+    native private static boolean isLeafNode(long bvhId, int nodeIndex);
+
     native private static byte[] serialize(long bvhId);
+
+    native private static void setTraversalMode(long bvhId, int mode);
 }

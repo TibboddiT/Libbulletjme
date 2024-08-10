@@ -1,15 +1,14 @@
 /* Copyright (c) 2011 Khaled Mamou (kmamou at gmail dot com)
  All rights reserved.
- 
- 
+
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
+
  1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- 
+
  2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- 
+
  3. The names of the contributors may not be used to endorse or promote products derived from this software without specific prior written permission.
- 
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
@@ -29,7 +28,11 @@
 // ImGui and StbLib and other popular open source libraries.
 
 #    define VHACD_VERSION_MAJOR 4
-#    define VHACD_VERSION_MINOR 0
+#    define VHACD_VERSION_MINOR 1
+
+// Changes for version 4.1
+//
+// Various minor tweaks mostly to the test application and some default values.
 
 // Changes for version 4.0
 //
@@ -38,7 +41,7 @@
 //      * All Bullet code removed
 //      * All SIMD code removed
 //      * Old plane splitting code removed
-// 
+//
 // * The code is now delivered as a single header file 'VHACD.h' which has both the API
 // * declaration as well as the implementation.  Simply add '#define ENABLE_VHACD_IMPLEMENTATION 1'
 // * to any CPP in your application prior to including 'VHACD.h'. Only do this in one CPP though.
@@ -52,7 +55,7 @@
 // * The old DebugView and test code has all been removed and replaced with a much smaller and
 // * simpler test console application with some test meshes to work with.
 //
-// * The convex hull generation code has changed. The previous version came from Bullet. 
+// * The convex hull generation code has changed. The previous version came from Bullet.
 // * However, the new version is courtesy of Julio Jerez, the author of the Newton
 // * physics engine. His new version is faster and more numerically stable.
 //
@@ -67,9 +70,9 @@
 // * algorithm that is more reliable.
 //
 // * You can now select which 'fill mode' to use. For perfectly closed meshes, the default
-// * behavior using a flood fill generally works fine. However, some meshes have small 
+// * behavior using a flood fill generally works fine. However, some meshes have small
 // * holes in them and therefore the flood fill will fail, treating the mesh as being
-// * hollow. In these cases, you can use the 'raycast' fill option to determine which 
+// * hollow. In these cases, you can use the 'raycast' fill option to determine which
 // * parts of the voxelized mesh are 'inside' versus being 'outside'. Finally, there
 // * are some rare instances where a user might actually want the mesh to be treated as
 // * hollow, in which case you can pass in 'surface' only.
@@ -90,18 +93,18 @@
 // The history of V-HACD:
 //
 // The initial version was written by John W. Ratcliff and was called 'ACD'
-// This version did not perform CSG operations on the source mesh, so if you 
+// This version did not perform CSG operations on the source mesh, so if you
 // recursed too deeply it would produce hollow results.
 //
 // The next version was written by Khaled Mamou and was called 'HACD'
-// In this version Khaled tried to perform a CSG operation on the source 
+// In this version Khaled tried to perform a CSG operation on the source
 // mesh to produce more robust results. However, Khaled learned that the
 // CSG library he was using had licensing issues so he started work on the
 // next version.
 //
 // The next version was called 'V-HACD' because Khaled made the observation
 // that plane splitting would be far easier to implement working in voxel space.
-// 
+//
 // V-HACD has been integrated into UE4, Blender, and a number of other projects.
 // This new release, version4, is a significant refactor of the code to fix
 // some bugs, improve performance, and to make the codebase easier to maintain
@@ -112,6 +115,8 @@
 
 #include <vector>
 #include <array>
+#include <cmath>
+#include <algorithm>
 
 namespace VHACD {
 
@@ -276,14 +281,14 @@ struct BoundsAABB
 
 /**
 * This enumeration determines how the voxels as filled to create a solid
-* object. The default should be 'FLOOD_FILL' which generally works fine 
+* object. The default should be 'FLOOD_FILL' which generally works fine
 * for closed meshes. However, if the mesh is not watertight, then using
-* RAYCAST_FILL may be preferable as it will determine if a voxel is part 
+* RAYCAST_FILL may be preferable as it will determine if a voxel is part
 * of the interior of the source mesh by raycasting around it.
-* 
-* Finally, there are some cases where you might actually want a convex 
+*
+* Finally, there are some cases where you might actually want a convex
 * decomposition to treat the source mesh as being hollow. If that is the
-* case you can pass in 'SURFACE_ONLY' and then the convex decomposition 
+* case you can pass in 'SURFACE_ONLY' and then the convex decomposition
 * will converge only onto the 'skin' of the surface mesh.
 */
 enum class FillMode
@@ -309,7 +314,7 @@ public:
 
         /**
         * Notifies the application of the current state of the convex decomposition operation
-        * 
+        *
         * @param overallProgress : Total progress from 0-100%
         * @param stageProgress : Progress of the current stage 0-100%
         * @param stage : A text description of the current stage we are in
@@ -353,7 +358,7 @@ public:
     };
 
     /**
-    * A simple class that represents a convex hull as a triangle mesh with 
+    * A simple class that represents a convex hull as a triangle mesh with
     * double precision vertices. Polygons are not currently provided.
     */
     class ConvexHull
@@ -381,7 +386,7 @@ public:
         uint32_t            m_maxConvexHulls{ 64 };         // The maximum number of convex hulls to produce
         uint32_t            m_resolution{ 400000 };         // The voxel resolution to use
         double              m_minimumVolumePercentErrorAllowed{ 1 }; // if the voxels are within 1% of the volume of the hull, we consider this a close enough approximation
-        uint32_t            m_maxRecursionDepth{ 14 };        // The maximum recursion depth
+        uint32_t            m_maxRecursionDepth{ 10 };        // The maximum recursion depth
         bool                m_shrinkWrap{true};             // Whether or not to shrinkwrap the voxel positions to the source mesh on output
         FillMode            m_fillMode{ FillMode::FLOOD_FILL }; // How to fill the interior of the voxelized mesh
         uint32_t            m_maxNumVerticesPerCH{ 64 };    // The maximum number of vertices allowed in any output convex hull
@@ -397,10 +402,10 @@ public:
 
     /**
     * Compute a convex decomposition of a triangle mesh using float vertices and the provided user parameters.
-    * 
+    *
     * @param points : The vertices of the source mesh as floats in the form of X1,Y1,Z1,  X2,Y2,Z2,.. etc.
     * @param countPoints : The number of vertices in the source mesh.
-    * @param triangles : The indices of triangles in the source mesh in the form of I1,I2,I3, .... 
+    * @param triangles : The indices of triangles in the source mesh in the form of I1,I2,I3, ....
     * @param countTriangles : The number of triangles in the source mesh
     * @param params : The convex decomposition parameters to apply
     * @return : Returns true if the convex decomposition operation can be started
@@ -413,10 +418,10 @@ public:
 
     /**
     * Compute a convex decomposition of a triangle mesh using double vertices and the provided user parameters.
-    * 
+    *
     * @param points : The vertices of the source mesh as floats in the form of X1,Y1,Z1,  X2,Y2,Z2,.. etc.
     * @param countPoints : The number of vertices in the source mesh.
-    * @param triangles : The indices of triangles in the source mesh in the form of I1,I2,I3, .... 
+    * @param triangles : The indices of triangles in the source mesh in the form of I1,I2,I3, ....
     * @param countTriangles : The number of triangles in the source mesh
     * @param params : The convex decomposition parameters to apply
     * @return : Returns true if the convex decomposition operation can be started
@@ -429,14 +434,14 @@ public:
 
     /**
     * Returns the number of convex hulls that were produced.
-    * 
+    *
     * @return : Returns the number of convex hulls produced, or zero if it failed or was canceled
     */
     virtual uint32_t GetNConvexHulls() const = 0;
 
     /**
     * Retrieves one of the convex hulls in the solution set
-    * 
+    *
     * @param index : Which convex hull to retrieve
     * @param ch : The convex hull descriptor to return
     * @return : Returns true if the convex hull exists and could be retrieved
@@ -472,9 +477,9 @@ public:
     * This method will return which convex hull is closest to the source position.
     * You can use this method to figure out, for example, which vertices in the original
     * source mesh are best associated with which convex hull.
-    * 
+    *
     * @param pos : The input 3d position to test against
-    * 
+    *
     * @return : Returns which convex hull this position is closest to.
     */
     virtual uint32_t findNearestConvexHull(const double pos[3],
@@ -485,12 +490,402 @@ protected:
     {
     }
 };
+/*
+ * Out of line definitions
+ */
+
+    template <typename T>
+    T clamp(const T& v, const T& lo, const T& hi)
+    {
+        if (v < lo)
+        {
+            return lo;
+        }
+        if (v > hi)
+        {
+            return hi;
+        }
+        return v ;
+    }
+
+/*
+ * Getters
+ */
+    template <typename T>
+    inline T& Vector3<T>::operator[](size_t i)
+    {
+        return m_data[i];
+    }
+
+    template <typename T>
+    inline const T& Vector3<T>::operator[](size_t i) const
+    {
+        return m_data[i];
+    }
+
+    template <typename T>
+    inline T& Vector3<T>::GetX()
+    {
+        return m_data[0];
+    }
+
+    template <typename T>
+    inline T& Vector3<T>::GetY()
+    {
+        return m_data[1];
+    }
+
+    template <typename T>
+    inline T& Vector3<T>::GetZ()
+    {
+        return m_data[2];
+    }
+
+    template <typename T>
+    inline const T& Vector3<T>::GetX() const
+    {
+        return m_data[0];
+    }
+
+    template <typename T>
+    inline const T& Vector3<T>::GetY() const
+    {
+        return m_data[1];
+    }
+
+    template <typename T>
+    inline const T& Vector3<T>::GetZ() const
+    {
+        return m_data[2];
+    }
+
+/*
+ * Normalize and norming
+ */
+    template <typename T>
+    inline T Vector3<T>::Normalize()
+    {
+        T n = GetNorm();
+        if (n != T(0.0)) (*this) /= n;
+        return n;
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::Normalized()
+    {
+        Vector3<T> ret = *this;
+        T n = GetNorm();
+        if (n != T(0.0)) ret /= n;
+        return ret;
+    }
+
+    template <typename T>
+    inline T Vector3<T>::GetNorm() const
+    {
+        return std::sqrt(GetNormSquared());
+    }
+
+    template <typename T>
+    inline T Vector3<T>::GetNormSquared() const
+    {
+        return this->Dot(*this);
+    }
+
+    template <typename T>
+    inline int Vector3<T>::LongestAxis() const
+    {
+        auto it = std::max_element(m_data.begin(), m_data.end());
+        return int(std::distance(m_data.begin(), it));
+    }
+
+/*
+ * Vector-vector operations
+ */
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator=(const Vector3<T>& rhs)
+    {
+        GetX() = rhs.GetX();
+        GetY() = rhs.GetY();
+        GetZ() = rhs.GetZ();
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& rhs)
+    {
+        GetX() += rhs.GetX();
+        GetY() += rhs.GetY();
+        GetZ() += rhs.GetZ();
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs)
+    {
+        GetX() -= rhs.GetX();
+        GetY() -= rhs.GetY();
+        GetZ() -= rhs.GetZ();
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::CWiseMul(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(GetX() * rhs.GetX(),
+                          GetY() * rhs.GetY(),
+                          GetZ() * rhs.GetZ());
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::Cross(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(GetY() * rhs.GetZ() - GetZ() * rhs.GetY(),
+                          GetZ() * rhs.GetX() - GetX() * rhs.GetZ(),
+                          GetX() * rhs.GetY() - GetY() * rhs.GetX());
+    }
+
+    template <typename T>
+    inline T Vector3<T>::Dot(const Vector3<T>& rhs) const
+    {
+        return   GetX() * rhs.GetX()
+                 + GetY() * rhs.GetY()
+                 + GetZ() * rhs.GetZ();
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::operator+(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(GetX() + rhs.GetX(),
+                          GetY() + rhs.GetY(),
+                          GetZ() + rhs.GetZ());
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::operator-(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(GetX() - rhs.GetX(),
+                          GetY() - rhs.GetY(),
+                          GetZ() - rhs.GetZ());
+    }
+
+    template <typename T>
+    inline Vector3<T> operator*(T lhs, const Vector3<T>& rhs)
+    {
+        return Vector3<T>(lhs * rhs.GetX(),
+                          lhs * rhs.GetY(),
+                          lhs * rhs.GetZ());
+    }
+
+/*
+ * Vector-scalar operations
+ */
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator-=(T a)
+    {
+        GetX() -= a;
+        GetY() -= a;
+        GetZ() -= a;
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator+=(T a)
+    {
+        GetX() += a;
+        GetY() += a;
+        GetZ() += a;
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator/=(T a)
+    {
+        GetX() /= a;
+        GetY() /= a;
+        GetZ() /= a;
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T>& Vector3<T>::operator*=(T a)
+    {
+        GetX() *= a;
+        GetY() *= a;
+        GetZ() *= a;
+        return *this;
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::operator*(T rhs) const
+    {
+        return Vector3<T>(GetX() * rhs,
+                          GetY() * rhs,
+                          GetZ() * rhs);
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::operator/(T rhs) const
+    {
+        return Vector3<T>(GetX() / rhs,
+                          GetY() / rhs,
+                          GetZ() / rhs);
+    }
+
+/*
+ * Unary operations
+ */
+    template <typename T>
+    inline Vector3<T> Vector3<T>::operator-() const
+    {
+        return Vector3<T>(-GetX(),
+                          -GetY(),
+                          -GetZ());
+    }
+
+/*
+ * Comparison operators
+ */
+    template <typename T>
+    inline bool Vector3<T>::operator<(const Vector3<T>& rhs) const
+    {
+        if (GetX() == rhs.GetX())
+        {
+            if (GetY() == rhs.GetY())
+            {
+                return (GetZ() < rhs.GetZ());
+            }
+            return (GetY() < rhs.GetY());
+        }
+        return (GetX() < rhs.GetX());
+    }
+
+    template <typename T>
+    inline bool Vector3<T>::operator>(const Vector3<T>& rhs) const
+    {
+        if (GetX() == rhs.GetX())
+        {
+            if (GetY() == rhs.GetY())
+            {
+                return (GetZ() > rhs.GetZ());
+            }
+            return (GetY() > rhs.GetY());
+        }
+        return (GetX() > rhs.GetZ());
+    }
+
+    template <typename T>
+    inline bool Vector3<T>::CWiseAllGE(const Vector3<T>& rhs) const
+    {
+        return    GetX() >= rhs.GetX()
+                  && GetY() >= rhs.GetY()
+                  && GetZ() >= rhs.GetZ();
+    }
+
+    template <typename T>
+    inline bool Vector3<T>::CWiseAllLE(const Vector3<T>& rhs) const
+    {
+        return    GetX() <= rhs.GetX()
+                  && GetY() <= rhs.GetY()
+                  && GetZ() <= rhs.GetZ();
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::CWiseMin(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(std::min(GetX(), rhs.GetX()),
+                          std::min(GetY(), rhs.GetY()),
+                          std::min(GetZ(), rhs.GetZ()));
+    }
+
+    template <typename T>
+    inline Vector3<T> Vector3<T>::CWiseMax(const Vector3<T>& rhs) const
+    {
+        return Vector3<T>(std::max(GetX(), rhs.GetX()),
+                          std::max(GetY(), rhs.GetY()),
+                          std::max(GetZ(), rhs.GetZ()));
+    }
+
+    template <typename T>
+    inline T Vector3<T>::MinCoeff() const
+    {
+        return *std::min_element(m_data.begin(), m_data.end());
+    }
+
+    template <typename T>
+    inline T Vector3<T>::MaxCoeff() const
+    {
+        return *std::max_element(m_data.begin(), m_data.end());
+    }
+
+    template <typename T>
+    inline T Vector3<T>::MinCoeff(uint32_t& idx) const
+    {
+        auto it = std::min_element(m_data.begin(), m_data.end());
+        idx = uint32_t(std::distance(m_data.begin(), it));
+        return *it;
+    }
+
+    template <typename T>
+    inline T Vector3<T>::MaxCoeff(uint32_t& idx) const
+    {
+        auto it = std::max_element(m_data.begin(), m_data.end());
+        idx = uint32_t(std::distance(m_data.begin(), it));
+        return *it;
+    }
+
+/*
+ * Constructors
+ */
+    template <typename T>
+    inline Vector3<T>::Vector3(T a)
+            : m_data{a, a, a}
+    {
+    }
+
+    template <typename T>
+    inline Vector3<T>::Vector3(T x, T y, T z)
+            : m_data{x, y, z}
+    {
+    }
+
+    template <typename T>
+    inline Vector3<T>::Vector3(const Vector3& rhs)
+            : m_data{rhs.m_data}
+    {
+    }
+
+    template <typename T>
+    template <typename U>
+    inline Vector3<T>::Vector3(const Vector3<U>& rhs)
+            : m_data{T(rhs.GetX()), T(rhs.GetY()), T(rhs.GetZ())}
+    {
+    }
+
+    template <typename T>
+    inline Vector3<T>::Vector3(const VHACD::Vertex& rhs)
+            : Vector3<T>(rhs.mX, rhs.mY, rhs.mZ)
+    {
+        static_assert(std::is_same<T, double>::value, "Vertex to Vector3 constructor only enabled for double");
+    }
+
+    template <typename T>
+    inline Vector3<T>::Vector3(const VHACD::Triangle& rhs)
+            : Vector3<T>(rhs.mI0, rhs.mI1, rhs.mI2)
+    {
+        static_assert(std::is_same<T, uint32_t>::value, "Triangle to Vector3 constructor only enabled for uint32_t");
+    }
+
+    template <typename T>
+    inline Vector3<T>::operator VHACD::Vertex() const
+    {
+        static_assert(std::is_same<T, double>::value, "Vector3 to Vertex conversion only enable for double");
+        return ::VHACD::Vertex( GetX(), GetY(), GetZ());
+    }
 
 IVHACD* CreateVHACD();      // Create a synchronous (blocking) implementation of V-HACD
 IVHACD* CreateVHACD_ASYNC();    // Create an asynchronous (non-blocking) implementation of V-HACD
 
 } // namespace VHACD
-
 
 #if ENABLE_VHACD_IMPLEMENTATION
 #include <assert.h>
@@ -500,7 +895,6 @@ IVHACD* CreateVHACD_ASYNC();    // Create an asynchronous (non-blocking) impleme
 #include <float.h>
 #include <limits.h>
 
-#include <algorithm>
 #include <array>
 #include <atomic>
 #include <chrono>
@@ -597,402 +991,9 @@ public:
     Timer       m_timer;
     VHACD::IVHACD::IUserLogger* m_logger{ nullptr };
 };
-
-/*
- * Out of line definitions
- */
-
-template <typename T>
-T clamp(const T& v, const T& lo, const T& hi)
-{
-    if (v < lo)
-    {
-        return lo;
-    }
-    if (v > hi)
-    {
-        return hi;
-    }
-    return v ;
-}
-
-/*
- * Getters
- */
-template <typename T>
-inline T& Vector3<T>::operator[](size_t i)
-{
-    return m_data[i];
-}
-
-template <typename T>
-inline const T& Vector3<T>::operator[](size_t i) const
-{
-    return m_data[i];
-}
-
-template <typename T>
-inline T& Vector3<T>::GetX()
-{
-    return m_data[0];
-}
-
-template <typename T>
-inline T& Vector3<T>::GetY()
-{
-    return m_data[1];
-}
-
-template <typename T>
-inline T& Vector3<T>::GetZ()
-{
-    return m_data[2];
-}
-
-template <typename T>
-inline const T& Vector3<T>::GetX() const
-{
-    return m_data[0];
-}
-
-template <typename T>
-inline const T& Vector3<T>::GetY() const
-{
-    return m_data[1];
-}
-
-template <typename T>
-inline const T& Vector3<T>::GetZ() const
-{
-    return m_data[2];
-}
-
-/*
- * Normalize and norming
- */
-template <typename T>
-inline T Vector3<T>::Normalize()
-{
-    T n = GetNorm();
-    if (n != T(0.0)) (*this) /= n;
-    return n;
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::Normalized()
-{
-    Vector3<T> ret = *this;
-    T n = GetNorm();
-    if (n != T(0.0)) ret /= n;
-    return ret;
-}
-
-template <typename T>
-inline T Vector3<T>::GetNorm() const
-{
-    return std::sqrt(GetNormSquared());
-}
-
-template <typename T>
-inline T Vector3<T>::GetNormSquared() const
-{
-    return this->Dot(*this);
-}
-
-template <typename T>
-inline int Vector3<T>::LongestAxis() const
-{
-    auto it = std::max_element(m_data.begin(), m_data.end());
-    return int(std::distance(m_data.begin(), it));
-}
-
-/*
- * Vector-vector operations
- */
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator=(const Vector3<T>& rhs)
-{
-    GetX() = rhs.GetX();
-    GetY() = rhs.GetY();
-    GetZ() = rhs.GetZ();
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& rhs)
-{
-    GetX() += rhs.GetX();
-    GetY() += rhs.GetY();
-    GetZ() += rhs.GetZ();
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs)
-{
-    GetX() -= rhs.GetX();
-    GetY() -= rhs.GetY();
-    GetZ() -= rhs.GetZ();
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::CWiseMul(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(GetX() * rhs.GetX(),
-                      GetY() * rhs.GetY(),
-                      GetZ() * rhs.GetZ());
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::Cross(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(GetY() * rhs.GetZ() - GetZ() * rhs.GetY(),
-                      GetZ() * rhs.GetX() - GetX() * rhs.GetZ(),
-                      GetX() * rhs.GetY() - GetY() * rhs.GetX());
-}
-
-template <typename T>
-inline T Vector3<T>::Dot(const Vector3<T>& rhs) const
-{
-    return   GetX() * rhs.GetX()
-           + GetY() * rhs.GetY()
-           + GetZ() * rhs.GetZ();
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::operator+(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(GetX() + rhs.GetX(),
-                      GetY() + rhs.GetY(),
-                      GetZ() + rhs.GetZ());
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::operator-(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(GetX() - rhs.GetX(),
-                      GetY() - rhs.GetY(),
-                      GetZ() - rhs.GetZ());
-}
-
-template <typename T>
-inline Vector3<T> operator*(T lhs, const Vector3<T>& rhs)
-{
-    return Vector3<T>(lhs * rhs.GetX(),
-                      lhs * rhs.GetY(),
-                      lhs * rhs.GetZ());
-}
-
-/*
- * Vector-scalar operations
- */
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator-=(T a)
-{
-    GetX() -= a;
-    GetY() -= a;
-    GetZ() -= a;
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator+=(T a)
-{
-    GetX() += a;
-    GetY() += a;
-    GetZ() += a;
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator/=(T a)
-{
-    GetX() /= a;
-    GetY() /= a;
-    GetZ() /= a;
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T>& Vector3<T>::operator*=(T a)
-{
-    GetX() *= a;
-    GetY() *= a;
-    GetZ() *= a;
-    return *this;
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::operator*(T rhs) const
-{
-    return Vector3<T>(GetX() * rhs,
-                      GetY() * rhs,
-                      GetZ() * rhs);
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::operator/(T rhs) const
-{
-    return Vector3<T>(GetX() / rhs,
-                      GetY() / rhs,
-                      GetZ() / rhs);
-}
-
-/*
- * Unary operations
- */
-template <typename T>
-inline Vector3<T> Vector3<T>::operator-() const
-{
-    return Vector3<T>(-GetX(),
-                      -GetY(),
-                      -GetZ());
-}
-
-/*
- * Comparison operators
- */
-template <typename T>
-inline bool Vector3<T>::operator<(const Vector3<T>& rhs) const
-{
-    if (GetX() == rhs.GetX())
-    {
-        if (GetY() == rhs.GetY())
-        {
-            return (GetZ() < rhs.GetZ());
-        }
-        return (GetY() < rhs.GetY());
-    }
-    return (GetX() < rhs.GetX());
-}
-
-template <typename T>
-inline bool Vector3<T>::operator>(const Vector3<T>& rhs) const
-{
-    if (GetX() == rhs.GetX())
-    {
-        if (GetY() == rhs.GetY())
-        {
-            return (GetZ() > rhs.GetZ());
-        }
-        return (GetY() > rhs.GetY());
-    }
-    return (GetX() > rhs.GetZ());
-}
-
-template <typename T>
-inline bool Vector3<T>::CWiseAllGE(const Vector3<T>& rhs) const
-{
-    return    GetX() >= rhs.GetX()
-           && GetY() >= rhs.GetY()
-           && GetZ() >= rhs.GetZ();
-}
-
-template <typename T>
-inline bool Vector3<T>::CWiseAllLE(const Vector3<T>& rhs) const
-{
-    return    GetX() <= rhs.GetX()
-           && GetY() <= rhs.GetY()
-           && GetZ() <= rhs.GetZ();
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::CWiseMin(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(std::min(GetX(), rhs.GetX()),
-                      std::min(GetY(), rhs.GetY()),
-                      std::min(GetZ(), rhs.GetZ()));
-}
-
-template <typename T>
-inline Vector3<T> Vector3<T>::CWiseMax(const Vector3<T>& rhs) const
-{
-    return Vector3<T>(std::max(GetX(), rhs.GetX()),
-                      std::max(GetY(), rhs.GetY()),
-                      std::max(GetZ(), rhs.GetZ()));
-}
-
-template <typename T>
-inline T Vector3<T>::MinCoeff() const
-{
-    return *std::min_element(m_data.begin(), m_data.end());
-}
-
-template <typename T>
-inline T Vector3<T>::MaxCoeff() const
-{
-    return *std::max_element(m_data.begin(), m_data.end());
-}
-
-template <typename T>
-inline T Vector3<T>::MinCoeff(uint32_t& idx) const
-{
-    auto it = std::min_element(m_data.begin(), m_data.end());
-    idx = uint32_t(std::distance(m_data.begin(), it));
-    return *it;
-}
-
-template <typename T>
-inline T Vector3<T>::MaxCoeff(uint32_t& idx) const
-{
-    auto it = std::max_element(m_data.begin(), m_data.end());
-    idx = uint32_t(std::distance(m_data.begin(), it));
-    return *it;
-}
-
-/*
- * Constructors
- */
-template <typename T>
-inline Vector3<T>::Vector3(T a)
-    : m_data{a, a, a}
-{
-}
-
-template <typename T>
-inline Vector3<T>::Vector3(T x, T y, T z)
-    : m_data{x, y, z}
-{
-}
-
-template <typename T>
-inline Vector3<T>::Vector3(const Vector3& rhs)
-    : m_data{rhs.m_data}
-{
-}
-
-template <typename T>
-template <typename U>
-inline Vector3<T>::Vector3(const Vector3<U>& rhs)
-    : m_data{T(rhs.GetX()), T(rhs.GetY()), T(rhs.GetZ())}
-{
-}
-
-template <typename T>
-inline Vector3<T>::Vector3(const VHACD::Vertex& rhs)
-    : Vector3<T>(rhs.mX, rhs.mY, rhs.mZ)
-{
-    static_assert(std::is_same<T, double>::value, "Vertex to Vector3 constructor only enabled for double");
-}
-
-template <typename T>
-inline Vector3<T>::Vector3(const VHACD::Triangle& rhs)
-    : Vector3<T>(rhs.mI0, rhs.mI1, rhs.mI2)
-{
-    static_assert(std::is_same<T, uint32_t>::value, "Triangle to Vector3 constructor only enabled for uint32_t");
-}
-
-template <typename T>
-inline Vector3<T>::operator VHACD::Vertex() const
-{
-    static_assert(std::is_same<T, double>::value, "Vector3 to Vertex conversion only enable for double");
-    return ::VHACD::Vertex( GetX(), GetY(), GetZ());
-}
-
-inline BoundsAABB::BoundsAABB(const std::vector<VHACD::Vertex>& points)
-    : m_min(points[0])
-    , m_max(points[0])
+BoundsAABB::BoundsAABB(const std::vector<VHACD::Vertex>& points)
+        : m_min(points[0])
+        , m_max(points[0])
 {
     for (uint32_t i = 1; i < points.size(); ++i)
     {
@@ -1002,10 +1003,10 @@ inline BoundsAABB::BoundsAABB(const std::vector<VHACD::Vertex>& points)
     }
 }
 
-inline BoundsAABB::BoundsAABB(const VHACD::Vect3& min,
+BoundsAABB::BoundsAABB(const VHACD::Vect3& min,
                               const VHACD::Vect3& max)
-    : m_min(min)
-    , m_max(max)
+        : m_min(min)
+        , m_max(max)
 {
 }
 
@@ -1015,16 +1016,16 @@ BoundsAABB BoundsAABB::Union(const BoundsAABB& b)
                       GetMax().CWiseMax(b.GetMax()));
 }
 
-inline bool VHACD::BoundsAABB::Intersects(const VHACD::BoundsAABB& b) const
+bool VHACD::BoundsAABB::Intersects(const VHACD::BoundsAABB& b) const
 {
     if (   (  GetMin().GetX() > b.GetMax().GetX())
-        || (b.GetMin().GetX() >   GetMax().GetX()))
+           || (b.GetMin().GetX() >   GetMax().GetX()))
         return false;
     if (   (  GetMin().GetY() > b.GetMax().GetY())
-        || (b.GetMin().GetY() >   GetMax().GetY()))
+           || (b.GetMin().GetY() >   GetMax().GetY()))
         return false;
     if (   (  GetMin().GetZ() > b.GetMax().GetZ())
-        || (b.GetMin().GetZ() >   GetMax().GetZ()))
+           || (b.GetMin().GetZ() >   GetMax().GetZ()))
         return false;
     return true;
 }
@@ -1035,30 +1036,30 @@ double BoundsAABB::SurfaceArea() const
     return double(2.0) * (d.GetX() * d.GetY() + d.GetX() * d.GetZ() + d.GetY() * d.GetZ());
 }
 
-inline double VHACD::BoundsAABB::Volume() const
+double VHACD::BoundsAABB::Volume() const
 {
     VHACD::Vect3 d = GetMax() - GetMin();
     return d.GetX() * d.GetY() * d.GetZ();
 }
 
-inline BoundsAABB VHACD::BoundsAABB::Inflate(double ratio) const
+BoundsAABB VHACD::BoundsAABB::Inflate(double ratio) const
 {
     double inflate = (GetMin() - GetMax()).GetNorm() * double(0.5) * ratio;
     return BoundsAABB(GetMin() - inflate,
                       GetMax() + inflate);
 }
 
-inline VHACD::Vect3 VHACD::BoundsAABB::ClosestPoint(const VHACD::Vect3& p) const
+VHACD::Vect3 VHACD::BoundsAABB::ClosestPoint(const VHACD::Vect3& p) const
 {
     return p.CWiseMax(GetMin()).CWiseMin(GetMax());
 }
 
-inline VHACD::Vect3& VHACD::BoundsAABB::GetMin()
+VHACD::Vect3& VHACD::BoundsAABB::GetMin()
 {
     return m_min;
 }
 
-inline VHACD::Vect3& VHACD::BoundsAABB::GetMax()
+VHACD::Vect3& VHACD::BoundsAABB::GetMax()
 {
     return m_max;
 }
@@ -1068,17 +1069,17 @@ inline const VHACD::Vect3& VHACD::BoundsAABB::GetMin() const
     return m_min;
 }
 
-inline const VHACD::Vect3& VHACD::BoundsAABB::GetMax() const
+const VHACD::Vect3& VHACD::BoundsAABB::GetMax() const
 {
     return m_max;
 }
 
-inline VHACD::Vect3 VHACD::BoundsAABB::GetSize() const
+VHACD::Vect3 VHACD::BoundsAABB::GetSize() const
 {
     return GetMax() - GetMin();
 }
 
-inline VHACD::Vect3 VHACD::BoundsAABB::GetCenter() const
+VHACD::Vect3 VHACD::BoundsAABB::GetCenter() const
 {
     return (GetMin() + GetMax()) * double(0.5);
 }
@@ -1781,7 +1782,7 @@ void Googol::ToString(char* const string) const
 void Googol::NegateMantissa(std::array<uint64_t, VHACD_GOOGOL_SIZE>& mantissa) const
 {
     uint64_t carrier = 1;
-    for (size_t i = mantissa.size() - 1; i >= 0 && i < mantissa.size(); i--)
+    for (size_t i = mantissa.size() - 1; i < mantissa.size(); i--)
     {
         uint64_t a = ~mantissa[i] + carrier;
         if (a)
@@ -5161,7 +5162,7 @@ void Volume::Voxelize(const std::vector<VHACD::Vertex>& points,
             size_t j = static_cast<size_t>(p[c][1] + double(0.5));
             size_t k = static_cast<size_t>(p[c][2] + double(0.5));
 
-            assert(i < m_dim[0] && i >= 0 && j < m_dim[1] && j >= 0 && k < m_dim[2] && k >= 0);
+            assert(i < m_dim[0] && j < m_dim[1] && k < m_dim[2]);
 
             if (c == 0)
             {
@@ -5348,9 +5349,9 @@ void Volume::SetVoxel(const size_t i,
                       const size_t k,
                       VoxelValue value)
 {
-    assert(i < m_dim[0] || i >= 0);
-    assert(j < m_dim[1] || j >= 0);
-    assert(k < m_dim[2] || k >= 0);
+    assert(i < m_dim[0]);
+    assert(j < m_dim[1]);
+    assert(k < m_dim[2]);
 
     m_data[k + j * m_dim[2] + i * m_dim[1] * m_dim[2]] = value;
 }
@@ -5359,9 +5360,9 @@ VoxelValue& Volume::GetVoxel(const size_t i,
                              const size_t j,
                              const size_t k)
 {
-    assert(i < m_dim[0] || i >= 0);
-    assert(j < m_dim[1] || j >= 0);
-    assert(k < m_dim[2] || k >= 0);
+    assert(i < m_dim[0]);
+    assert(j < m_dim[1]);
+    assert(k < m_dim[2]);
     return m_data[k + j * m_dim[2] + i * m_dim[1] * m_dim[2]];
 }
 
@@ -5369,9 +5370,9 @@ const VoxelValue& Volume::GetVoxel(const size_t i,
                                    const size_t j,
                                    const size_t k) const
 {
-    assert(i < m_dim[0] || i >= 0);
-    assert(j < m_dim[1] || j >= 0);
-    assert(k < m_dim[2] || k >= 0);
+    assert(i < m_dim[0]);
+    assert(j < m_dim[1]);
+    assert(k < m_dim[2]);
     return m_data[k + j * m_dim[2] + i * m_dim[1] * m_dim[2]];
 }
 
@@ -5693,7 +5694,6 @@ class ThreadPool {
     std::mutex task_mutex;
     std::condition_variable cv;
     bool closed;
-    int count;
 };
 
 ThreadPool::ThreadPool()
@@ -5703,20 +5703,19 @@ ThreadPool::ThreadPool()
 
 ThreadPool::ThreadPool(int worker)
     : closed(false)
-    , count(0)
 {
     workers.reserve(worker);
-    for(int i=0; i<worker; i++) 
+    for(int i=0; i<worker; i++)
     {
         workers.emplace_back(
             [this]
             {
                 std::unique_lock<std::mutex> lock(this->task_mutex);
-                while(true) 
+                while(true)
                 {
-                    while (this->tasks.empty()) 
+                    while (this->tasks.empty())
                     {
-                        if (this->closed) 
+                        if (this->closed)
                         {
                             return;
                         }
@@ -5754,10 +5753,10 @@ auto ThreadPool::enqueue(F&& f, Args&& ... args)
 
     {
         std::unique_lock<std::mutex> lock(task_mutex);
-        if (!closed) 
+        if (!closed)
         {
             tasks.emplace_back([task]
-            { 
+            {
                 (*task)();
             });
             cv.notify_one();
@@ -5773,7 +5772,7 @@ ThreadPool::~ThreadPool() {
         closed = true;
     }
     cv.notify_all();
-    for (auto && worker : workers) 
+    for (auto && worker : workers)
     {
         worker.join();
     }
@@ -5841,14 +5840,14 @@ public:
 
     void BuildRaycastMesh();
 
-    // We now compute the convex hull relative to a triangle mesh generated 
+    // We now compute the convex hull relative to a triangle mesh generated
     // from the voxels
     void ComputeConvexHull();
 
     // Returns true if this convex hull should be considered done
     bool IsComplete();
 
-    
+
     // Convert a voxel position into it's correct double precision location
     VHACD::Vect3 GetPoint(const int32_t x,
                                  const int32_t y,
@@ -5869,14 +5868,14 @@ public:
     // for each voxel, not just the center point. If you don't do this, then the hulls don't fit the
     // mesh accurately enough.
     // The second reason we convert it into a triangle mesh is so that we can do raycasting against it
-    // to search for the best splitting plane fairly quickly. That algorithm will be discussed in the 
+    // to search for the best splitting plane fairly quickly. That algorithm will be discussed in the
     // method which computes the best splitting plane.
     void BuildVoxelMesh();
 
     // Convert a single voxel position into an actual 3d box mesh comprised
     // of 12 triangles
     void AddVoxelBox(const Voxel &v);
-    
+
     // Add the triangle represented by these 3 indices into the 'box' set of vertices
     // to the output mesh
     void AddTri(const std::array<VHACD::Vector3<uint32_t>, 8>& box,
@@ -5890,7 +5889,7 @@ public:
                      const VHACD::Vector3<uint32_t>& p2,
                      const VHACD::Vector3<uint32_t>& p3);
 
-    // When computing the split plane, we start by simply 
+    // When computing the split plane, we start by simply
     // taking the midpoint of the longest side. However,
     // we can also search the surface and look for the greatest
     // spot of concavity and use that as the split location.
@@ -6822,9 +6821,9 @@ public:
     * This method will return which convex hull is closest to the source position.
     * You can use this method to figure out, for example, which vertices in the original
     * source mesh are best associated with which convex hull.
-    * 
+    *
     * @param pos : The input 3d position to test against
-    * 
+    *
     * @return : Returns which convex hull this position is closest to.
     */
     uint32_t findNearestConvexHull(const double pos[3],
@@ -6841,7 +6840,7 @@ public:
 
     // This copies the input mesh while scaling the input positions
     // to fit into a normalized unit cube. It also re-indexes all of the
-    // vertex positions in case they weren't clean coming in. 
+    // vertex positions in case they weren't clean coming in.
     void CopyInputMesh(const std::vector<VHACD::Vertex>& points,
                        const std::vector<VHACD::Triangle>& triangles);
 
@@ -7485,17 +7484,17 @@ void VHACDImpl::PerformConvexDecomposition()
                 {
                     ConvexHull* chB = hulls[j];
 
-                    CostTask t;
-                    t.m_hullA = chA;
-                    t.m_hullB = chB;
-                    t.m_this = this;
+                    CostTask ct;
+                    ct.m_hullA = chA;
+                    ct.m_hullB = chB;
+                    ct.m_this = this;
 
-                    if ( DoFastCost(t) )
+                    if ( DoFastCost(ct) )
                     {
                     }
                     else
                     {
-                        tasks.push_back(std::move(t));
+                        tasks.push_back(std::move(ct));
                         CostTask* task = &tasks.back();
 #if !VHACD_DISABLE_THREADING
                         if ( m_threadPool )
@@ -7607,16 +7606,16 @@ void VHACDImpl::PerformConvexDecomposition()
                                 break;
                             }
                             ConvexHull* secondHull = i.second;
-                            CostTask t;
-                            t.m_hullA = combinedHull;
-                            t.m_hullB = secondHull;
-                            t.m_this = this;
-                            if ( DoFastCost(t) )
+                            CostTask ct;
+                            ct.m_hullA = combinedHull;
+                            ct.m_hullB = secondHull;
+                            ct.m_this = this;
+                            if ( DoFastCost(ct) )
                             {
                             }
                             else
                             {
-                                tasks.push_back(std::move(t));
+                                tasks.push_back(std::move(ct));
                             }
                         }
                         m_hulls[combinedHull->m_meshId] = combinedHull;
@@ -7823,7 +7822,7 @@ IVHACD::ConvexHull* VHACDImpl::ComputeReducedConvexHull(const ConvexHull& ch,
     ShrinkWrap(sourceConvexHull,
                m_AABBTree,
                maxVerts,
-               m_voxelScale * 4,
+               m_voxelScale,
                projectHullVertices);
 
     ConvexHull *ret = new ConvexHull;

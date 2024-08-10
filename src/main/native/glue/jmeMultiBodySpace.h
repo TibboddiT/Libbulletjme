@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 jMonkeyEngine
+ * Copyright (c) 2020-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,12 +32,11 @@
 #ifndef JME_MULTI_BODY_SPACE_H
 #define JME_MULTI_BODY_SPACE_H
 
-#include "jmePhysicsSpace.h"
-#include "btMultiBodyDynamicsWorld.h"
-
 /*
  * Author: Stephen Gold
  */
+#include "jmePhysicsSpace.h"
+#include "btMultiBodyDynamicsWorld.h"
 
 /*
  * A jmePhysicsSpace with support for multibodies.
@@ -55,7 +54,7 @@ public:
      */
     void
     createMultiBodySpace(const btVector3& min, const btVector3& max,
-            jint broadphaseType);
+            int broadphaseType, const btDefaultCollisionConstructionInfo *);
     /*
      * getters:
      */

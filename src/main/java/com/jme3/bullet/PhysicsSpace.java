@@ -32,9 +32,6 @@
 package com.jme3.bullet;
 
 import com.jme3.bullet.collision.ContactListener;
-import com.jme3.bullet.collision.PersistentManifolds;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.ProceduralCollisionShape;
 import com.jme3.bullet.joints.Constraint;
@@ -45,11 +42,9 @@ import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.bullet.objects.PhysicsVehicle;
 import com.jme3.bullet.util.NativeLibrary;
 import com.jme3.math.Vector3f;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -117,16 +112,6 @@ public class PhysicsSpace
     // fields
 
     /**
-     * contact-processed events not yet distributed to listeners
-     */
-    final private Deque<PhysicsCollisionEvent> contactProcessedEvents
-            = new ArrayDeque<>(20);
-    /**
-     * contact-started events not yet distributed to listeners
-     */
-    final private Deque<PhysicsCollisionEvent> contactStartedEvents
-            = new ArrayDeque<>(20);
-    /**
      * time step (in seconds, &gt;0) ignored when maxSubSteps=0
      */
     private float accuracy = 1f / 60f;
@@ -135,20 +120,10 @@ public class PhysicsSpace
      */
     private float maxTimeStep = 0.1f;
     /**
-     * maximum number of time steps per frame, or 0 for a variable time step
-     * (&ge;0)
+     * maximum number of simulation steps per frame (&gt;0) or 0 for a variable
+     * time step
      */
     private int maxSubSteps = 4;
-    /**
-     * list of registered listeners for ongoing contacts
-     */
-    final private Collection<PhysicsCollisionListener> contactProcessedListeners
-            = new ArrayList<>(4);
-    /**
-     * list of registered listeners for new contacts
-     */
-    final private Collection<PhysicsCollisionListener> contactStartedListeners
-            = new ArrayList<>(4);
     /**
      * list of registered tick listeners
      */
@@ -197,8 +172,8 @@ public class PhysicsSpace
      * @param broadphaseType which broadphase accelerator to use (not null)
      */
     public PhysicsSpace(BroadphaseType broadphaseType) {
-        this(new Vector3f(-10000f, -10000f, -10000f),
-                new Vector3f(10000f, 10000f, 10000f), broadphaseType);
+        this(new Vector3f(-10_000f, -10_000f, -10_000f),
+                new Vector3f(10_000f, 10_000f, 10_000f), broadphaseType);
     }
 
     /**
@@ -249,6 +224,26 @@ public class PhysicsSpace
     }
 
     /**
+     * Instantiate a PhysicsSpace with the specified number of
+     * sequential-impulse solvers. Must be invoked on the designated physics
+     * thread.
+     *
+     * @param worldMin the desired minimum coordinate values (not null,
+     * unaffected, default=(-10k,-10k,-10k))
+     * @param worldMax the desired maximum coordinate values (not null,
+     * unaffected, default=(10k,10k,10k))
+     * @param broadphaseType which broadphase accelerator to use (not null)
+     * @param numSolvers the desired number of solvers in the thread-safe pool
+     * (&ge;1, &le;64, default=numThreads)
+     * @param configuration the desired configuration (not null)
+     */
+    public PhysicsSpace(
+            Vector3f worldMin, Vector3f worldMax, BroadphaseType broadphaseType,
+            int numSolvers, CollisionConfiguration configuration) {
+        super(worldMin, worldMax, broadphaseType, numSolvers, configuration);
+    }
+
+    /**
      * Instantiate a PhysicsSpace with the specified contact-and-constraint
      * solver. Must be invoked on the designated physics thread.
      *
@@ -261,7 +256,26 @@ public class PhysicsSpace
      */
     public PhysicsSpace(Vector3f worldMin, Vector3f worldMax,
             BroadphaseType broadphaseType, SolverType solverType) {
-        super(worldMin, worldMax, broadphaseType);
+        this(worldMin, worldMax, broadphaseType, solverType,
+                new CollisionConfiguration());
+    }
+
+    /**
+     * Instantiate a PhysicsSpace with the specified contact-and-constraint
+     * solver. Must be invoked on the designated physics thread.
+     *
+     * @param worldMin the desired minimum coordinate values (not null,
+     * unaffected, default=(-10k,-10k,-10k))
+     * @param worldMax the desired maximum coordinate values (not null,
+     * unaffected, default=(10k,10k,10k))
+     * @param broadphaseType which broadphase accelerator to use (not null)
+     * @param solverType the desired contact-and-constraint solver (not null)
+     * @param configuration the desired configuration (not null)
+     */
+    public PhysicsSpace(Vector3f worldMin, Vector3f worldMax,
+            BroadphaseType broadphaseType, SolverType solverType,
+            CollisionConfiguration configuration) {
+        super(worldMin, worldMax, broadphaseType, 1, configuration);
         Validate.nonNull(solverType, "solver type");
 
         if (this.solverType != solverType) {
@@ -559,7 +573,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Read the maximum number of time steps per frame.
+     * Read the maximum number of simulation steps per frame.
      *
      * @return number of steps (&gt;0) or 0 for a variable time step
      */
@@ -674,7 +688,7 @@ public class PhysicsSpace
      */
     public void setMaxSubSteps(int steps) {
         Validate.nonNegative(steps, "steps");
-        maxSubSteps = steps;
+        this.maxSubSteps = steps;
     }
 
     /**
@@ -725,8 +739,8 @@ public class PhysicsSpace
         assert Validate.nonNegative(maxSteps, "max steps");
 
         boolean doEnded = false;
-        boolean doProcessed = !contactProcessedListeners.isEmpty();
-        boolean doStarted = !contactStartedListeners.isEmpty();
+        boolean doProcessed = false;
+        boolean doStarted = false;
         update(timeInterval, maxSteps, doEnded, doProcessed, doStarted);
     }
 
@@ -775,7 +789,7 @@ public class PhysicsSpace
     /**
      * Access the map from native IDs to physics joints.
      *
-     * @return the pre-existing instance
+     * @return the pre-existing instance (not null)
      */
     protected Map<Long, PhysicsJoint> getJointMap() {
         return jointMap;
@@ -795,7 +809,7 @@ public class PhysicsSpace
     protected void initSolverInfo() {
         long spaceId = nativeId();
         long solverInfoId = getSolverInfo(spaceId);
-        solverInfo = new SolverInfo(solverInfoId);
+        this.solverInfo = new SolverInfo(solverInfoId);
     }
 
     /**
@@ -874,8 +888,10 @@ public class PhysicsSpace
         Vector3f max = getWorldMax(null);
         Vector3f min = getWorldMin(null);
         int numSolvers = countSolvers();
-        long nativeId
-                = createPhysicsSpace(min, max, broadphase, numSolvers);
+        CollisionConfiguration configuration = getConfiguration();
+        long configurationId = configuration.nativeId();
+        long nativeId = createPhysicsSpace(
+                min, max, broadphase, numSolvers, configurationId);
         assert nativeId != 0L;
 
         assert getWorldType(nativeId) == 2 // BT_DISCRETE_DYNAMICS_WORLD
@@ -996,14 +1012,6 @@ public class PhysicsSpace
     public void onContactProcessed(PhysicsCollisionObject pcoA,
             PhysicsCollisionObject pcoB, long pointId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
-
-        if (!contactProcessedListeners.isEmpty()) {
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
-
-            // Queue the event to be handled later by distributeEvents().
-            contactProcessedEvents.add(event);
-        }
     }
 
     /**
@@ -1018,30 +1026,6 @@ public class PhysicsSpace
     @Override
     public void onContactStarted(long manifoldId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
-
-        if (contactStartedListeners.isEmpty()) {
-            return;
-        }
-        int numPoints = PersistentManifolds.countPoints(manifoldId);
-        if (numPoints == 0) {
-            return;
-        }
-
-        long bodyAId = PersistentManifolds.getBodyAId(manifoldId);
-        PhysicsCollisionObject pcoA
-                = PhysicsCollisionObject.findInstance(bodyAId);
-        long bodyBId = PersistentManifolds.getBodyBId(manifoldId);
-        PhysicsCollisionObject pcoB
-                = PhysicsCollisionObject.findInstance(bodyBId);
-
-        for (int i = 0; i < numPoints; ++i) {
-            long pointId = PersistentManifolds.getPointId(manifoldId, i);
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
-
-            // Queue the event to be handled later by distributeEvents().
-            contactStartedEvents.add(event);
-        }
     }
     // *************************************************************************
     // Java private methods
@@ -1157,7 +1141,7 @@ public class PhysicsSpace
     /**
      * Callback invoked (by native code) just after the physics is stepped.
      *
-     * @param timeStep the time per simulation step (in seconds, &ge;0)
+     * @param timeStep the duration of the simulation step (in seconds, &ge;0)
      */
     private void postTick(float timeStep) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
@@ -1170,7 +1154,7 @@ public class PhysicsSpace
     /**
      * Callback invoked (by native code) just before the physics is stepped.
      *
-     * @param timeStep the time per simulation step (in seconds, &ge;0)
+     * @param timeStep the duration of the simulation step (in seconds, &ge;0)
      */
     private void preTick(float timeStep) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
@@ -1260,8 +1244,9 @@ public class PhysicsSpace
     native private static void addProceduralStaticRigidBody(long spaceId,
             long rigidBodyId, long shapeId, int proxyGroup, int proxyMask);
 
-    native private long createPhysicsSpace(Vector3f minVector,
-            Vector3f maxVector, int broadphaseType, int numSolvers);
+    native private long createPhysicsSpace(
+            Vector3f minVector, Vector3f maxVector, int broadphaseType,
+            int numSolvers, long configurationId);
 
     native private static void getGravity(long spaceId, Vector3f storeVector);
 

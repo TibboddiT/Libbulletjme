@@ -42,9 +42,9 @@ import jme3utilities.math.MyVector3f;
 
 /**
  * A mesh collisions shape based on Bullet's {@code btGImpactMeshShape}.
- *
- * Collisions between GImpactCollisionShape and PlaneCollisionShape objects are
- * never detected.
+ * <p>
+ * Collisions between {@code GImpactCollisionShape} and
+ * {@code PlaneCollisionShape} objects are never detected.
  *
  * @author normenhansen
  */
@@ -115,6 +115,31 @@ public class GImpactCollisionShape extends CollisionShape {
     }
 
     /**
+     * Count how many submeshes are in the mesh.
+     *
+     * @return the count (&ge;0)
+     */
+    public int countSubmeshes() {
+        int result = nativeMesh.countSubmeshes();
+        return result;
+    }
+
+    /**
+     * Access the specified submesh.
+     *
+     * @param index the index of the desired submesh (in the order the submeshes
+     * were added, &ge;0)
+     * @return the pre-existing instance (not null)
+     */
+    public IndexedMesh getSubmesh(int index) {
+        int numSubmeshes = nativeMesh.countSubmeshes();
+        Validate.inRange(index, "submesh index", 0, numSubmeshes - 1);
+
+        IndexedMesh result = nativeMesh.getSubmesh(index);
+        return result;
+    }
+
+    /**
      * Attempt to divide this shape into 2 shapes.
      *
      * @param splittingTriangle to define the splitting plane (in shape
@@ -162,9 +187,9 @@ public class GImpactCollisionShape extends CollisionShape {
     // CollisionShape methods
 
     /**
-     * Test whether this shape can be split by an arbitrary plane.
+     * Test whether the shape can be split by an arbitrary plane.
      *
-     * @return true if splittable, false otherwise
+     * @return true
      */
     @Override
     public boolean canSplit() {

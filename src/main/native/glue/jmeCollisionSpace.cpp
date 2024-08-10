@@ -29,13 +29,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "jmeCollisionSpace.h"
-#include "jmeClasses.h"
-#include "jmeUserInfo.h"
 
 /*
  * Author: Normen Hansen
  */
+#include "jmeCollisionSpace.h"
+#include "jmeClasses.h"
+#include "jmeUserInfo.h"
 
 /*
  * During the broadphase, test whether the specified pair of proxies
@@ -120,9 +120,9 @@ void jmeCollisionSpace::attachThread() {
 }
 
 btBroadphaseInterface * jmeCollisionSpace::createBroadphase(
-        const btVector3 & min, const btVector3 & max, int broadphaseId) {
+        const btVector3 & min, const btVector3 & max, int broadphaseType) {
     btBroadphaseInterface * pBroadphase;
-    switch (broadphaseId) {
+    switch (broadphaseType) {
         case 0:
             pBroadphase = new btSimpleBroadphase(); //dance009
             break;
@@ -150,13 +150,14 @@ btBroadphaseInterface * jmeCollisionSpace::createBroadphase(
 }
 
 void jmeCollisionSpace::createCollisionSpace(const btVector3& min,
-        const btVector3& max, int broadphaseId) {
+        const btVector3& max, int broadphaseType,
+        const btDefaultCollisionConstructionInfo *pInfo) {
     btBroadphaseInterface * const
-            pBroadphase = createBroadphase(min, max, broadphaseId);
+            pBroadphase = createBroadphase(min, max, broadphaseType);
 
     // Use the default collision dispatcher plus GImpact.
     btCollisionConfiguration * const
-            pCollisionConfiguration = new btDefaultCollisionConfiguration(); //dance010
+            pCollisionConfiguration = new btDefaultCollisionConfiguration(*pInfo); //dance010
     btCollisionDispatcher * const
             pDispatcher = new btCollisionDispatcher(pCollisionConfiguration); //dance008
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);

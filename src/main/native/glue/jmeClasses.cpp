@@ -29,13 +29,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "jmeClasses.h"
-#include <stdio.h>
-#include "LinearMath/btThreads.h"
 
 /*
  * Author: Normen Hansen, Empire Phoenix, Lutherion
  */
+#include "jmeClasses.h"
+#include <stdio.h>
+#include "LinearMath/btThreads.h"
 
 // public fields
 
@@ -106,8 +106,6 @@ jclass jmeClasses::NativeLibrary_Class;
 jmethodID jmeClasses::NativeLibrary_reinitialization;
 
 jclass jmeClasses::NullPointerException;
-
-jmethodID jmeClasses::DebugMeshCallback_addVector;
 
 jclass jmeClasses::PhysicsCollisionEvent_Class;
 jmethodID jmeClasses::PhysicsCollisionEvent_init;
@@ -365,12 +363,6 @@ void jmeClasses::initJavaClasses(JNIEnv *pEnv) {
     GLOBAL_FIELD(Matrix3f_m22, matrix3f, "m22", "F");
 
     GLOBAL_CLASS(NullPointerException, "java/lang/NullPointerException");
-
-    jclass debugMeshCallback
-            = pEnv->FindClass("com/jme3/bullet/util/DebugMeshCallback");
-    EXCEPTION_CHK(pEnv,);
-    GLOBAL_METHOD(DebugMeshCallback_addVector,
-            debugMeshCallback, "addVector", "(FFFII)V");
 
     GLOBAL_CLASS(PhysicsCollisionEvent_Class,
             "com/jme3/bullet/collision/PhysicsCollisionEvent");

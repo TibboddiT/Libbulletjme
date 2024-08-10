@@ -49,9 +49,9 @@ import jme3utilities.minie.MyShape;
  * The abstract base class for collision shapes based on Bullet's
  * {@code btCollisionShape}.
  * <p>
- * Subclasses include ConvexShape and MeshCollisionShape. As suggested in the
- * Bullet manual, a single collision shape can be shared among multiple
- * collision objects.
+ * Subclasses include {@code ConvexShape} and {@code MeshCollisionShape}. As
+ * suggested in the Bullet manual, a single collision shape can be shared among
+ * multiple collision objects.
  *
  * @author normenhansen
  */
@@ -82,7 +82,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * copy of the contact-filter enable flag
      */
-    protected boolean enableContactFilter = true;
+    protected boolean enableContactFilter = false;
     /**
      * default margin for new non-sphere/non-capsule shapes (in physics-space
      * units, &gt;0)
@@ -102,8 +102,11 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * Instantiate a collision shape with no tracker and no assigned native
      * object.
+     * <p>
+     * This no-arg constructor was made explicit to avoid javadoc warnings from
+     * JDK 18+.
      */
-    protected CollisionShape() { // to avoid a warning from JDK 18 javadoc
+    protected CollisionShape() {
     }
     // *************************************************************************
     // new methods exposed
@@ -125,9 +128,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Calculate an axis-aligned bounding box for this shape with the specified
-     * translation and rotation applied to it. Rotation is applied first.
-     * Collision margin is included.
+     * Calculate an axis-aligned bounding box with the specified translation and
+     * rotation applied. Rotation is applied first. Collision margin is
+     * included.
      *
      * @param translation the translation to apply (not null, unaffected)
      * @param rotation the rotation to apply (not null, unaffected)
@@ -153,9 +156,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Calculate an axis-aligned bounding box for this shape with the specified
-     * translation and rotation applied to it. Rotation is applied first.
-     * Collision margin is included.
+     * Calculate an axis-aligned bounding box with the specified translation and
+     * rotation applied. Rotation is applied first. Collision margin is
+     * included.
      *
      * @param translation the translation to apply (not null, unaffected)
      * @param rotation the rotation to apply (not null, unaffected)
@@ -182,7 +185,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether the specified scale factors can be applied to this shape.
+     * Test whether the specified scale factors can be applied to the shape.
      * Subclasses that restrict scaling should override this method.
      *
      * @param scale the desired scale factor for each local axis (may be null,
@@ -201,7 +204,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this shape can be split by an arbitrary plane. Meant to be
+     * Test whether the shape can be split by an arbitrary plane. Meant to be
      * overridden.
      *
      * @return true if splittable, false otherwise
@@ -214,7 +217,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * Return the default margin for new shapes that are neither capsules nor
      * spheres.
      *
-     * @return the margin distance (in physics-space units, &gt;0)
+     * @return the margin thickness (in physics-space units, &gt;0)
      */
     public static float getDefaultMargin() {
         assert defaultMargin > 0f : defaultMargin;
@@ -224,7 +227,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * Return the collision margin for this shape.
      *
-     * @return the margin distance (in physics-space units, &ge;0)
+     * @return the margin thickness (in physics-space units, &ge;0)
      */
     public float getMargin() {
         assert margin >= 0f : margin;
@@ -264,9 +267,9 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Return the type of this shape.
+     * Return the encoded type of the shape.
      *
-     * @return the type value (from Bullet's {@code enum BroadphaseNativeTypes})
+     * @return the type code (from Bullet's {@code enum BroadphaseNativeTypes})
      */
     public int getShapeType() {
         long shapeId = nativeId();
@@ -276,7 +279,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this shape has concave type. In Bullet, "concave" is a
+     * Test whether the shape has concave type. In Bullet, "concave" is a
      * property of <em>types</em> of shapes. Specific <em>instances</em> of
      * those types might actually be "convex" in the mathematical sense of the
      * word.
@@ -307,14 +310,13 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this shape has convex type. In Bullet, "convex" is a
-     * property of <em>types</em> of shapes. Specific <em>instances</em> of
-     * non-convex types might still be "convex" in the mathematical sense of the
-     * word.
+     * Test whether the shape has convex type. In Bullet, "convex" is a property
+     * of <em>types</em> of shapes. Specific <em>instances</em> of non-convex
+     * types might still be "convex" in the mathematical sense of the word.
      * <p>
-     * The only convex types are the box2d, box, capsule, cone, convex2d,
-     * cylinder, hull, multi-sphere, simplex, and sphere shapes. Note that
-     * compound shapes are neither concave nor convex.
+     * Convex types include the box2d, box, capsule, cone, convex2d, cylinder,
+     * hull, multi-sphere, simplex, and sphere shapes. Note that compound shapes
+     * are neither concave nor convex.
      *
      * @return true if convex type, false otherwise
      */
@@ -326,8 +328,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this shape's type is infinite. PlaneCollisionShape is the
-     * only type of shape that's infinite.
+     * Test whether the shape's type is infinite. {@code PlaneCollisionShape} is
+     * the only type of shape that's infinite.
      *
      * @return true if infinite, false otherwise
      */
@@ -339,7 +341,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this shape can be applied to a dynamic rigid body. The only
+     * Test whether the shape can be applied to a dynamic rigid body. The only
      * non-moving shapes are the empty, heightfield, mesh, and plane shapes.
      *
      * @return true if non-moving, false otherwise
@@ -365,7 +367,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
-     * Estimate how far this shape extends from its center.
+     * Estimate how far the scaled shape extends from its center, including
+     * margin.
      *
      * @return a distance estimate (in physics-space units, &ge;0, may be
      * infinite)
@@ -389,7 +392,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * Enable/disable contact filtering for this shape.
      *
-     * @param setting the desired setting (default=true)
+     * @param setting the desired setting (default=false)
      */
     public void setContactFilterEnabled(boolean setting) {
         long shapeId = nativeId();
@@ -404,8 +407,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * It is best not to modify the default collision margin, and if you do use
      * a positive value: zero margin might introduce problems.
      *
-     * @param margin the desired margin distance (in physics-space units, &gt;0,
-     * default=0.04)
+     * @param margin the desired margin thickness (in physics-space units,
+     * &gt;0, default=0.04)
      */
     public static void setDefaultMargin(float margin) {
         Validate.positive(margin, "margin");
@@ -424,8 +427,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * Note that if the shape is shared (between collision objects and/or
      * compound shapes) changes can have unintended consequences.
      *
-     * @param margin the desired margin distance (in physics-space units, &gt;0,
-     * default=0.04)
+     * @param margin the desired margin thickness (in physics-space units,
+     * &gt;0, default=0.04)
      */
     public void setMargin(float margin) {
         Validate.positive(margin, "margin");
@@ -479,6 +482,28 @@ abstract public class CollisionShape extends NativePhysicsObject {
     }
 
     /**
+     * Alter the primary user index. Applications may use this parameter for any
+     * purpose (native field: m_userIndex).
+     *
+     * @param index the desired value (default=-1)
+     */
+    public void setUserIndex(int index) {
+        long shapeId = nativeId();
+        setUserIndex(shapeId, index);
+    }
+
+    /**
+     * Alter the secondary user index. Applications may use this parameter for
+     * any purpose (native field: m_userIndex2).
+     *
+     * @param index the desired value (default=-1)
+     */
+    public void setUserIndex2(int index) {
+        long shapeId = nativeId();
+        setUserIndex2(shapeId, index);
+    }
+
+    /**
      * Approximate this shape with a splittable shape. Meant to be overridden.
      *
      * @return a new splittable shape
@@ -489,6 +514,28 @@ abstract public class CollisionShape extends NativePhysicsObject {
         } else {
             throw new IllegalArgumentException("this = " + this);
         }
+    }
+
+    /**
+     * Return the primary user index (native field: m_userIndex).
+     *
+     * @return the value
+     */
+    public int userIndex() {
+        long shapeId = nativeId();
+        int result = getUserIndex(shapeId);
+        return result;
+    }
+
+    /**
+     * Return the secondary user index (native field: m_userIndex2).
+     *
+     * @return the value
+     */
+    public int userIndex2() {
+        long shapeId = nativeId();
+        int result = getUserIndex2(shapeId);
+        return result;
     }
     // *************************************************************************
     // new protected methods
@@ -504,14 +551,14 @@ abstract public class CollisionShape extends NativePhysicsObject {
     /**
      * Return the native collision margin of this shape.
      *
-     * @return the margin distance (in physics-space units, &ge;0)
+     * @return the margin thickness (in physics-space units, &ge;0)
      */
     final protected float nativeMargin() {
         long shapeId = nativeId();
         float result = getMargin(shapeId);
 
         assert result >= 0f : result;
-        return margin;
+        return result;
     }
 
     /**
@@ -563,7 +610,7 @@ abstract public class CollisionShape extends NativePhysicsObject {
      * Compare Bullet's scale factors to the local copies.
      *
      * @param storeVector caller-allocated temporary storage (not null)
-     * @return true if Bullet and the JVM copy match exactly, otherwise false
+     * @return true if the scale factors match exactly, otherwise false
      */
     private boolean checkScale(Vector3f storeVector) {
         assert storeVector != null;
@@ -605,6 +652,10 @@ abstract public class CollisionShape extends NativePhysicsObject {
 
     native private static float getMargin(long shapeId);
 
+    native private static int getUserIndex(long shapeId);
+
+    native private static int getUserIndex2(long shapeId);
+
     native private static boolean isConcave(long shapeId);
 
     native private static boolean isContactFilterEnabled(long shapeId);
@@ -623,4 +674,8 @@ abstract public class CollisionShape extends NativePhysicsObject {
     native private static void setLocalScaling(long shapeId, Vector3f scale);
 
     native private static void setMargin(long shapeId, float margin);
+
+    native private static void setUserIndex(long shapeId, int index);
+
+    native private static void setUserIndex2(long shapeId, int index);
 }

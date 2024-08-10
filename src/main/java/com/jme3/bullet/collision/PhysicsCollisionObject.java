@@ -165,8 +165,11 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Instantiate a collision object with no tracker and no assigned native
      * object.
+     * <p>
+     * This no-arg constructor was made explicit to avoid javadoc warnings from
+     * JDK 18+.
      */
-    protected PhysicsCollisionObject() { // avoid a warning from JDK 18 javadoc
+    protected PhysicsCollisionObject() {
     }
     // *************************************************************************
     // new methods exposed
@@ -287,7 +290,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     /**
      * Copy common properties from another collision object.
      *
-     * @param old (not null, unaffected)
+     * @param old the instance to copy from (not null, unaffected)
      */
     final public void copyPcoProperties(PhysicsCollisionObject old) {
         assert old.hasAssignedNativeObject();
@@ -311,6 +314,9 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
         setRestitution(old.getRestitution());
         setRollingFriction(old.getRollingFriction());
         setSpinningFriction(old.getSpinningFriction());
+        setUserIndex(old.userIndex());
+        setUserIndex2(old.userIndex2());
+        setUserIndex3(old.userIndex3());
 
         if (old.hasAnisotropicFriction(AfMode.basic)) {
             setAnisotropicFriction(
@@ -386,7 +392,7 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * <p>
      * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
-     * @return the minimum distance per timestep to trigger CCD (in
+     * @return the minimum distance per simulation step to trigger CCD (in
      * physics-space units, &ge;0)
      */
     public float getCcdMotionThreshold() {
@@ -958,13 +964,14 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
      * Alter the amount of motion required to trigger continuous collision
      * detection (CCD) (native field: m_ccdMotionThreshold).
      * <p>
-     * CCD addresses the issue of fast objects passing through other objects
-     * with no collision detected.
+     * CCD addresses the issue of fast-moving bodies passing through other
+     * bodies without creating any contacts.
      * <p>
      * CCD doesn't affect a PhysicsCharacter or PhysicsGhostObject.
      *
-     * @param threshold the desired minimum distance per timestep to trigger CCD
-     * (in physics-space units, &gt;0) or zero to disable CCD (default=0)
+     * @param threshold the desired minimum distance per simulation step to
+     * trigger CCD (in physics-space units, &gt;0) or zero to disable CCD
+     * (default=0)
      */
     public void setCcdMotionThreshold(float threshold) {
         long objectId = nativeId();
@@ -1163,6 +1170,39 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
     }
 
     /**
+     * Alter the object's primary user index. Applications may use this
+     * parameter for any purpose (native field: m_userIndex).
+     *
+     * @param index the desired value (default=-1)
+     */
+    public void setUserIndex(int index) {
+        long objectId = nativeId();
+        setUserIndex(objectId, index);
+    }
+
+    /**
+     * Alter the object's secondary user index. Applications may use this
+     * parameter for any purpose (native field: m_userIndex2).
+     *
+     * @param index the desired value (default=-1)
+     */
+    public void setUserIndex2(int index) {
+        long objectId = nativeId();
+        setUserIndex2(objectId, index);
+    }
+
+    /**
+     * Alter the object's tertiary user index. Applications may use this
+     * parameter for any purpose (native field: m_userIndex3).
+     *
+     * @param index the desired value (default=-1)
+     */
+    public void setUserIndex3(int index) {
+        long objectId = nativeId();
+        setUserIndex3(objectId, index);
+    }
+
+    /**
      * Associate a "user" with this collision object.
      *
      * @param user the desired scene object (alias created, default=null)
@@ -1182,6 +1222,39 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
         long spaceId = getSpaceId(objectId);
 
         return spaceId;
+    }
+
+    /**
+     * Return the object's primary user index (native field: m_userIndex).
+     *
+     * @return the value of the index
+     */
+    public int userIndex() {
+        long objectId = nativeId();
+        int result = getUserIndex(objectId);
+        return result;
+    }
+
+    /**
+     * Return the object's secondary user index (native field: m_userIndex2).
+     *
+     * @return the value of the index
+     */
+    public int userIndex2() {
+        long objectId = nativeId();
+        int result = getUserIndex2(objectId);
+        return result;
+    }
+
+    /**
+     * Return the object's tertiary user index (native field: m_userIndex3).
+     *
+     * @return the value of the index
+     */
+    public int userIndex3() {
+        long objectId = nativeId();
+        int result = getUserIndex3(objectId);
+        return result;
     }
     // *************************************************************************
     // new protected methods
@@ -1382,6 +1455,12 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static float getSpinningFriction(long objectId);
 
+    native private static int getUserIndex(long objectId);
+
+    native private static int getUserIndex2(long objectId);
+
+    native private static int getUserIndex3(long objectId);
+
     native private static boolean
             hasAnisotropicFriction(long objectId, int mode);
 
@@ -1431,4 +1510,10 @@ abstract public class PhysicsCollisionObject extends NativePhysicsObject {
 
     native private static void
             setSpinningFriction(long objectId, float friction);
+
+    native private static void setUserIndex(long objectId, int index);
+
+    native private static void setUserIndex2(long objectId, int index);
+
+    native private static void setUserIndex3(long objectId, int index);
 }

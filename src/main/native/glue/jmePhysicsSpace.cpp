@@ -29,6 +29,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/*
+ * Author: Normen Hansen
+ */
 #if BT_THREADSAFE
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorldMt.h"
 #endif
@@ -36,21 +40,18 @@
 #include "jmeClasses.h"
 #include "jmeUserInfo.h"
 
-/*
- * Author: Normen Hansen
- */
-
 #if BT_THREADSAFE
 
 void jmePhysicsSpace::createMultiThreadedSpace(const btVector3& min,
-        const btVector3& max, int broadphaseType, int numSolvers) {
+        const btVector3& max, int broadphaseType, int numSolvers,
+        const btDefaultCollisionConstructionInfo *pInfo) {
     // Create the pair cache for broadphase collision detection.
     btBroadphaseInterface * const
             pBroadphase = createBroadphase(min, max, broadphaseType);
 
     // Use the default collision dispatcher plus GImpact.
     btCollisionConfiguration * const
-            pCollisionConfiguration = new btDefaultCollisionConfiguration(); //dance010
+            pCollisionConfiguration = new btDefaultCollisionConfiguration(*pInfo); //dance010
     btCollisionDispatcher * const
             pDispatcher = new btCollisionDispatcher(pCollisionConfiguration); //dance008
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);
@@ -72,14 +73,15 @@ void jmePhysicsSpace::createMultiThreadedSpace(const btVector3& min,
 #else // BT_THREADSAFE
 
 void jmePhysicsSpace::createPhysicsSpace(const btVector3& min,
-        const btVector3& max, int broadphaseId) {
+        const btVector3& max, int broadphaseType,
+        const btDefaultCollisionConstructionInfo *pInfo) {
     // Create the pair cache for broadphase collision detection.
     btBroadphaseInterface * const
-            pBroadphase = createBroadphase(min, max, broadphaseId);
+            pBroadphase = createBroadphase(min, max, broadphaseType);
 
     // Use the default collision dispatcher plus GImpact.
     btCollisionConfiguration * const
-            pCollisionConfiguration = new btDefaultCollisionConfiguration(); //dance010
+            pCollisionConfiguration = new btDefaultCollisionConfiguration(*pInfo); //dance010
     btCollisionDispatcher * const
             pDispatcher = new btCollisionDispatcher(pCollisionConfiguration); //dance008
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);

@@ -45,9 +45,10 @@ import jme3utilities.math.MyMath;
 /**
  * A collision shape for terrain defined by a matrix of height values, based on
  * Bullet's {@code btHeightfieldTerrainShape}. Should be more efficient than an
- * equivalent MeshCollisionShape. Not for use in dynamic bodies. Collisions
- * between HeightfieldCollisionShape, MeshCollisionShape, and
- * PlaneCollisionShape objects are never detected.
+ * equivalent {@code MeshCollisionShape}. Not for use in dynamic bodies.
+ * Collisions between {@code HeightfieldCollisionShape},
+ * {@code MeshCollisionShape}, and {@code PlaneCollisionShape} objects are never
+ * detected.
  *
  * @author Brent Owens
  */
@@ -193,15 +194,47 @@ public class HeightfieldCollisionShape extends CollisionShape {
     // new methods exposed
 
     /**
+     * Count how many columns are in the heightfield.
+     *
+     * @return the count (&ge;2)
+     */
+    public int countColumns() {
+        assert heightStickWidth >= 2 : heightStickWidth;
+        return heightStickWidth;
+    }
+
+    /**
      * Count how many data points are in the heightfield.
      *
-     * @return the count (&gt;0)
+     * @return the count (&ge;4)
      */
     public int countMeshVertices() {
         int count = heightfieldData.length;
 
-        assert count > 0 : count;
+        assert count >= 4 : count;
         return count;
+    }
+
+    /**
+     * Count how many rows are in the heightfield.
+     *
+     * @return the count (&ge;2)
+     */
+    public int countRows() {
+        assert heightStickLength >= 2 : heightStickLength;
+        return heightStickLength;
+    }
+
+    /**
+     * Return the index of the height axis.
+     *
+     * @return the axis index: 0&rarr;X, 1&rarr;Y, 2&rarr;Z
+     */
+    public int upAxis() {
+        assert upAxis == PhysicsSpace.AXIS_X
+                || upAxis == PhysicsSpace.AXIS_Y
+                || upAxis == PhysicsSpace.AXIS_Z : upAxis;
+        return upAxis;
     }
     // *************************************************************************
     // CollisionShape methods

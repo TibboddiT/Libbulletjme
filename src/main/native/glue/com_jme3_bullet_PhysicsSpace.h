@@ -72,10 +72,10 @@ JNIEXPORT void JNICALL Java_com_jme3_bullet_PhysicsSpace_addProceduralStaticRigi
 /*
  * Class:     com_jme3_bullet_PhysicsSpace
  * Method:    createPhysicsSpace
- * Signature: (Lcom/jme3/math/Vector3f;Lcom/jme3/math/Vector3f;II)J
+ * Signature: (Lcom/jme3/math/Vector3f;Lcom/jme3/math/Vector3f;IIJ)J
  */
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_PhysicsSpace_createPhysicsSpace
-  (JNIEnv *, jobject, jobject, jobject, jint, jint);
+  (JNIEnv *, jobject, jobject, jobject, jint, jint, jlong);
 
 /*
  * Class:     com_jme3_bullet_PhysicsSpace

@@ -30,15 +30,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Normen Hansen
- */
 #ifndef _Included_jmeClasses
 #define _Included_jmeClasses
 
+/*
+ * Author: Normen Hansen
+ */
 #include <jni.h>
 
-#define LIBBULLETJME_VERSION "20.0.0"
+#define LIBBULLETJME_VERSION "21.2.1"
 
 #define EXCEPTION_CHK(pEnv, retval) \
     if (pEnv->ExceptionCheck()) { \
@@ -164,8 +164,6 @@ public:
     static jclass Vhacd;
     static jmethodID Vhacd_addHull;
     static jmethodID Vhacd_update;
-
-    static jmethodID DebugMeshCallback_addVector;
 
     static bool printFlag;
     static bool reinitializationCallbackFlag;

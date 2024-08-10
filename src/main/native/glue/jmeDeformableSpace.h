@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 jMonkeyEngine
+ * Copyright (c) 2009-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,14 +32,13 @@
 #ifndef JME_DEFORMABLE_SPACE_H
 #define JME_DEFORMABLE_SPACE_H
 
-#include "jmeMultiBodySpace.h"
-#include "BulletSoftBody/btDeformableMultiBodyDynamicsWorld.h"
-
 /*
  * Author: Stephen Gold
  *
  * Based on jmePhysicsSoftSpace.h by dokthar
  */
+#include "jmeMultiBodySpace.h"
+#include "BulletSoftBody/btDeformableMultiBodyDynamicsWorld.h"
 
 /*
  * A jmeMultiBodySpace with support for deformables.
@@ -57,7 +56,7 @@ public:
      */
     void
     createDeformableSpace(const btVector3& min, const btVector3& max,
-            jint broadphaseType);
+            int broadphaseType, const btDefaultCollisionConstructionInfo *);
     /*
      * getters:
      */

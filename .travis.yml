@@ -14,7 +14,7 @@ jobs:
       osx_image: xcode9.4.1
       script:
         - date
-        - ./gradlew build --console=plain --no-daemon -Ptravis=osx_intel
+        - ./gradlew run build --console=plain --no-daemon -Ptravis=osx_intel
 
     # Linux32 and Linux64 non-multithreaded (job .2):
     - env:
@@ -28,7 +28,7 @@ jobs:
         - sudo ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/asm
         - sudo ln -s /usr/include/x86_64-linux-gnu/bits /usr/include/bits
         - g++ --version
-        - ./gradlew build --console=plain --no-daemon -Ptravis=amd64
+        - ./gradlew run build --console=plain --no-daemon -Ptravis=amd64
 
     # Linux64 multithreaded (job .3):
     - env:
@@ -78,7 +78,7 @@ jobs:
       script:
         - date
         - aarch64-linux-gnu-g++-6 -E -v
-        - travis_wait 20 ./gradlew build --exclude-task check --console=plain --no-daemon -Pflavor=Dp -Ptravis=arm64
+        - travis_wait 20 ./gradlew run build --console=plain --no-daemon -Pflavor=Dp -Ptravis=arm64
 
     # Linux_ARM64 single-precision (job .7):
     - arch: arm64
@@ -92,18 +92,23 @@ jobs:
       script:
         - date
         - aarch64-linux-gnu-g++-6 -E -v
-        - travis_wait 20 ./gradlew build --console=plain --no-daemon -Pflavor=Sp -Ptravis=arm64
+        - travis_wait 20 ./gradlew run build --console=plain --no-daemon -Pflavor=Sp -Ptravis=arm64
 
     # Android_ARM7, Android_ARM8, Android_X86, and Android_X86_64 (job .8):
-    - dist: trusty
+    - dist: xenial
       language: android
+      addons:
+        apt:
+          packages:
+            - openjdk-11-jdk
       android:
         components:
           - tools
       script:
         - date
-        - sdkmanager --list
-        - echo y | sdkmanager "ndk;21.3.6528147" > /dev/null
+        - echo y | sdkmanager "ndk;23.1.7779620" > /dev/null
+        - sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64
+        - export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
         - ./gradlew copyToDist --build-file=android.gradle --console=plain --no-daemon
 
     # MacOSX_ARM64 (job .9):
@@ -128,16 +133,19 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
-# Deploy using personal access token (classic) expiring on Mar 9 2024
+# Deploy using personal access token (classic) expiring on 31 August 2024
 # Browse to GitHub user pulldown -> Settings -> "Developer settings"
-# cd Libbulletjme
-# travis encrypt {token}
+# cdn Libbulletjme
+# travis login --pro --github-token={token}
+# travis encrypt --pro {token}
 # cat /dev/null > ~/.bash_history && history -c && exit
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: "VbdA/FrqL9L41i815x0wUD8Zy0gb3jhURUXUPkyEl8Uc+Y1rIsn2wcjKQl1Ni71trfH7ePMiQRfLyqsLkdskiFwfsDqkXIO2dKr4v2oPDqpcc6dZSnVxtQTY0pDU60sUrUPC9Osu7fyLyWdRZs01DXTPrMq81wAOQslrr9YNxFYR1ci1OmnvkF29w0f1jpxaTBs1AF90MvwcEIiXzRTgvFSkT0WDiqpjK+4CsJCfiu9qW5pOwBQhZnI0uSGtwGIvjv9V9K9/bvmNStiGJc2uKt3CgzcJ2Lrdk98V2QfLFHpxvoTgC3gRXtmqcAn4hf4XADtHXI+UxGGmm2qu3IoHTHEaIi/XY9g9WYeG233EtzAZ8sffVRuqCbAE1edp+xq6GkvrrZz+sNeR05eyOxIbywIPTeVpu9UrFaR5iovFkd5wBWQV8Viw2/71UbpOcnYKeBKThc7b5yZJsVWuXuFobLniO5H4CwjU/fBoMAxRYjx7dK4bN/0SelfVHVJlaCbKUhl5G54bmEQW8RFDxQlvgGntvdWrkzZhs8j7cAnci1Qo1be66brRngCs9l0otk4yPhKsNyHqjj7qQckJUtsKLuK/aD0PdXBXCtHzwVJ2fQOQFoirTmQVjyGYQ5xmktEByLH4qVG1SD5kwUMiQrhFRKcsOhqmQev2tUa7yCt97Ys="
+    secure: "eqOKIVGOB/Vj8MEExhGSk+Zzn7Lj4gzQg0AGXJi+YieP2Thd3VI4snjA3MutEqrXfg23Gzifs21TgIVT1wFAqA/YEumd6WmxB95VTpzEJbsdFITRQWITPxF/ANceE/M5v5041NlCwuFJtbEr3prwDPRJ2g43Hvm2jlpmQegsx8Pai7mzrjDr6gOVeRNQhPLKtqIjmyvojt2DPM+4SMe2pubZG95U6znpHCWOLdAwc7WXduSLywNVJo6dHkWFXilkCTrzXnnxzq/Jg5dawuMJZaCxQxxf+MnuKprbH+KeTzyYdjjOXY96zee6QYiyWgSLRXGFXJnTQXZ64wAqPD4l64EPlKYiD5HjmDl3q6nC8U3ppeqIqYAdUAsm9+Qn1PI9ZWjywOGskiqPLolXopbxS11yn1kR/g3ncbprL/GCbrSeGU/QB20zEkhcbeZA6j9EIgepZPjcTf0cYznAa21/uC8TsDh+cPczGTYwlm8IMcdBlKIh8M/xMq4ikCuklRMgX0x7g3u4hABfQEfMZ5TTOHkt2mJrjr5fwUfMxWwdQ8PwAuN3qd0400QVgBwukRRp27YN/nZxvSKy5ZgmFyle9r9THrPmEDWAKK/QQ1qZ5EDrvGPIjRJpYo8/M6rHKOau8ySNZ6tT7aEIeAEKd5rJbszFWjq5w9B+Nx8NPZl2ODo="
+  edge:
+    branch: v2.0.3-beta.4
   file:
     - dist/Android_ARM7DebugSp_libbulletjme.so
     - dist/Android_ARM7ReleaseSp_libbulletjme.so
