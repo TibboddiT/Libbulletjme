@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/shape.html">
     <link rel="prev" href="rigidbody.html">
     <link rel="next" href="character.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="Choosing collision shapes">
@@ -142,7 +142,7 @@
     <span class="nav-text">Library APIs (javadoc)</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">Master branch</a>
+    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">"master" branch</a>
   </li>
 </ul>
   </li>
@@ -173,6 +173,12 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/LbjExamples">LbjExamples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/macana">Macana</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/sport">SPORT</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/V-Sport">V-Sport</a>
@@ -261,11 +267,11 @@ describes the shape and size of a collision object such as a rigid body.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_17_shape_classes"><a class="anchor" href="#_the_17_shape_classes"></a>The 17 shape classes</h2>
+<h2 id="_the_19_shape_classes"><a class="anchor" href="#_the_19_shape_classes"></a>The 19 shape classes</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The examples so far have all used spheres, cubes, and/or cylinders.
-However, those are only 3 of the 17 concrete subclasses of
+However, those are but 3 of the 19 concrete subclasses of
 <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CollisionShape.html"><code>CollisionShape</code></a>.</p>
 </div>
 <div class="paragraph">
@@ -309,8 +315,8 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CompoundCollisionShape.html"><code>CompoundCollisionShape</code></a></p>
 <p class="tableblock">&rarr; neither concave nor convex<br>
 &rarr; positive margin<br>
-&rarr; precise if-and-only-if all of its children are precise<br>
-&rarr; scalable to the extent that all of its children are scalable</p></td>
+&rarr; precise if-and-only-if all its children are precise<br>
+&rarr; scalable to the extent that all its children are scalable</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/compound.png" alt="compound" height="160"></span></p></td>
 </tr>
 <tr>
@@ -323,7 +329,16 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/cone.png" alt="cone" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/Convex2dShape.html"><code>Convex2dShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConicalFrustum.html"><code>ConicalFrustum</code></a></p>
+<p class="tableblock">&rarr; convex<br>
+&rarr; positive margin<br>
+&rarr; imprecise<br>
+&rarr; limited scalability<br>
+&rarr; symmetric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/frustum.png" alt="frustum" height="160"></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/Convex2dShape.html"><code>Convex2dShape</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; positive margin<br>
 &rarr; imprecise<br>
@@ -331,7 +346,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/convex2d.png" alt="convex2d" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; positive margin<br>
 &rarr; imprecise<br>
@@ -340,7 +355,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/cylinder.png" alt="cylinder" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">8. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/EmptyShape.html"><code>EmptyShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/EmptyShape.html"><code>EmptyShape</code></a></p>
 <p class="tableblock">&rarr; concave<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
@@ -349,7 +364,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">(no image)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">9. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/GImpactCollisionShape.html"><code>GImpactCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/GImpactCollisionShape.html"><code>GImpactCollisionShape</code></a></p>
 <p class="tableblock">&rarr; concave<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
@@ -357,7 +372,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/gimpact.png" alt="gimpact" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html"><code>HeightfieldCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html"><code>HeightfieldCollisionShape</code></a></p>
 <p class="tableblock">&rarr; concave<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
@@ -365,7 +380,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/heightfield.png" alt="heightfield" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">11. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/HullCollisionShape.html"><code>HullCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/HullCollisionShape.html"><code>HullCollisionShape</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; positive margin<br>
 &rarr; imprecise<br>
@@ -373,7 +388,7 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/hull.png" alt="hull" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">12. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MeshCollisionShape.html"><code>MeshCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MeshCollisionShape.html"><code>MeshCollisionShape</code></a></p>
 <p class="tableblock">&rarr; concave<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
@@ -381,14 +396,14 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/mesh.png" alt="mesh" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">13. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MinkowskiSum.html"><code>MinkowskiSum</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MinkowskiSum.html"><code>MinkowskiSum</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; margin determined by base shapes<br>
 &rarr; not scalable</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/minkowski.png" alt="minkowski" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MultiSphere.html"><code>MultiSphere</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/MultiSphere.html"><code>MultiSphere</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
@@ -396,16 +411,15 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/multiSphere.png" alt="multiSphere" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">15. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/PlaneCollisionShape.html"><code>PlaneCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/PlaneCollisionShape.html"><code>PlaneCollisionShape</code></a></p>
 <p class="tableblock">&rarr; concave and infinite<br>
 &rarr; positive margin<br>
 &rarr; precise<br>
-&rarr; fully scalable, but why bother?<br>
-&rarr; symmetric</p></td>
+&rarr; fully scalable, but why bother?</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/plane.png" alt="plane" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SimplexCollisionShape.html"><code>SimplexCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SimplexCollisionShape.html"><code>SimplexCollisionShape</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; positive margin<br>
 &rarr; imprecise<br>
@@ -413,13 +427,22 @@ with illustrations and lists of key properties (explained below):</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/simplex.png" alt="simplex" height="160"></span></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">17. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a></p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">18. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a></p>
 <p class="tableblock">&rarr; convex<br>
 &rarr; zero margin<br>
 &rarr; precise<br>
 &rarr; uniform scaling only<br>
 &rarr; symmetric</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/sphere.png" alt="sphere" height="160"></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">19. <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphericalSegment.html"><code>SphericalSegment</code></a></p>
+<p class="tableblock">&rarr; convex<br>
+&rarr; positive margin<br>
+&rarr; imprecise<br>
+&rarr; uniform scaling only<br>
+&rarr; symmetric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="_images/segment.png" alt="segment" height="160"></span></p></td>
 </tr>
 </tbody>
 </table>
@@ -561,16 +584,21 @@ doing so is not recommended.
 <div class="paragraph">
 <p>A <em>precise shape</em> is a collision shape whose <em>effective shape</em>
 (observed in collisions, contact tests, ray tests, and sweep tests)
-is unaffected by margin.</p>
+is unaffected by margin.
+In effect, the margin of a precise shape is internal,
+so it doesn&#8217;t impact the effective shape.</p>
 </div>
 <div class="paragraph">
-<p>While most collision-shape subtypes are precise, 5 of them are not.
-For 4 of them, margin simply expands their effective shapes:</p>
+<p>While most collision-shape subtypes are precise, 7 of them are not.
+For 6 of them, margin uniformly expands their effective shapes:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConeCollisionShape.html"><code>ConeCollisionShape</code></a></p>
+</li>
+<li>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConicalFrustum.html"><code>ConicalFrustum</code></a></p>
 </li>
 <li>
 <p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/Convex2dShape.html"><code>Convex2dShape</code></a></p>
@@ -581,15 +609,13 @@ For 4 of them, margin simply expands their effective shapes:</p>
 <li>
 <p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SimplexCollisionShape.html"><code>SimplexCollisionShape</code></a></p>
 </li>
+<li>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphericalSegment.html"><code>SphericalSegment</code></a></p>
+</li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Margin also distorts a
-<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a>,
-but its effect there is more complicated.</p>
-</div>
-<div class="paragraph">
-<p>Here are illustrations of 4 otherwise identical simplex shapes
+<p>To illustrate this, here are 4 otherwise identical simplex shapes
 with different margins:</p>
 </div>
 <table class="tableblock frame-all grid-none stretch">
@@ -609,12 +635,18 @@ with different margins:</p>
 </tbody>
 </table>
 <div class="paragraph">
+<p>Margin can also distort a
+<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a>,
+but its effect there is more complicated:
+no effect for small margins and non-uniform distortion for large margins.</p>
+</div>
+<div class="paragraph">
 <p>Since margin is defined in physics-space units,
 its effects are most noticeable for small shapes.</p>
 </div>
 <div class="paragraph">
 <p>When using imprecise shapes, you may compensate for margin
-by shrinking the shape&#8217;s dimensions (for a cone or cylinder shape)
+by shrinking the shape&#8217;s dimensions (for a cone shape)
 or by moving its defining vertices inward (for a simplex or hull shape).</p>
 </div>
 <div class="paragraph">
@@ -679,7 +711,7 @@ the simulator cannot determine their mass distributions:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The safest shapes for dynamic rigid bodies are the 5 <em>primitives</em> listed below.
+<p>The safest shapes for dynamic rigid bodies are the 7 <em>primitives</em> listed below.
 All have at least one <a href="https://en.wikipedia.org/wiki/Rotational_symmetry">axis of symmetry</a>,
 and their centers and axes are well-known:</p>
 </div>
@@ -695,10 +727,16 @@ and their centers and axes are well-known:</p>
 <p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConeCollisionShape.html"><code>ConeCollisionShape</code></a>,</p>
 </li>
 <li>
-<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a>, and</p>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConicalFrustum.html"><code>ConicalFrustum</code></a>,</p>
 </li>
 <li>
-<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a>.</p>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a>,</p>
+</li>
+<li>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a>, and</p>
+</li>
+<li>
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphericalSegment.html"><code>SphericalSegment</code></a>.</p>
 </li>
 </ol>
 </div>
@@ -710,7 +748,7 @@ At the very least,
 the shape&#8217;s center should be located well inside its convex hull.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloMadMallet.java">HelloMadMallet</a> is a SPORT app
+<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloMadMallet.java">HelloMadMallet</a> (also <a href="https://github.com/stephengold/LbjExamples/blob/master/kotlin-apps/src/main/kotlin/com/github/stephengold/lbjexamples/ktapps/HelloMadMallet.kt">in Kotlin</a>) is a SPORT app
 that demonstrates the effect of an implausibly centered shape.
 Things to notice while running the app:</p>
 </div>
@@ -765,7 +803,7 @@ the <code>principalAxes()</code> and <code>correctAxes()</code> methods
 may be used to adjust its center and axes for a specific mass distribution.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloMassDistribution.java">HelloMassDistribution</a>
+<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloMassDistribution.java">HelloMassDistribution</a> (also <a href="https://github.com/stephengold/LbjExamples/blob/master/kotlin-apps/src/main/kotlin/com/github/stephengold/lbjexamples/ktapps/HelloMassDistribution.kt">in Kotlin</a>)
 is a SPORT app
 that demonstrates the use of <code>principalAxes()</code> and <code>correctAxes()</code>.
 Things to notice while running the app:</p>
@@ -815,14 +853,16 @@ the only allowed scale is (1,1,1).</p>
 </li>
 <li>
 <p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html"><code>CapsuleCollisionShape</code></a>,
-<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConeCollisionShape.html"><code>ConeCollisionShape</code></a>, and
-<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a>
+<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConeCollisionShape.html"><code>ConeCollisionShape</code></a>,
+<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphereCollisionShape.html"><code>SphereCollisionShape</code></a>, and
+<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/SphericalSegment.html"><code>SphericalSegment</code></a>
 support only uniform scaling, where all axes have the same scale factor,
 such as (0.2, 0.2, 0.2) or (9,9,9).</p>
 </li>
 <li>
-<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a>
-allows the height and base to scale independently,
+<p><a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/CylinderCollisionShape.html"><code>CylinderCollisionShape</code></a> and
+<a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/ConicalFrustum.html"><code>ConicalFrustum</code></a>
+allow the height and base to scale independently,
 but the scale factors of both base axes must be equal.
 In other words, the cross section must remain circular.
 So (9,9,9) would be allowed for any cylinder,
@@ -981,9 +1021,23 @@ compound of hull shapes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">VHACDParameters parms = new VHACDParameters();
-CollisionShape shape
-        = CollisionShapeFactory.createVhacdShape(modelRoot, parms, null);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// using VHACD version 4:
+Vhacd4Parameters v4Parms = new Vhacd4Parameters();
+List&lt;Vhacd4Hull&gt; vhacd4Hulls = Vhacd4.compute(meshPositions, meshIndices, v4Parms);
+CompoundCollisionShape compound = new CompoundCollisionShape();
+for (Vhacd4Hull vhacdHull : vhacd4Hulls) {
+    HullCollisionShape hullShape = new HullCollisionShape(vhacdHull);
+    compound.addChildShape(hullShape);
+}
+
+// or alternatively, using classic VHACD:
+VHACDParameters parms = new VHACDParameters();
+List&lt;VHACDHull&gt; vhacdHulls = VHACD.compute(meshPositions, meshIndices, parms);
+CompoundCollisionShape compound2 = new CompoundCollisionShape();
+for (VHACDHull vhacdHull : vhacdHulls) {
+    HullCollisionShape hullShape = new HullCollisionShape(vhacdHull);
+    compound2.addChildShape(hullShape);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1000,7 +1054,7 @@ than a GImpact shape.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Libbulletjme provides 17 types of collision shapes,
+<p>Libbulletjme provides 19 types of collision shapes,
 ranging from the trivial <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/EmptyShape.html"><code>EmptyShape</code></a>
 to the costly <a href="https://stephengold.github.io/Libbulletjme/javadoc/master/com/jme3/bullet/collision/shapes/GImpactCollisionShape.html"><code>GImpactCollisionShape</code></a>.</p>
 </li>

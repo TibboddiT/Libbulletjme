@@ -88,7 +88,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BoxCollisionShape</span>
 <span class="extends-implements">extends <a href="ConvexShape.html" title="class in com.jme3.bullet.collision.shapes">ConvexShape</a></span></div>
 <div class="block">An axis-aligned, rectangular-solid collision shape based on Bullet's
- <code>btBoxShape</code>. For a rectangle, use Box2dShape.</div>
+ <code>btBoxShape</code>. For a rectangle, use <code>Box2dShape</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -128,17 +128,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float)" class="member-name-link">BoxCollisionShape</a><wbr>(float&nbsp;halfExtent)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Instantiate a cube-shaped box with the specified half extent.</div>
+<div class="block">Instantiate a cube with the specified half extent.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float,float,float)" class="member-name-link">BoxCollisionShape</a><wbr>(float&nbsp;xHalfExtent,
  float&nbsp;yHalfExtent,
  float&nbsp;zHalfExtent)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.jme3.math.Vector3f)" class="member-name-link">BoxCollisionShape</a><wbr>(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;halfExtents)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.nio.FloatBuffer,int,int)" class="member-name-link">BoxCollisionShape</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a>&nbsp;buffer,
  int&nbsp;startPosition,
@@ -156,8 +156,8 @@ loadScripts(document, 'script');</script>
 <h2>Method Summary</h2>
 <div id="method-summary-table">
 <div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
-<div id="method-summary-table.tabpanel" role="tabpanel">
-<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
@@ -169,12 +169,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maxRadius()" class="member-name-link">maxRadius</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Calculate how far the box extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaledVolume()" class="member-name-link">scaledVolume</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+<div class="block">Estimate the volume of the collision shape, including scale and margin.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="HullCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HullCollisionShape</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toHullShape()" class="member-name-link">toHullShape</a>()</code></div>
@@ -194,7 +194,7 @@ loadScripts(document, 'script');</script>
 <code><a href="ConvexShape.html#isConcave()">isConcave</a>, <a href="ConvexShape.html#isConvex()">isConvex</a>, <a href="ConvexShape.html#toSplittableShape()">toSplittableShape</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.jme3.bullet.collision.shapes.CollisionShape">Methods inherited from class&nbsp;com.jme3.bullet.collision.shapes.<a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></h3>
-<code><a href="CollisionShape.html#aabbCenter(com.jme3.math.Vector3f)">aabbCenter</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#canScale(com.jme3.math.Vector3f)">canScale</a>, <a href="CollisionShape.html#canSplit()">canSplit</a>, <a href="CollisionShape.html#getDefaultMargin()">getDefaultMargin</a>, <a href="CollisionShape.html#getMargin()">getMargin</a>, <a href="CollisionShape.html#getScale(com.jme3.math.Vector3f)">getScale</a>, <a href="CollisionShape.html#getScaleDp(com.simsilica.mathd.Vec3d)">getScaleDp</a>, <a href="CollisionShape.html#getShapeType()">getShapeType</a>, <a href="CollisionShape.html#getShapeType(long)">getShapeType</a>, <a href="CollisionShape.html#isContactFilterEnabled()">isContactFilterEnabled</a>, <a href="CollisionShape.html#isInfinite()">isInfinite</a>, <a href="CollisionShape.html#isNonMoving()">isNonMoving</a>, <a href="CollisionShape.html#isPolyhedral()">isPolyhedral</a>, <a href="CollisionShape.html#nativeMargin()">nativeMargin</a>, <a href="CollisionShape.html#recalculateAabb()">recalculateAabb</a>, <a href="CollisionShape.html#setContactFilterEnabled(boolean)">setContactFilterEnabled</a>, <a href="CollisionShape.html#setDefaultMargin(float)">setDefaultMargin</a>, <a href="CollisionShape.html#setMargin(float)">setMargin</a>, <a href="CollisionShape.html#setNativeId(long)">setNativeId</a>, <a href="CollisionShape.html#setScale(float)">setScale</a>, <a href="CollisionShape.html#setScale(com.jme3.math.Vector3f)">setScale</a>, <a href="CollisionShape.html#toString()">toString</a>, <a href="CollisionShape.html#updateScale()">updateScale</a></code></div>
+<code><a href="CollisionShape.html#aabbCenter(com.jme3.math.Vector3f)">aabbCenter</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)">boundingBox</a>, <a href="CollisionShape.html#canScale(com.jme3.math.Vector3f)">canScale</a>, <a href="CollisionShape.html#canSplit()">canSplit</a>, <a href="CollisionShape.html#getDefaultMargin()">getDefaultMargin</a>, <a href="CollisionShape.html#getMargin()">getMargin</a>, <a href="CollisionShape.html#getScale(com.jme3.math.Vector3f)">getScale</a>, <a href="CollisionShape.html#getScaleDp(com.simsilica.mathd.Vec3d)">getScaleDp</a>, <a href="CollisionShape.html#getShapeType()">getShapeType</a>, <a href="CollisionShape.html#getShapeType(long)">getShapeType</a>, <a href="CollisionShape.html#isContactFilterEnabled()">isContactFilterEnabled</a>, <a href="CollisionShape.html#isInfinite()">isInfinite</a>, <a href="CollisionShape.html#isNonMoving()">isNonMoving</a>, <a href="CollisionShape.html#isPolyhedral()">isPolyhedral</a>, <a href="CollisionShape.html#nativeMargin()">nativeMargin</a>, <a href="CollisionShape.html#recalculateAabb()">recalculateAabb</a>, <a href="CollisionShape.html#setContactFilterEnabled(boolean)">setContactFilterEnabled</a>, <a href="CollisionShape.html#setDefaultMargin(float)">setDefaultMargin</a>, <a href="CollisionShape.html#setMargin(float)">setMargin</a>, <a href="CollisionShape.html#setNativeId(long)">setNativeId</a>, <a href="CollisionShape.html#setScale(float)">setScale</a>, <a href="CollisionShape.html#setScale(com.jme3.math.Vector3f)">setScale</a>, <a href="CollisionShape.html#setUserIndex(int)">setUserIndex</a>, <a href="CollisionShape.html#setUserIndex2(int)">setUserIndex2</a>, <a href="CollisionShape.html#toString()">toString</a>, <a href="CollisionShape.html#updateScale()">updateScale</a>, <a href="CollisionShape.html#userIndex()">userIndex</a>, <a href="CollisionShape.html#userIndex2()">userIndex2</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.jme3.bullet.NativePhysicsObject">Methods inherited from class&nbsp;com.jme3.bullet.<a href="../../NativePhysicsObject.html" title="class in com.jme3.bullet">NativePhysicsObject</a></h3>
 <code><a href="../../NativePhysicsObject.html#compareTo(com.jme3.bullet.NativePhysicsObject)">compareTo</a>, <a href="../../NativePhysicsObject.html#countTrackers()">countTrackers</a>, <a href="../../NativePhysicsObject.html#dumpTrackers()">dumpTrackers</a>, <a href="../../NativePhysicsObject.html#equals(java.lang.Object)">equals</a>, <a href="../../NativePhysicsObject.html#freeUnusedObjects()">freeUnusedObjects</a>, <a href="../../NativePhysicsObject.html#hasAssignedNativeObject()">hasAssignedNativeObject</a>, <a href="../../NativePhysicsObject.html#hashCode()">hashCode</a>, <a href="../../NativePhysicsObject.html#nativeId()">nativeId</a>, <a href="../../NativePhysicsObject.html#reassignNativeId(long)">reassignNativeId</a>, <a href="../../NativePhysicsObject.html#setNativeIdNotTracked(long)">setNativeIdNotTracked</a>, <a href="../../NativePhysicsObject.html#unassignNativeObject()">unassignNativeObject</a></code></div>
@@ -231,11 +231,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(float)">
 <h3>BoxCollisionShape</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BoxCollisionShape</span><wbr><span class="parameters">(float&nbsp;halfExtent)</span></div>
-<div class="block">Instantiate a cube-shaped box with the specified half extent.</div>
+<div class="block">Instantiate a cube with the specified half extent.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>halfExtent</code> - the desired half extent on each local axis (in shape
- units, not negative)</dd>
+<dd><code>halfExtent</code> - the desired half extent on each local axis, before
+ scaling and excluding margin (&ge;0)</dd>
 </dl>
 </section>
 </li>
@@ -245,15 +245,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BoxCollisionShape</span><wbr><span class="parameters">(float&nbsp;xHalfExtent,
  float&nbsp;yHalfExtent,
  float&nbsp;zHalfExtent)</span></div>
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>xHalfExtent</code> - the desired half extent on the local X axis (in shape
- units, not negative)</dd>
-<dd><code>yHalfExtent</code> - the desired half extent on the local Y axis (in shape
- units, not negative)</dd>
-<dd><code>zHalfExtent</code> - the desired half extent on the local Z axis (in shape
- units, not negative)</dd>
+<dd><code>xHalfExtent</code> - the desired half extent on the local X axis, before
+ scaling and excluding margin (&ge;0)</dd>
+<dd><code>yHalfExtent</code> - the desired half extent on the local Y axis, before
+ scaling and excluding margin (&ge;0)</dd>
+<dd><code>zHalfExtent</code> - the desired half extent on the local Z axis, before
+ scaling and excluding margin (&ge;0)</dd>
 </dl>
 </section>
 </li>
@@ -280,11 +280,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.jme3.math.Vector3f)">
 <h3>BoxCollisionShape</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BoxCollisionShape</span><wbr><span class="parameters">(<a href="../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;halfExtents)</span></div>
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>halfExtents</code> - the desired half extents (in shape units, not null, no
- negative component, unaffected)</dd>
+<dd><code>halfExtents</code> - the desired half extents on each local axis, before
+ scaling and excluding margin (not null, all components &ge;0, unaffected)</dd>
 </dl>
 </section>
 </li>
@@ -306,7 +306,7 @@ loadScripts(document, 'script');</script>
 <dd><code>storeResult</code> - storage for the result (modified if not null)</dd>
 <dt>Returns:</dt>
 <dd>the unscaled half extent for each local axis (either storeResult
- or a new vector, not null, no negative component)</dd>
+ or a new vector, not null, all components &ge;0)</dd>
 </dl>
 </section>
 </li>
@@ -325,7 +325,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="maxRadius()">
 <h3>maxRadius</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">maxRadius</span>()</div>
-<div class="block">Calculate how far the box extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="CollisionShape.html#maxRadius()">maxRadius</a></code>&nbsp;in class&nbsp;<code><a href="CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></code></dd>
@@ -338,12 +338,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="scaledVolume()">
 <h3>scaledVolume</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">scaledVolume</span>()</div>
-<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+<div class="block">Estimate the volume of the collision shape, including scale and margin.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="ConvexShape.html#scaledVolume()">scaledVolume</a></code>&nbsp;in class&nbsp;<code><a href="ConvexShape.html" title="class in com.jme3.bullet.collision.shapes">ConvexShape</a></code></dd>
 <dt>Returns:</dt>
-<dd>the volume (in physics-space units cubed, &ge;0)</dd>
+<dd>the estimated volume (in physics-space units cubed, &ge;0)</dd>
 </dl>
 </section>
 </li>

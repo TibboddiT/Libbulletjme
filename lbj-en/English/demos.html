@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>An overview of the demo applications :: The Libbulletjme project</title>
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/demos.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="An overview of the demo applications">
@@ -140,7 +140,7 @@
     <span class="nav-text">Library APIs (javadoc)</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">Master branch</a>
+    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">"master" branch</a>
   </li>
 </ul>
   </li>
@@ -171,6 +171,12 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/LbjExamples">LbjExamples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/macana">Macana</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/sport">SPORT</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/V-Sport">V-Sport</a>
@@ -254,36 +260,36 @@
 <div class="paragraph">
 <p><em>Demo applications</em> are provided to showcase certain features of Libbulletjme.
 The following demos are found in
-<a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples">the com.github.stephengold.lbjexamples package of the "apps" sub-project</a>:</p>
+<a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo">the com.github.stephengold.sport.demo package of the SPORT "apps" sub-project</a>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/ConveyorDemo.java"><code>ConveyorDemo</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/ConveyorDemo.java"><code>ConveyorDemo</code></a>
 demonstrates contact-point modifications</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/NewtonsCradle.java"><code>NewtonsCradle</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/NewtonsCradle.java"><code>NewtonsCradle</code></a>
 demonstrates dynamic restitution and point-to-point joints</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/Pachinko.java"><code>Pachinko</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/Pachinko.java"><code>Pachinko</code></a>
 demonstrates compound collision shapes and 2-D physics</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/SplitDemo.java"><code>SplitDemo</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/SplitDemo.java"><code>SplitDemo</code></a>
 demonstrates dynamic splitting of rigid bodies</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/TestGearJoint.java"><code>TestGearJoint</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/TestGearJoint.java"><code>TestGearJoint</code></a>
 demonstrates a gear joint</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/ThousandCubes.java"><code>ThousandCubes</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/ThousandCubes.java"><code>ThousandCubes</code></a>
 demonstrates stacking cubes and launching projectiles</p>
 </li>
 <li>
-<p><a href="https://github.com/stephengold/LbjExamples/tree/master/apps/src/main/java/com/github/stephengold/lbjexamples/Windlass.java"><code>Windlass</code></a>
+<p><a href="https://github.com/stephengold/sport/tree/master/apps/src/main/java/com/github/stephengold/sport/demo/Windlass.java"><code>Windlass</code></a>
 demonstrates rope simulation using rigid bodies</p>
 </li>
 </ul>
@@ -415,13 +421,13 @@ drop a box onto the conveyor belt</p>
 <p><kbd>Tab</kbd> convert all bodies to splittable shapes</p>
 </li>
 <li>
-<p><kbd>Home</kbd>, <kbd>Numpad5</kbd> restart with a random rigid body</p>
+<p><kbd>Home</kbd> and <kbd>Numpad5</kbd> restart with a random rigid body</p>
 </li>
 <li>
-<p><kbd>Enter</kbd>, <kbd>Numpad0</kbd>, <kbd>Spacebar</kbd> split all shapes</p>
+<p><kbd>Enter</kbd>, <kbd>Numpad0</kbd>, and <kbd>Spacebar</kbd> split all shapes</p>
 </li>
 <li>
-<p><kbd>L bracket</kbd>, <kbd>R bracket</kbd> rotate the splitting plane</p>
+<p><kbd>L bracket</kbd> and <kbd>R bracket</kbd> rotate the splitting plane</p>
 </li>
 </ul>
 </div>

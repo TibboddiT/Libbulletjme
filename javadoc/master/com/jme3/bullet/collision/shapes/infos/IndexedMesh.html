@@ -115,18 +115,23 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.jme3.math.Vector3f%5B%5D,int%5B%5D)" class="member-name-link">IndexedMesh</a><wbr>(<a href="../../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>[]&nbsp;positionArray,
- int[]&nbsp;indexArray)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.jme3.bullet.collision.shapes.CollisionShape,int)" class="member-name-link">IndexedMesh</a><wbr>(<a href="../CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a>&nbsp;shape,
+ int&nbsp;meshResolution)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Instantiate a IndexedMesh to visualize the specified collision shape.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.jme3.math.Vector3f%5B%5D,int%5B%5D)" class="member-name-link">IndexedMesh</a><wbr>(<a href="../../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>[]&nbsp;positionArray,
+ int[]&nbsp;indexArray)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Instantiate an IndexedMesh based on the specified positions and indices.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.nio.FloatBuffer)" class="member-name-link">IndexedMesh</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a>&nbsp;buffer)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.nio.FloatBuffer)" class="member-name-link">IndexedMesh</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a>&nbsp;buffer)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Instantiate an IndexedMesh based on the specified vertex positions.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.nio.FloatBuffer,java.nio.IntBuffer)" class="member-name-link">IndexedMesh</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a>&nbsp;positionBuffer,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.nio.FloatBuffer,java.nio.IntBuffer)" class="member-name-link">IndexedMesh</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a>&nbsp;positionBuffer,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/IntBuffer.html" title="class or interface in java.nio" class="external-link">IntBuffer</a>&nbsp;indexBuffer)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Instantiate an IndexedMesh based on the specified positions and indices.</div>
 </div>
 </div>
@@ -138,8 +143,8 @@ loadScripts(document, 'script');</script>
 <h2>Method Summary</h2>
 <div id="method-summary-table">
 <div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
-<div id="method-summary-table.tabpanel" role="tabpanel">
-<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
@@ -155,19 +160,29 @@ loadScripts(document, 'script');</script>
 <div class="block">Copy the vertex positions of the specified triangle.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copyVertexPositions()" class="member-name-link">copyVertexPositions</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copyTriangles()" class="member-name-link">copyTriangles</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Copy the unindexed triangle vertices to a new buffer.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copyVertexPositions()" class="member-name-link">copyVertexPositions</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copy the vertex positions to a new buffer.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countTriangles()" class="member-name-link">countTriangles</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countTriangles()" class="member-name-link">countTriangles</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Count how many triangles are in this mesh.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countVertices()" class="member-name-link">countVertices</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countVertices()" class="member-name-link">countVertices</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Count how many vertices are in this mesh.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maxDistance(com.jme3.math.Transform)" class="member-name-link">maxDistance</a><wbr>(<a href="../../../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;meshToWorld)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate how far the mesh extends from some origin.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maxMin(com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">maxMin</a><wbr>(<a href="../../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeMaxima,
@@ -180,6 +195,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#split(com.jme3.math.Plane)" class="member-name-link">split</a><wbr>(<a href="../../../../math/Plane.html" title="class in com.jme3.math">Plane</a>&nbsp;splittingPlane)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Attempt to divide this mesh into 2 meshes.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#surfaceArea()" class="member-name-link">surfaceArea</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate the (one-sided) surface area of the mesh.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#volumeConvex()" class="member-name-link">volumeConvex</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculate volume of the mesh, assuming it's both closed and convex.</div>
 </div>
 </div>
 </div>
@@ -257,6 +282,20 @@ loadScripts(document, 'script');</script>
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.jme3.bullet.collision.shapes.CollisionShape,int)">
+<h3>IndexedMesh</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IndexedMesh</span><wbr><span class="parameters">(<a href="../CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a>&nbsp;shape,
+ int&nbsp;meshResolution)</span></div>
+<div class="block">Instantiate a IndexedMesh to visualize the specified collision shape.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>shape</code> - shape to visualize (not null, not compound, unaffected)</dd>
+<dd><code>meshResolution</code> - 0&rarr;low, 1&rarr;high for convex shapes,
+ 2&rarr;high for all shapes</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -286,6 +325,17 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>triangleIndex</code> - the index of the source triangle (&ge;0)</dd>
 <dd><code>destination</code> - storage for the result (not null, modified)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="copyTriangles()">
+<h3>copyTriangles</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/FloatBuffer.html" title="class or interface in java.nio" class="external-link">FloatBuffer</a></span>&nbsp;<span class="element-name">copyTriangles</span>()</div>
+<div class="block">Copy the unindexed triangle vertices to a new buffer.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new, direct, unflipped buffer</dd>
 </dl>
 </section>
 </li>
@@ -323,6 +373,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="maxDistance(com.jme3.math.Transform)">
+<h3>maxDistance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">maxDistance</span><wbr><span class="parameters">(<a href="../../../../math/Transform.html" title="class in com.jme3.math">Transform</a>&nbsp;meshToWorld)</span></div>
+<div class="block">Calculate how far the mesh extends from some origin.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>meshToWorld</code> - the transform to apply to vertex locations (not null,
+ unaffected)</dd>
+<dt>Returns:</dt>
+<dd>the maximum length of the transformed vectors (&ge;0)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="maxMin(com.jme3.math.Vector3f,com.jme3.math.Vector3f)">
 <h3>maxMin</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">maxMin</span><wbr><span class="parameters">(<a href="../../../../math/Vector3f.html" title="class in com.jme3.math">Vector3f</a>&nbsp;storeMaxima,
@@ -348,6 +412,28 @@ loadScripts(document, 'script');</script>
 <dd>a pair of meshes, the first mesh generated by the plane's minus
  side and the 2nd mesh generated by its plus side; either mesh may be
  null, indicating an empty mesh</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="surfaceArea()">
+<h3>surfaceArea</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">surfaceArea</span>()</div>
+<div class="block">Calculate the (one-sided) surface area of the mesh.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the area (in square mesh units, &ge;0)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="volumeConvex()">
+<h3>volumeConvex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">volumeConvex</span>()</div>
+<div class="block">Calculate volume of the mesh, assuming it's both closed and convex.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the volume (in cubic mesh units, &ge;0)</dd>
 </dl>
 </section>
 </li>

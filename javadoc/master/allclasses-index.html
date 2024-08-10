@@ -55,8 +55,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div id="all-classes-table">
 <div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interfaces</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Classes</button><button id="all-classes-table-tab3" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab3', 2)" class="table-tab">Enum Classes</button></div>
-<div id="all-classes-table.tabpanel" role="tabpanel">
-<div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
+<div id="all-classes-table.tabpanel" role="tabpanel" aria-labelledby="all-classes-table-tab0">
+<div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="vhacd/ACDMode.html" title="enum class in vhacd">ACDMode</a></div>
@@ -127,40 +127,50 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Enumerate the float-valued parameters in a soft-body cluster.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/CollisionFlag.html" title="class in com.jme3.bullet.collision">CollisionFlag</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Tuning parameters for a CollisionSpace, based on Bullet's
+ btDefaultCollisionConstructionInfo.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/CollisionFlag.html" title="class in com.jme3.bullet.collision">CollisionFlag</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Named collision flags for a PhysicsCollisionObject.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The abstract base class for collision shapes based on Bullet's
  <code>btCollisionShape</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A Bullet-JME collision space with its own <code>btCollisionWorld</code>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A collision shape formed by combining child shapes, based on Bullet's
  <code>btCompoundShape</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">CompoundMesh</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">CompoundMesh</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A scalable mesh that combines multiple indexed meshes.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">ConeCollisionShape</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">ConeCollisionShape</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A conical collision shape based on Bullet's <code>btConeShapeX</code>,
  <code>btConeShape</code>, or <code>btConeShapeZ</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/joints/ConeJoint.html" title="class in com.jme3.bullet.joints">ConeJoint</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/joints/ConeJoint.html" title="class in com.jme3.bullet.joints">ConeJoint</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A 3 degree-of-freedom joint based on Bullet's btConeTwistConstraint.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/objects/infos/ConfigFlag.html" title="class in com.jme3.bullet.objects.infos">ConfigFlag</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/objects/infos/ConfigFlag.html" title="class in com.jme3.bullet.objects.infos">ConfigFlag</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Named collision flags for use with a SoftBodyConfig.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A collision shape for a conical frustum with uniform density, based on
+ <code>btConvexInternalShape</code>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/joints/Constraint.html" title="class in com.jme3.bullet.joints">Constraint</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -223,7 +233,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">An empty collision shape based on Bullet's <code>btEmptyShape.</code></div>
+<div class="block">An empty collision shape based on Bullet's <code>btEmptyShape</code>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/math/FastMath.html" title="class in com.jme3.math">FastMath</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -242,7 +252,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="jme3utilities/math/noise/Generator.html" title="class in jme3utilities.math.noise">Generator</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Generate pseudo-random numbers, vectors, and selections.</div>
+<div class="block">Generate pseudo-random numbers, quaternions, vectors, and selections.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">GImpactCollisionShape</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -275,7 +285,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/system/JmeSystem.html" title="class in com.jme3.system">JmeSystem</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Utility class to access platform-dependant features.</div>
+<div class="block">Utility class to access platform-dependent features.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/jme3/bullet/joints/JointEnd.html" title="enum class in com.jme3.bullet.joints">JointEnd</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
@@ -634,9 +644,18 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A spherical collision shape based on Bullet's <code>btSphereShape</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/util/TempVars.html" title="class in com.jme3.util">TempVars</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A collision shape for a spherical segment with uniform density, based on
+ <code>btConvexInternalShape</code>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/util/TempVars.html" title="class in com.jme3.util">TempVars</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Temporary variables assigned to each thread.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="jme3utilities/minie/TestApp.html" title="class in jme3utilities.minie">TestApp</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Command-line application for testing Libbulletjme.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/jme3/math/Transform.html" title="class in com.jme3.math">Transform</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">

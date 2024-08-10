@@ -530,6 +530,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Determine if two floats are approximately equal.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#aRadius()" class="member-name-link">aRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Return the radius of the "A" base.</div>
+</dd>
+<dt><a href="jme3utilities/math/MyMath.html#area(com.jme3.math.Triangle)" class="member-name-link">area(Triangle)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
+<dd>
+<div class="block">Return the (one-sided) area of the specified triangle.</div>
+</dd>
 <dt><a href="com/jme3/bullet/SolverMode.html#ArticulatedWarmStart" class="member-name-link">ArticulatedWarmStart</a> - Static variable in class com.jme3.bullet.<a href="com/jme3/bullet/SolverMode.html" title="class in com.jme3.bullet">SolverMode</a></dt>
 <dd>
 <div class="block">use articulated warm start</div>
@@ -648,13 +656,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Matrix3f,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox(Vector3f, Matrix3f, BoundingBox)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Calculate an axis-aligned bounding box for this shape with the specified
- translation and rotation applied to it.</div>
+<div class="block">Calculate an axis-aligned bounding box with the specified translation and
+ rotation applied.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#boundingBox(com.jme3.math.Vector3f,com.jme3.math.Quaternion,com.jme3.bounding.BoundingBox)" class="member-name-link">boundingBox(Vector3f, Quaternion, BoundingBox)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Calculate an axis-aligned bounding box for this shape with the specified
- translation and rotation applied to it.</div>
+<div class="block">Calculate an axis-aligned bounding box with the specified translation and
+ rotation applied.</div>
 </dd>
 <dt><a href="com/jme3/bounding/BoundingBox.html" class="type-name-link" title="class in com.jme3.bounding">BoundingBox</a> - Class in <a href="com/jme3/bounding/package-summary.html">com.jme3.bounding</a></dt>
 <dd>
@@ -679,12 +687,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#%3Cinit%3E(byte%5B%5D)" class="member-name-link">BoundingValueHierarchy(byte[])</a> - Constructor for class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
 <dd>
-<div class="block">Instantiate a hierarchy from serialized bytes.</div>
+<div class="block">Instantiate a (tracked) hierarchy from serialized bytes.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#%3Cinit%3E(com.jme3.bullet.collision.shapes.MeshCollisionShape)" class="member-name-link">BoundingValueHierarchy(MeshCollisionShape)</a> - Constructor for class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
 <dd>
-<div class="block">Instantiate a reference to the hierarchy of the specified
- MeshCollisionShape.</div>
+<div class="block">Instantiate an (untracked) reference to the hierarchy of the specified
+ <code>MeshCollisionShape</code>.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/Box2dShape.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes">Box2dShape</a> - Class in <a href="com/jme3/bullet/collision/shapes/package-summary.html">com.jme3.bullet.collision.shapes</a></dt>
 <dd>
@@ -710,15 +718,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#%3Cinit%3E(float)" class="member-name-link">BoxCollisionShape(float)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
-<div class="block">Instantiate a cube-shaped box with the specified half extent.</div>
+<div class="block">Instantiate a cube with the specified half extent.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#%3Cinit%3E(float,float,float)" class="member-name-link">BoxCollisionShape(float, float, float)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#%3Cinit%3E(com.jme3.math.Vector3f)" class="member-name-link">BoxCollisionShape(Vector3f)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
-<div class="block">Instantiate a box shape with the specified half extents.</div>
+<div class="block">Instantiate a box with the specified half extents.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#%3Cinit%3E(java.nio.FloatBuffer,int,int)" class="member-name-link">BoxCollisionShape(FloatBuffer, int, int)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
@@ -728,6 +736,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="jme3utilities/math/MyVolume.html#boxVolume(com.jme3.math.Vector3f)" class="member-name-link">boxVolume(Vector3f)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyVolume.html" title="class in jme3utilities.math">MyVolume</a></dt>
 <dd>
 <div class="block">Compute the volume of a box with the specified half extents.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#bRadius()" class="member-name-link">bRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Return the radius of the "B" base.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsVehicle.html#brake(float)" class="member-name-link">brake(float)</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsVehicle.html" title="class in com.jme3.bullet.objects">PhysicsVehicle</a></dt>
 <dd>
@@ -785,11 +797,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CapsuleCollisionShape</a></dt>
 <dd>
-<div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></dt>
 <dd>
@@ -798,6 +810,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">ConeCollisionShape</a></dt>
 <dd>
 <div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/Convex2dShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/Convex2dShape.html" title="class in com.jme3.bullet.collision.shapes">Convex2dShape</a></dt>
 <dd>
@@ -813,11 +829,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SimplexCollisionShape</a></dt>
 <dd>
-<div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
 <dd>
-<div class="block">Test whether the specified scale factors can be applied to this shape.</div>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#canScale(com.jme3.math.Vector3f)" class="member-name-link">canScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Test whether the specified scale factors can be applied to the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/joints/motors/MotorParam.html#canSet(float)" class="member-name-link">canSet(float)</a> - Method in enum class com.jme3.bullet.joints.motors.<a href="com/jme3/bullet/joints/motors/MotorParam.html" title="enum class in com.jme3.bullet.joints.motors">MotorParam</a></dt>
 <dd>
@@ -837,7 +857,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape can be split by an arbitrary plane.</div>
+<div class="block">Test whether the shape can be split by an arbitrary plane.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></dt>
 <dd>
@@ -845,15 +865,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></dt>
 <dd>
-<div class="block">Test whether this shape can be split by an arbitrary plane.</div>
+<div class="block">Test whether the shape can be split by an arbitrary plane.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">GImpactCollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape can be split by an arbitrary plane.</div>
+<div class="block">Test whether the shape can be split by an arbitrary plane.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HullCollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape can be split by an arbitrary plane.</div>
+<div class="block">Test whether the shape can be split by an arbitrary plane.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#canSplit()" class="member-name-link">canSplit()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
 <dd>
@@ -930,6 +950,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">children in compound collision shapes</div>
 </dd>
+<dt><a href="jme3utilities/math/MyMath.html#circle(double)" class="member-name-link">circle(double)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
+<dd>
+<div class="block">Return the circle function <code>sqrt(1 - x^2)</code> for a double-precision
+ value.</div>
+</dd>
+<dt><a href="jme3utilities/math/MyMath.html#circle(float)" class="member-name-link">circle(float)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
+<dd>
+<div class="block">Return the circle function <code>sqrt(1 - x^2)</code> for a single-precision
+ value.</div>
+</dd>
 <dt><a href="com/jme3/bullet/objects/infos/ConfigFlag.html#CL_RS" class="member-name-link">CL_RS</a> - Static variable in class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/ConfigFlag.html" title="class in com.jme3.bullet.objects.infos">ConfigFlag</a></dt>
 <dd>
 <div class="block">enable the Cluster-versus-Convex handler for rigid-versus-soft collisions</div>
@@ -945,6 +975,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="jme3utilities/math/MyMath.html#clamp(double,double,double)" class="member-name-link">clamp(double, double, double)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
 <dd>
 <div class="block">Clamp a double-precision value between 2 limits.</div>
+</dd>
+<dt><a href="com/jme3/math/FastMath.html#clamp(float,float,float)" class="member-name-link">clamp(float, float, float)</a> - Static method in class com.jme3.math.<a href="com/jme3/math/FastMath.html" title="class in com.jme3.math">FastMath</a></dt>
+<dd>
+<div class="block">Take a float input and clamp it between min and max.</div>
 </dd>
 <dt><a href="jme3utilities/math/MyMath.html#clamp(int,int,int)" class="member-name-link">clamp(int, int, int)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
 <dd>
@@ -1186,6 +1220,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">collideWithGroups bitmask that represents "no groups"</div>
 </dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html" class="type-name-link" title="class in com.jme3.bullet">CollisionConfiguration</a> - Class in <a href="com/jme3/bullet/package-summary.html">com.jme3.bullet</a></dt>
+<dd>
+<div class="block">Tuning parameters for a CollisionSpace, based on Bullet's
+ btDefaultCollisionConstructionInfo.</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html#%3Cinit%3E()" class="member-name-link">CollisionConfiguration()</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></dt>
+<dd>
+<div class="block">Instantiate an instance with the default parameter values.</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html#%3Cinit%3E(int,int)" class="member-name-link">CollisionConfiguration(int, int)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></dt>
+<dd>
+<div class="block">Instantiate an instance with the specified parameter values.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/CollisionFlag.html" class="type-name-link" title="class in com.jme3.bullet.collision">CollisionFlag</a> - Class in <a href="com/jme3/bullet/collision/package-summary.html">com.jme3.bullet.collision</a></dt>
 <dd>
 <div class="block">Named collision flags for a PhysicsCollisionObject.</div>
@@ -1221,6 +1268,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Instantiate a CollisionSpace.</div>
 </dd>
 <dt><a href="com/jme3/bullet/CollisionSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,int)" class="member-name-link">CollisionSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, int)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
+<dd>
+<div class="block">Used internally.</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,int,com.jme3.bullet.CollisionConfiguration)" class="member-name-link">CollisionSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, int, CollisionConfiguration)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
 <dd>
 <div class="block">Used internally.</div>
 </dd>
@@ -1395,6 +1446,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Configure a link that is joined to its parent with a spherical joint.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a> - Class in <a href="com/jme3/bullet/collision/shapes/package-summary.html">com.jme3.bullet.collision.shapes</a></dt>
+<dd>
+<div class="block">A collision shape for a conical frustum with uniform density, based on
+ <code>btConvexInternalShape</code>.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#%3Cinit%3E(float,float,float)" class="member-name-link">ConicalFrustum(float, float, float)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Instantiate a conical frustum with the specified dimensions.</div>
+</dd>
 <dt><a href="jme3utilities/math/MyQuaternion.html#conjugate(com.jme3.math.Quaternion,com.jme3.math.Quaternion)" class="member-name-link">conjugate(Quaternion, Quaternion)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyQuaternion.html" title="class in jme3utilities.math">MyQuaternion</a></dt>
 <dd>
 <div class="block">Return the conjugate of a Quaternion.</div>
@@ -1524,6 +1584,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Instantiate a collision shape with no tracker and no assigned native
  object.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#copyAabb(com.jme3.bounding.BoundingBox)" class="member-name-link">copyAabb(BoundingBox)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Copy the bounds of the hierarchy.</div>
+</dd>
 <dt><a href="com/jme3/bullet/objects/infos/CharacterController.html#copyAll(com.jme3.bullet.objects.infos.CharacterController)" class="member-name-link">copyAll(CharacterController)</a> - Method in class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/CharacterController.html" title="class in com.jme3.bullet.objects.infos">CharacterController</a></dt>
 <dd>
 <div class="block">Copy all parameter values from the specified controller.</div>
@@ -1612,6 +1676,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Copy the location of the connection point in the rigid body at the B end.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#copyQuantization(com.jme3.math.Vector3f)" class="member-name-link">copyQuantization(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Copy the quantization vector of the hierarchy.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/ChildCollisionShape.html#copyRotation(com.jme3.math.Quaternion)" class="member-name-link">copyRotation(Quaternion)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/ChildCollisionShape.html" title="class in com.jme3.bullet.collision.shapes.infos">ChildCollisionShape</a></dt>
 <dd>
 <div class="block">Copy the rotation in the parent's coordinate system.</div>
@@ -1631,6 +1699,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#copyTriangle(int,com.jme3.math.Triangle)" class="member-name-link">copyTriangle(int, Triangle)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
 <dd>
 <div class="block">Copy the vertex positions of the specified triangle.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#copyTriangles()" class="member-name-link">copyTriangles()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
+<dd>
+<div class="block">Copy the unindexed triangle vertices to a new buffer.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsSoftBody.html#copyVelocities(java.nio.FloatBuffer)" class="member-name-link">copyVelocities(FloatBuffer)</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsSoftBody.html" title="class in com.jme3.bullet.objects">PhysicsSoftBody</a></dt>
 <dd>
@@ -1676,6 +1748,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/CollisionSpace.html#countCollisionObjects()" class="member-name-link">countCollisionObjects()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
 <dd>
 <div class="block">Count the collision objects in this space.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html#countColumns()" class="member-name-link">countColumns()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HeightfieldCollisionShape</a></dt>
+<dd>
+<div class="block">Count how many columns are in the heightfield.</div>
 </dd>
 <dt><a href="com/jme3/bullet/MultiBody.html#countConfiguredLinks()" class="member-name-link">countConfiguredLinks()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
 <dd>
@@ -1729,6 +1805,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Count the joints in this space.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#countLeafNodes()" class="member-name-link">countLeafNodes()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Count the leaf nodes in the hierarchy.</div>
+</dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsSoftBody.html#countLinks()" class="member-name-link">countLinks()</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsSoftBody.html" title="class in com.jme3.bullet.objects">PhysicsSoftBody</a></dt>
 <dd>
 <div class="block">Count the links in this body.</div>
@@ -1769,6 +1849,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Count the multibodies in this space.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#countNodes()" class="member-name-link">countNodes()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Count all nodes in the hierarchy.</div>
+</dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsSoftBody.html#countNodes()" class="member-name-link">countNodes()</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsSoftBody.html" title="class in com.jme3.bullet.objects">PhysicsSoftBody</a></dt>
 <dd>
 <div class="block">Count the nodes in this body.</div>
@@ -1798,6 +1882,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Count the rigid bodies in this space, including vehicles.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html#countRows()" class="member-name-link">countRows()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HeightfieldCollisionShape</a></dt>
+<dd>
+<div class="block">Count how many rows are in the heightfield.</div>
+</dd>
 <dt><a href="com/jme3/bullet/DeformableSpace.html#countSoftBodies()" class="member-name-link">countSoftBodies()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/DeformableSpace.html" title="class in com.jme3.bullet">DeformableSpace</a></dt>
 <dd>
 <div class="block">Count the soft bodies in this space.</div>
@@ -1812,11 +1900,24 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MultiSphere.html#countSpheres()" class="member-name-link">countSpheres()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MultiSphere.html" title="class in com.jme3.bullet.collision.shapes">MultiSphere</a></dt>
 <dd>
-<div class="block">Count the spheres in this shape.</div>
+<div class="block">Count the spheres in the shape.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html#countSubmeshes()" class="member-name-link">countSubmeshes()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">GImpactCollisionShape</a></dt>
+<dd>
+<div class="block">Count how many submeshes are in the mesh.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html#countSubmeshes()" class="member-name-link">countSubmeshes()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">CompoundMesh</a></dt>
 <dd>
 <div class="block">Count how many submeshes are in this mesh.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#countSubmeshes()" class="member-name-link">countSubmeshes()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
+<dd>
+<div class="block">Count how many submeshes are in the mesh.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#countSubtreeHeaders()" class="member-name-link">countSubtreeHeaders()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Count the subtree headers in the hierarchy (native field:
+ m_SubtreeHeaders).</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsSoftBody.html#countTetras()" class="member-name-link">countTetras()</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsSoftBody.html" title="class in com.jme3.bullet.objects">PhysicsSoftBody</a></dt>
 <dd>
@@ -2114,6 +2215,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generate a textual description for a CollisionShape.</div>
 </dd>
+<dt><a href="jme3utilities/minie/PhysicsDescriber.html#describe(com.jme3.bullet.CollisionConfiguration)" class="member-name-link">describe(CollisionConfiguration)</a> - Method in class jme3utilities.minie.<a href="jme3utilities/minie/PhysicsDescriber.html" title="class in jme3utilities.minie">PhysicsDescriber</a></dt>
+<dd>
+<div class="block">Generate a textual description for a CollisionConfiguration.</div>
+</dd>
 <dt><a href="jme3utilities/minie/PhysicsDescriber.html#describe(com.jme3.bullet.joints.motors.RotationalLimitMotor)" class="member-name-link">describe(RotationalLimitMotor)</a> - Method in class jme3utilities.minie.<a href="jme3utilities/minie/PhysicsDescriber.html" title="class in jme3utilities.minie">PhysicsDescriber</a></dt>
 <dd>
 <div class="block">Describe the specified RotationalLimitMotor.</div>
@@ -2215,7 +2320,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="jme3utilities/debug/Describer.html#%3Cinit%3E()" class="member-name-link">Describer()</a> - Constructor for class jme3utilities.debug.<a href="jme3utilities/debug/Describer.html" title="class in jme3utilities.debug">Describer</a></dt>
 <dd>
-<div class="block">A no-arg constructor to avoid javadoc warnings from JDK 18.</div>
+<div class="block">Instantiate a Describer with the default separator.</div>
 </dd>
 <dt><a href="jme3utilities/debug/Describer.html#describeScale(com.jme3.math.Vector3f)" class="member-name-link">describeScale(Vector3f)</a> - Method in class jme3utilities.debug.<a href="jme3utilities/debug/Describer.html" title="class in jme3utilities.debug">Describer</a></dt>
 <dd>
@@ -2438,7 +2543,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a> - Class in <a href="com/jme3/bullet/collision/shapes/package-summary.html">com.jme3.bullet.collision.shapes</a></dt>
 <dd>
-<div class="block">An empty collision shape based on Bullet's <code>btEmptyShape.</code></div>
+<div class="block">An empty collision shape based on Bullet's <code>btEmptyShape</code>.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html#%3Cinit%3E(boolean)" class="member-name-link">EmptyShape(boolean)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></dt>
 <dd>
@@ -2529,6 +2634,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Replace all tab, quote, newline, and backslash characters in the
  specified text with escape sequences.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#escapeIndex(int)" class="member-name-link">escapeIndex(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Return the escape index of the specified node.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/Activation.html#exempt" class="member-name-link">exempt</a> - Static variable in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/Activation.html" title="class in com.jme3.bullet.collision">Activation</a></dt>
 <dd>
@@ -2762,7 +2871,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="jme3utilities/math/noise/Generator.html" class="type-name-link" title="class in jme3utilities.math.noise">Generator</a> - Class in <a href="jme3utilities/math/noise/package-summary.html">jme3utilities.math.noise</a></dt>
 <dd>
-<div class="block">Generate pseudo-random numbers, vectors, and selections.</div>
+<div class="block">Generate pseudo-random numbers, quaternions, vectors, and selections.</div>
 </dd>
 <dt><a href="jme3utilities/math/noise/Generator.html#%3Cinit%3E()" class="member-name-link">Generator()</a> - Constructor for class jme3utilities.math.noise.<a href="jme3utilities/math/noise/Generator.html" title="class in jme3utilities.math.noise">Generator</a></dt>
 <dd>
@@ -3082,6 +3191,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Access the buffer data.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#getBvh()" class="member-name-link">getBvh()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
+<dd>
+<div class="block">Access the bounding-value hierarchy.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#getCcdMotionThreshold()" class="member-name-link">getCcdMotionThreshold()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
 <dd>
 <div class="block">Return the continuous collision detection (CCD) motion threshold (native
@@ -3151,7 +3264,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/CollisionSpace.html#getCollisionSpace()" class="member-name-link">getCollisionSpace()</a> - Static method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
 <dd>
-<div class="block">Access the CollisionSpace <b>running on this thread</b>.</div>
+<div class="block">Access the CollisionSpace associated with the current thread.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/PhysicsCollisionEvent.html#getCombinedFriction()" class="member-name-link">getCombinedFriction()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionEvent.html" title="class in com.jme3.bullet.collision">PhysicsCollisionEvent</a></dt>
 <dd>
@@ -3195,6 +3308,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Return the combined spinning friction of the specified point (native
  field: m_combinedSpinningFriction).</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionSpace.html#getConfiguration()" class="member-name-link">getConfiguration()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
+<dd>
+<div class="block">Access the tuning parameters.</div>
 </dd>
 <dt><a href="com/jme3/math/Plane.html#getConstant()" class="member-name-link">getConstant()</a> - Method in class com.jme3.math.<a href="com/jme3/math/Plane.html" title="class in com.jme3.math">Plane</a></dt>
 <dd>
@@ -3246,7 +3363,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsVehicle.html#getCurrentVehicleSpeedKmHour()" class="member-name-link">getCurrentVehicleSpeedKmHour()</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsVehicle.html" title="class in com.jme3.bullet.objects">PhysicsVehicle</a></dt>
 <dd>
-<div class="block">Determine this vehicle's forward velocity as of the previous time step.</div>
+<div class="block">Determine this vehicle's forward velocity as of the previous simulation
+ step.</div>
 </dd>
 <dt><a href="com/jme3/bullet/joints/motors/RotationalLimitMotor.html#getDamping()" class="member-name-link">getDamping()</a> - Method in class com.jme3.bullet.joints.motors.<a href="com/jme3/bullet/joints/motors/RotationalLimitMotor.html" title="class in com.jme3.bullet.joints.motors">RotationalLimitMotor</a></dt>
 <dd>
@@ -3508,6 +3626,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Return the height of the cylinder.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#getHeight()" class="member-name-link">getHeight()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Return the height of the segment.</div>
+</dd>
 <dt><a href="com/jme3/bullet/joints/HingeJoint.html#getHingeAngle()" class="member-name-link">getHingeAngle()</a> - Method in class com.jme3.bullet.joints.<a href="com/jme3/bullet/joints/HingeJoint.html" title="class in com.jme3.bullet.joints">HingeJoint</a></dt>
 <dd>
 <div class="block">Read the hinge angle.</div>
@@ -3737,7 +3859,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html#getMargin()" class="member-name-link">getMargin()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CapsuleCollisionShape</a></dt>
 <dd>
-<div class="block">Return the collision margin for this shape.</div>
+<div class="block">Return the collision margin of the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#getMargin()" class="member-name-link">getMargin()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
@@ -3745,11 +3867,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MinkowskiSum.html#getMargin()" class="member-name-link">getMargin()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MinkowskiSum.html" title="class in com.jme3.bullet.collision.shapes">MinkowskiSum</a></dt>
 <dd>
-<div class="block">Return the collision margin for this shape.</div>
+<div class="block">Return the collision margin of this shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#getMargin()" class="member-name-link">getMargin()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
 <dd>
-<div class="block">Return the collision margin for this shape.</div>
+<div class="block">Return the collision margin of the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/PhysicsBody.html#getMass()" class="member-name-link">getMass()</a> - Method in class com.jme3.bullet.objects.<a href="com/jme3/bullet/objects/PhysicsBody.html" title="class in com.jme3.bullet.objects">PhysicsBody</a></dt>
 <dd>
@@ -4343,7 +4465,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#getShapeType()" class="member-name-link">getShapeType()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Return the type of this shape.</div>
+<div class="block">Return the encoded type of the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#getShapeType(long)" class="member-name-link">getShapeType(long)</a> - Static method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
@@ -4459,7 +4581,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Copy this motor's constraint-force mixing parameters at the limits
  (native field: m_stopCFM).</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html#getSubmesh(int)" class="member-name-link">getSubmesh(int)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/GImpactCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">GImpactCollisionShape</a></dt>
+<dd>
+<div class="block">Access the specified submesh.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html#getSubmesh(int)" class="member-name-link">getSubmesh(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">CompoundMesh</a></dt>
+<dd>
+<div class="block">Access the specified submesh.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#getSubmesh(int)" class="member-name-link">getSubmesh(int)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
 <dd>
 <div class="block">Access the specified submesh.</div>
 </dd>
@@ -4839,6 +4969,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generate the hash code for this instance.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#height()" class="member-name-link">height()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Return the height of the frustum.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes">HeightfieldCollisionShape</a> - Class in <a href="com/jme3/bullet/collision/shapes/package-summary.html">com.jme3.bullet.collision.shapes</a></dt>
 <dd>
 <div class="block">A collision shape for terrain defined by a matrix of height values, based on
@@ -4858,7 +4992,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/util/DebugShapeFactory.html#highResolution" class="member-name-link">highResolution</a> - Static variable in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/DebugShapeFactory.html" title="class in com.jme3.bullet.util">DebugShapeFactory</a></dt>
 <dd>
-<div class="block">specify high-res debug meshes for convex shapes (up to 256 vertices)</div>
+<div class="block">specify high-resolution debug meshes for convex shapes (up to 256
+ vertices) and zero-margin debug meshes for concave shapes</div>
+</dd>
+<dt><a href="com/jme3/bullet/util/DebugShapeFactory.html#highResolution2" class="member-name-link">highResolution2</a> - Static variable in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/DebugShapeFactory.html" title="class in com.jme3.bullet.util">DebugShapeFactory</a></dt>
+<dd>
+<div class="block">specify high-resolution debug meshes for convex shapes (up to 256
+ vertices) and actual-margin debug meshes for concave shapes</div>
 </dd>
 <dt><a href="com/jme3/bullet/joints/HingeJoint.html" class="type-name-link" title="class in com.jme3.bullet.joints">HingeJoint</a> - Class in <a href="com/jme3/bullet/joints/package-summary.html">com.jme3.bullet.joints</a></dt>
 <dd>
@@ -4960,6 +5100,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a> - Class in <a href="com/jme3/bullet/collision/shapes/infos/package-summary.html">com.jme3.bullet.collision.shapes.infos</a></dt>
 <dd>
 <div class="block">An indexed triangle mesh based on Bullet's <code>btIndexedMesh</code>.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#%3Cinit%3E(com.jme3.bullet.collision.shapes.CollisionShape,int)" class="member-name-link">IndexedMesh(CollisionShape, int)</a> - Constructor for class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
+<dd>
+<div class="block">Instantiate a IndexedMesh to visualize the specified collision shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#%3Cinit%3E(com.jme3.math.Vector3f%5B%5D,int%5B%5D)" class="member-name-link">IndexedMesh(Vector3f[], int[])</a> - Constructor for class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
 <dd>
@@ -5127,9 +5271,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Test whether collisions with the immediate parent link are enabled.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#isCompressed()" class="member-name-link">isCompressed()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Test whether the hierarchy uses quantized AABB compression.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#isConcave()" class="member-name-link">isConcave()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape has concave type.</div>
+<div class="block">Test whether the shape has concave type.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/ConvexShape.html#isConcave()" class="member-name-link">isConcave()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConvexShape.html" title="class in com.jme3.bullet.collision.shapes">ConvexShape</a></dt>
 <dd>
@@ -5150,7 +5298,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#isConvex()" class="member-name-link">isConvex()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape has convex type.</div>
+<div class="block">Test whether the shape has convex type.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/ConvexShape.html#isConvex()" class="member-name-link">isConvex()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConvexShape.html" title="class in com.jme3.bullet.collision.shapes">ConvexShape</a></dt>
 <dd>
@@ -5288,7 +5436,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#isInfinite()" class="member-name-link">isInfinite()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape's type is infinite.</div>
+<div class="block">Test whether the shape's type is infinite.</div>
 </dd>
 <dt><a href="com/jme3/bullet/util/NativeLibrary.html#isInsideTriangle(com.jme3.math.Vector3f,float,com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">isInsideTriangle(Vector3f, float, Vector3f, Vector3f, Vector3f)</a> - Static method in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/NativeLibrary.html" title="class in com.jme3.bullet.util">NativeLibrary</a></dt>
 <dd>
@@ -5307,6 +5455,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Test whether the contact point's lateral friction is initialized.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#isLeafNode(int)" class="member-name-link">isLeafNode(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Test whether the specified node is a leaf.</div>
+</dd>
 <dt><a href="com/jme3/bullet/joints/motors/RotationMotor.html#isMotorEnabled()" class="member-name-link">isMotorEnabled()</a> - Method in class com.jme3.bullet.joints.motors.<a href="com/jme3/bullet/joints/motors/RotationMotor.html" title="class in com.jme3.bullet.joints.motors">RotationMotor</a></dt>
 <dd>
 <div class="block">Test whether the motor is enabled (native field: m_enableMotor).</div>
@@ -5321,7 +5473,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#isNonMoving()" class="member-name-link">isNonMoving()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Test whether this shape can be applied to a dynamic rigid body.</div>
+<div class="block">Test whether the shape can be applied to a dynamic rigid body.</div>
 </dd>
 <dt><a href="jme3utilities/math/MyMath.html#isOdd(int)" class="member-name-link">isOdd(int)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyMath.html" title="class in jme3utilities.math">MyMath</a></dt>
 <dd>
@@ -5473,6 +5625,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Test whether this space uses Speculative Contact Restitution (native
  field: m_applySpeculativeContactRestitution).</div>
 </dd>
+<dt><a href="com/jme3/math/Quaternion.html#isValidQuaternion(com.jme3.math.Quaternion)" class="member-name-link">isValidQuaternion(Quaternion)</a> - Static method in class com.jme3.math.<a href="com/jme3/math/Quaternion.html" title="class in com.jme3.math">Quaternion</a></dt>
+<dd>
+<div class="block">Tests whether the argument is a valid quaternion, returning false if it's
+ null or if any component is NaN or infinite.</div>
+</dd>
 <dt><a href="com/jme3/math/Vector3f.html#isValidVector(com.jme3.math.Vector3f)" class="member-name-link">isValidVector(Vector3f)</a> - Static method in class com.jme3.math.<a href="com/jme3/math/Vector3f.html" title="class in com.jme3.math">Vector3f</a></dt>
 <dd>
 <div class="block">Tests whether the argument is a valid vector, returning false if it's
@@ -5527,7 +5684,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/system/JmeSystem.html" class="type-name-link" title="class in com.jme3.system">JmeSystem</a> - Class in <a href="com/jme3/system/package-summary.html">com.jme3.system</a></dt>
 <dd>
-<div class="block">Utility class to access platform-dependant features.</div>
+<div class="block">Utility class to access platform-dependent features.</div>
 </dd>
 <dt><a href="com/jme3/bullet/CollisionSpace.html#jniEnvId()" class="member-name-link">jniEnvId()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
 <dd>
@@ -5854,6 +6011,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">message logger for this class</div>
 </dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html#logger" class="member-name-link">logger</a> - Static variable in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></dt>
+<dd>
+<div class="block">message logger for this class</div>
+</dd>
 <dt><a href="com/jme3/bullet/joints/motors/RotationalLimitMotor.html#logger" class="member-name-link">logger</a> - Static variable in class com.jme3.bullet.joints.motors.<a href="com/jme3/bullet/joints/motors/RotationalLimitMotor.html" title="class in com.jme3.bullet.joints.motors">RotationalLimitMotor</a></dt>
 <dd>
 <div class="block">message logger for this class</div>
@@ -6058,6 +6219,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">message logger for this class</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#logger2" class="member-name-link">logger2</a> - Static variable in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">message logger for this class</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/Convex2dShape.html#logger2" class="member-name-link">logger2</a> - Static variable in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/Convex2dShape.html" title="class in com.jme3.bullet.collision.shapes">Convex2dShape</a></dt>
 <dd>
 <div class="block">message logger for this class</div>
@@ -6103,6 +6268,10 @@ loadScripts(document, 'script');</script>
 <div class="block">message logger for this class</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#logger2" class="member-name-link">logger2</a> - Static variable in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
+<dd>
+<div class="block">message logger for this class</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#logger2" class="member-name-link">logger2</a> - Static variable in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
 <dd>
 <div class="block">message logger for this class</div>
 </dd>
@@ -6221,7 +6390,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/util/DebugShapeFactory.html#lowResolution" class="member-name-link">lowResolution</a> - Static variable in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/DebugShapeFactory.html" title="class in com.jme3.bullet.util">DebugShapeFactory</a></dt>
 <dd>
-<div class="block">specify low-res debug meshes for convex shapes (up to 42 vertices)</div>
+<div class="block">specify low-res debug meshes for convex shapes (up to 42 vertices) and
+ zero-margin debug meshes for concave shapes</div>
 </dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
@@ -6386,6 +6556,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Apple Mac OS X 64-bit Intel</div>
 </dd>
+<dt><a href="jme3utilities/minie/TestApp.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class jme3utilities.minie.<a href="jme3utilities/minie/TestApp.html" title="class in jme3utilities.minie">TestApp</a></dt>
+<dd>
+<div class="block">Main entry point for the TestApp application.</div>
+</dd>
 <dt><a href="com/simsilica/mathd/Matrix3d.html#makeIdentity()" class="member-name-link">makeIdentity()</a> - Method in class com.simsilica.mathd.<a href="com/simsilica/mathd/Matrix3d.html" title="class in com.simsilica.mathd">Matrix3d</a></dt>
 <dd>
 <div class="block">Configures the matrix as an identity matrix (diagonals = 1, other
@@ -6506,12 +6680,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/SoftBodyWorldInfo.html#maxDisplacement()" class="member-name-link">maxDisplacement()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/SoftBodyWorldInfo.html" title="class in com.jme3.bullet">SoftBodyWorldInfo</a></dt>
 <dd>
-<div class="block">Read the maximum distance a node can travel per time step.</div>
+<div class="block">Read the maximum distance a node can travel per simulation step.</div>
 </dd>
 <dt><a href="com/jme3/bullet/util/DebugShapeFactory.html#maxDistance(com.jme3.bullet.collision.shapes.CollisionShape,com.jme3.math.Transform,int)" class="member-name-link">maxDistance(CollisionShape, Transform, int)</a> - Static method in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/DebugShapeFactory.html" title="class in com.jme3.bullet.util">DebugShapeFactory</a></dt>
 <dd>
 <div class="block">Estimate how far the specified (non-compound, non-plane) shape extends
  from some origin, based on its debug mesh.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#maxDistance(com.jme3.math.Transform)" class="member-name-link">maxDistance(Transform)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
+<dd>
+<div class="block">Calculate how far the mesh extends from some origin.</div>
 </dd>
 <dt><a href="jme3utilities/math/RectangularSolid.html#maxima(com.jme3.math.Vector3f)" class="member-name-link">maxima(Vector3f)</a> - Method in class jme3utilities.math.<a href="jme3utilities/math/RectangularSolid.html" title="class in jme3utilities.math">RectangularSolid</a></dt>
 <dd>
@@ -6533,6 +6711,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Find the magnitude of the longest 3-D vector in the specified FloatBuffer
  range.</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html#maxManifolds()" class="member-name-link">maxManifolds()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></dt>
+<dd>
+<div class="block">Return the size of the persistent-manifold pool.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html#maxMin(com.jme3.math.Vector3f,com.jme3.math.Vector3f)" class="member-name-link">maxMin(Vector3f, Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/CompoundMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">CompoundMesh</a></dt>
 <dd>
@@ -6565,35 +6747,42 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/Box2dShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/Box2dShape.html" title="class in com.jme3.bullet.collision.shapes">Box2dShape</a></dt>
 <dd>
-<div class="block">Calculate how far the box extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
-<div class="block">Calculate how far the box extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CapsuleCollisionShape</a></dt>
 <dd>
-<div class="block">Calculate how far the capsule extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
-<div class="block">Estimate how far this shape extends from its center.</div>
+<div class="block">Estimate how far the scaled shape extends from its center, including
+ margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></dt>
 <dd>
-<div class="block">Estimate how far this shape extends from its center.</div>
+<div class="block">Estimate how far the shape extends from its origin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConeCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">ConeCollisionShape</a></dt>
 <dd>
-<div class="block">Calculate how far the cone extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center of mass,
+ including collision margin.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Calculate how far the scaled shape extends from its center of mass,
+ including collision margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CylinderCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CylinderCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CylinderCollisionShape</a></dt>
 <dd>
-<div class="block">Estimate how far the cylinder extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></dt>
 <dd>
-<div class="block">Determine how far the shape extends from its center.</div>
+<div class="block">Calculate how far the shape extends from its center.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HullCollisionShape</a></dt>
 <dd>
@@ -6601,15 +6790,20 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/PlaneCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/PlaneCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">PlaneCollisionShape</a></dt>
 <dd>
-<div class="block">Determine how far this shape extends from its center.</div>
+<div class="block">Calculate how far the shape extends.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SimplexCollisionShape</a></dt>
 <dd>
-<div class="block">Calculate how far the simplex extends from its center, including margin.</div>
+<div class="block">Calculate how far the shape extends from its origin, including margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
 <dd>
-<div class="block">Calculate how far the sphere extends from its center.</div>
+<div class="block">Calculate how far the scaled shape extends from its center.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#maxRadius()" class="member-name-link">maxRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Calculate how far the scaled shape extends from its center of mass,
+ including collision margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/infos/Cluster.html#MaxSelfImpulse" class="member-name-link">MaxSelfImpulse</a> - Enum constant in enum class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/Cluster.html" title="enum class in com.jme3.bullet.objects.infos">Cluster</a></dt>
 <dd>
@@ -6622,7 +6816,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/PhysicsSpace.html#maxSubSteps()" class="member-name-link">maxSubSteps()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSpace.html" title="class in com.jme3.bullet">PhysicsSpace</a></dt>
 <dd>
-<div class="block">Read the maximum number of time steps per frame.</div>
+<div class="block">Read the maximum number of simulation steps per frame.</div>
 </dd>
 <dt><a href="com/jme3/bullet/PhysicsSpace.html#maxTimeStep()" class="member-name-link">maxTimeStep()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSpace.html" title="class in com.jme3.bullet">PhysicsSpace</a></dt>
 <dd>
@@ -7335,6 +7529,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Determine the offset from the parent's center to the pivot for a
  non-planar joint.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#partId(int)" class="member-name-link">partId(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Return the part index of the specified node.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/PhysicsRayTestResult.html#partIndex()" class="member-name-link">partIndex()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsRayTestResult.html" title="class in com.jme3.bullet.collision">PhysicsRayTestResult</a></dt>
 <dd>
 <div class="block">Read the part index at the point of contact.</div>
@@ -7350,6 +7548,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/PcoType.html" class="type-name-link" title="class in com.jme3.bullet.collision">PcoType</a> - Class in <a href="com/jme3/bullet/collision/package-summary.html">com.jme3.bullet.collision</a></dt>
 <dd>
 <div class="block">Named constants for types of PhysicsCollisionObject.</div>
+</dd>
+<dt><a href="com/jme3/bullet/CollisionConfiguration.html#penetrationDepthSolver()" class="member-name-link">penetrationDepthSolver()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionConfiguration.html" title="class in com.jme3.bullet">CollisionConfiguration</a></dt>
+<dd>
+<div class="block">Return which penetration-depth solver is used.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/PersistentManifolds.html" class="type-name-link" title="class in com.jme3.bullet.collision">PersistentManifolds</a> - Class in <a href="com/jme3/bullet/collision/package-summary.html">com.jme3.bullet.collision</a></dt>
 <dd>
@@ -7489,6 +7691,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Instantiate a PhysicsSoftSpace with a sequential-impulse solver.</div>
 </dd>
+<dt><a href="com/jme3/bullet/PhysicsSoftSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,com.jme3.bullet.CollisionConfiguration)" class="member-name-link">PhysicsSoftSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, CollisionConfiguration)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSoftSpace.html" title="class in com.jme3.bullet">PhysicsSoftSpace</a></dt>
+<dd>
+<div class="block">Instantiate a PhysicsSoftSpace with a sequential-impulse solver.</div>
+</dd>
 <dt><a href="com/jme3/bullet/PhysicsSpace.html" class="type-name-link" title="class in com.jme3.bullet">PhysicsSpace</a> - Class in <a href="com/jme3/bullet/package-summary.html">com.jme3.bullet</a></dt>
 <dd>
 <div class="block">A CollisionSpace to simulate dynamic physics, with its own
@@ -7512,7 +7718,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Instantiate a PhysicsSpace with the specified number of
  sequential-impulse solvers.</div>
 </dd>
+<dt><a href="com/jme3/bullet/PhysicsSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,int,com.jme3.bullet.CollisionConfiguration)" class="member-name-link">PhysicsSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, int, CollisionConfiguration)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSpace.html" title="class in com.jme3.bullet">PhysicsSpace</a></dt>
+<dd>
+<div class="block">Instantiate a PhysicsSpace with the specified number of
+ sequential-impulse solvers.</div>
+</dd>
 <dt><a href="com/jme3/bullet/PhysicsSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,com.jme3.bullet.SolverType)" class="member-name-link">PhysicsSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, SolverType)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSpace.html" title="class in com.jme3.bullet">PhysicsSpace</a></dt>
+<dd>
+<div class="block">Instantiate a PhysicsSpace with the specified contact-and-constraint
+ solver.</div>
+</dd>
+<dt><a href="com/jme3/bullet/PhysicsSpace.html#%3Cinit%3E(com.jme3.math.Vector3f,com.jme3.math.Vector3f,com.jme3.bullet.PhysicsSpace.BroadphaseType,com.jme3.bullet.SolverType,com.jme3.bullet.CollisionConfiguration)" class="member-name-link">PhysicsSpace(Vector3f, Vector3f, PhysicsSpace.BroadphaseType, SolverType, CollisionConfiguration)</a> - Constructor for class com.jme3.bullet.<a href="com/jme3/bullet/PhysicsSpace.html" title="class in com.jme3.bullet">PhysicsSpace</a></dt>
 <dd>
 <div class="block">Instantiate a PhysicsSpace with the specified contact-and-constraint
  solver.</div>
@@ -7690,7 +7906,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html#principalAxes(java.nio.FloatBuffer,com.jme3.math.Transform,com.jme3.math.Vector3f)" class="member-name-link">principalAxes(FloatBuffer, Transform, Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CompoundCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CompoundCollisionShape</a></dt>
 <dd>
 <div class="block">Calculates the coordinate transform to be applied to a rigid body in
- order for this shape to be centered at the center of mass and its
+ order for this shape to be centered on its center of mass and its
  principal axes to coincide with its local axes.</div>
 </dd>
 <dt><a href="com/jme3/bullet/MultiBodyJointType.html#Prismatic" class="member-name-link">Prismatic</a> - Enum constant in enum class com.jme3.bullet.<a href="com/jme3/bullet/MultiBodyJointType.html" title="enum class in com.jme3.bullet">MultiBodyJointType</a></dt>
@@ -7851,7 +8067,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html#recalculateAabb()" class="member-name-link">recalculateAabb()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HullCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HullCollisionShape</a></dt>
 <dd>
-<div class="block">Recalculate this shape's bounding box if necessary.</div>
+<div class="block">Recalculate the shape's bounding box if necessary.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#recalculateAabb()" class="member-name-link">recalculateAabb()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
 <dd>
@@ -7859,11 +8075,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MultiSphere.html#recalculateAabb()" class="member-name-link">recalculateAabb()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MultiSphere.html" title="class in com.jme3.bullet.collision.shapes">MultiSphere</a></dt>
 <dd>
-<div class="block">Recalculate this shape's bounding box if necessary.</div>
+<div class="block">Recalculate the shape's bounding box if necessary.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html#recalculateAabb()" class="member-name-link">recalculateAabb()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SimplexCollisionShape</a></dt>
 <dd>
-<div class="block">Recalculate this shape's bounding box if necessary.</div>
+<div class="block">Recalculate the shape's bounding box if necessary.</div>
 </dd>
 <dt><a href="jme3utilities/math/RectangularSolid.html" class="type-name-link" title="class in jme3utilities.math">RectangularSolid</a> - Class in <a href="jme3utilities/math/package-summary.html">jme3utilities.math</a></dt>
 <dd>
@@ -8110,11 +8326,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/BoxCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">BoxCollisionShape</a></dt>
 <dd>
-<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+<div class="block">Estimate the volume of the collision shape, including scale and margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CapsuleCollisionShape</a></dt>
 <dd>
-<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+<div class="block">Estimate the volume of the shape, including scale and margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
@@ -8124,13 +8340,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Estimate the volume of this shape, including scale and margin.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConicalFrustum.html" title="class in com.jme3.bullet.collision.shapes">ConicalFrustum</a></dt>
+<dd>
+<div class="block">Estimate the volume of the collision shape, including scale and margin.</div>
+</dd>
 <dt><a href="com/jme3/bullet/collision/shapes/ConvexShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/ConvexShape.html" title="class in com.jme3.bullet.collision.shapes">ConvexShape</a></dt>
 <dd>
 <div class="block">Estimate the volume of this shape, including scale and margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></dt>
 <dd>
-<div class="block">Estimate the volume of this shape, including scale and margin.</div>
+<div class="block">Return the volume of the shape, including scale and margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MultiSphere.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MultiSphere.html" title="class in com.jme3.bullet.collision.shapes">MultiSphere</a></dt>
 <dd>
@@ -8139,6 +8359,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
 <dd>
 <div class="block">Estimate the volume of this shape, including scale and margin.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#scaledVolume()" class="member-name-link">scaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Estimate the volume of the collision shape, including scale and margin.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/infos/ConfigFlag.html#SDF_MDF" class="member-name-link">SDF_MDF</a> - Static variable in class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/ConfigFlag.html" title="class in com.jme3.bullet.objects.infos">ConfigFlag</a></dt>
 <dd>
@@ -8172,7 +8396,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#serialize()" class="member-name-link">serialize()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
 <dd>
-<div class="block">Serialize this hierarchy to a byte array.</div>
+<div class="block">Serialize the hierarchy to a byte array.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#serializeBvh()" class="member-name-link">serializeBvh()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
 <dd>
@@ -9038,6 +9262,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Alter the location of the specified point in the local coordinates of
  object B (native name: m_localPointB).</div>
 </dd>
+<dt><a href="com/jme3/bullet/CollisionSpace.html#setLocalThreadPhysicsSpace(com.jme3.bullet.CollisionSpace)" class="member-name-link">setLocalThreadPhysicsSpace(CollisionSpace)</a> - Static method in class com.jme3.bullet.<a href="com/jme3/bullet/CollisionSpace.html" title="class in com.jme3.bullet">CollisionSpace</a></dt>
+<dd>
+<div class="block">Alter the CollisionSpace associated with this thread.</div>
+</dd>
 <dt><a href="com/jme3/bullet/joints/SoftLinearJoint.html#setLocation(com.jme3.math.Vector3f)" class="member-name-link">setLocation(Vector3f)</a> - Method in class com.jme3.bullet.joints.<a href="com/jme3/bullet/joints/SoftLinearJoint.html" title="class in com.jme3.bullet.joints">SoftLinearJoint</a></dt>
 <dd>
 <div class="block">Alter the joint location.</div>
@@ -9068,7 +9296,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html#setMargin(float)" class="member-name-link">setMargin(float)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CapsuleCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CapsuleCollisionShape</a></dt>
 <dd>
-<div class="block">Alter the collision margin of this shape.</div>
+<div class="block">Alter the collision margin of the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#setMargin(float)" class="member-name-link">setMargin(float)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
 <dd>
@@ -9127,7 +9355,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/SoftBodyWorldInfo.html#setMaxDisplacement(float)" class="member-name-link">setMaxDisplacement(float)</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/SoftBodyWorldInfo.html" title="class in com.jme3.bullet">SoftBodyWorldInfo</a></dt>
 <dd>
-<div class="block">Alter the maximum distance a node can travel per time step.</div>
+<div class="block">Alter the maximum distance a node can travel per simulation step.</div>
 </dd>
 <dt><a href="vhacd4/Vhacd4Parameters.html#setMaxHulls(int)" class="member-name-link">setMaxHulls(int)</a> - Method in class vhacd4.<a href="vhacd4/Vhacd4Parameters.html" title="class in vhacd4">Vhacd4Parameters</a></dt>
 <dd>
@@ -9619,6 +9847,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Alter the scale factors.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html#setScale(com.jme3.math.Vector3f)" class="member-name-link">setScale(Vector3f)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/MeshCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">MeshCollisionShape</a></dt>
+<dd>
+<div class="block">Alter the scale of this shape.</div>
+</dd>
 <dt><a href="com/jme3/math/Matrix4f.html#setScale(com.jme3.math.Vector3f)" class="member-name-link">setScale(Vector3f)</a> - Method in class com.jme3.math.<a href="com/jme3/math/Matrix4f.html" title="class in com.jme3.math">Matrix4f</a></dt>
 <dd>
 <div class="block">Alters the scale component of the coordinate transform.</div>
@@ -9849,6 +10081,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the translation component to the argument.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#setTraversalMode(int)" class="member-name-link">setTraversalMode(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Alter the traversal mode (native field: m_traversalMode).</div>
+</dd>
 <dt><a href="com/jme3/bullet/objects/infos/CharacterController.html#setUp(com.jme3.math.Vector3f)" class="member-name-link">setUp(Vector3f)</a> - Method in class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/CharacterController.html" title="class in com.jme3.bullet.objects.infos">CharacterController</a></dt>
 <dd>
 <div class="block">Alter the character's "up" direction.</div>
@@ -9876,6 +10112,34 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/joints/SliderJoint.html#setUpperLinLimit(float)" class="member-name-link">setUpperLinLimit(float)</a> - Method in class com.jme3.bullet.joints.<a href="com/jme3/bullet/joints/SliderJoint.html" title="class in com.jme3.bullet.joints">SliderJoint</a></dt>
 <dd>
 <div class="block">Alter the joint's upper limit for on-axis translation.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#setUserIndex(int)" class="member-name-link">setUserIndex(int)</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Alter the object's primary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#setUserIndex(int)" class="member-name-link">setUserIndex(int)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
+<dd>
+<div class="block">Alter the primary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/MultiBody.html#setUserIndex(int)" class="member-name-link">setUserIndex(int)</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
+<dd>
+<div class="block">Alter the primary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#setUserIndex2(int)" class="member-name-link">setUserIndex2(int)</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Alter the object's secondary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#setUserIndex2(int)" class="member-name-link">setUserIndex2(int)</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
+<dd>
+<div class="block">Alter the secondary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/MultiBody.html#setUserIndex2(int)" class="member-name-link">setUserIndex2(int)</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
+<dd>
+<div class="block">Alter the secondary user index.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#setUserIndex3(int)" class="member-name-link">setUserIndex3(int)</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Alter the object's tertiary user index.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#setUserObject(java.lang.Object)" class="member-name-link">setUserObject(Object)</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
 <dd>
@@ -10204,6 +10468,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Instantiate a sphere shape that encloses the sample locations in the
  specified FloatBuffer range.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#sphereRadius()" class="member-name-link">sphereRadius()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Return the radius of the parent sphere.</div>
+</dd>
 <dt><a href="jme3utilities/math/MyVolume.html#sphereVolume(float)" class="member-name-link">sphereVolume(float)</a> - Static method in class jme3utilities.math.<a href="jme3utilities/math/MyVolume.html" title="class in jme3utilities.math">MyVolume</a></dt>
 <dd>
 <div class="block">Compute the volume of a sphere with the specified radius.</div>
@@ -10211,6 +10479,19 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/MultiBodyJointType.html#Spherical" class="member-name-link">Spherical</a> - Enum constant in enum class com.jme3.bullet.<a href="com/jme3/bullet/MultiBodyJointType.html" title="enum class in com.jme3.bullet">MultiBodyJointType</a></dt>
 <dd>
 <div class="block">spherical joint (native name: eSpherical)</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" class="type-name-link" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a> - Class in <a href="com/jme3/bullet/collision/shapes/package-summary.html">com.jme3.bullet.collision.shapes</a></dt>
+<dd>
+<div class="block">A collision shape for a spherical segment with uniform density, based on
+ <code>btConvexInternalShape</code>.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#%3Cinit%3E(float)" class="member-name-link">SphericalSegment(float)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Instantiate a hemisphere with the specified radius.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#%3Cinit%3E(float,float,float)" class="member-name-link">SphericalSegment(float, float, float)</a> - Constructor for class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Instantiate a spherical segment with the specified dimensions.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#split(com.jme3.math.Plane)" class="member-name-link">split(Plane)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
 <dd>
@@ -10359,6 +10640,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Return the sum of squares of some single-precision values.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#surfaceArea()" class="member-name-link">surfaceArea()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
+<dd>
+<div class="block">Calculate the (one-sided) surface area of the mesh.</div>
+</dd>
 <dt><a href="com/jme3/bullet/FillMode.html#SurfaceOnly" class="member-name-link">SurfaceOnly</a> - Enum constant in enum class com.jme3.bullet.<a href="com/jme3/bullet/FillMode.html" title="enum class in com.jme3.bullet">FillMode</a></dt>
 <dd>
 <div class="block">create a hollow skin (native name: SURFACE_ONLY)</div>
@@ -10382,6 +10667,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/util/TempVars.html" class="type-name-link" title="class in com.jme3.util">TempVars</a> - Class in <a href="com/jme3/util/package-summary.html">com.jme3.util</a></dt>
 <dd>
 <div class="block">Temporary variables assigned to each thread.</div>
+</dd>
+<dt><a href="jme3utilities/minie/TestApp.html" class="type-name-link" title="class in jme3utilities.minie">TestApp</a> - Class in <a href="jme3utilities/minie/package-summary.html">jme3utilities.minie</a></dt>
+<dd>
+<div class="block">Command-line application for testing Libbulletjme.</div>
 </dd>
 <dt><a href="vhacd/ACDMode.html#TETRAHEDRON" class="member-name-link">TETRAHEDRON</a> - Enum constant in enum class vhacd.<a href="vhacd/ACDMode.html" title="enum class in vhacd">ACDMode</a></dt>
 <dd>
@@ -10732,6 +11021,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the transpose.</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#traversalMode()" class="member-name-link">traversalMode()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Return the traversal mode (native field: m_traversalMode).</div>
+</dd>
 <dt><a href="com/jme3/math/Triangle.html" class="type-name-link" title="class in com.jme3.math">Triangle</a> - Class in <a href="com/jme3/math/package-summary.html">com.jme3.math</a></dt>
 <dd>
 <div class="block">Describes a triangle in terms of its vertex locations, with auxiliary storage
@@ -10752,6 +11045,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/PhysicsSweepTestResult.html#triangleIndex()" class="member-name-link">triangleIndex()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsSweepTestResult.html" title="class in com.jme3.bullet.collision">PhysicsSweepTestResult</a></dt>
 <dd>
 <div class="block">Read the triangle index at the point of contact.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html#triangleIndex(int)" class="member-name-link">triangleIndex(int)</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/BoundingValueHierarchy.html" title="class in com.jme3.bullet.collision.shapes.infos">BoundingValueHierarchy</a></dt>
+<dd>
+<div class="block">Return the triangle index of the specified node.</div>
 </dd>
 <dt><a href="com/jme3/math/FastMath.html#TWO_PI" class="member-name-link">TWO_PI</a> - Static variable in class com.jme3.math.<a href="com/jme3/math/FastMath.html" title="class in com.jme3.math">FastMath</a></dt>
 <dd>
@@ -10811,7 +11108,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/EmptyShape.html#unscaledVolume()" class="member-name-link">unscaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/EmptyShape.html" title="class in com.jme3.bullet.collision.shapes">EmptyShape</a></dt>
 <dd>
-<div class="block">Return the unscaled volume of the shape.</div>
+<div class="block">Return the volume of the shape.</div>
 </dd>
 <dt><a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html#unscaledVolume()" class="member-name-link">unscaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SimplexCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SimplexCollisionShape</a></dt>
 <dd>
@@ -10820,6 +11117,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html#unscaledVolume()" class="member-name-link">unscaledVolume()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphereCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">SphereCollisionShape</a></dt>
 <dd>
 <div class="block">Return the unscaled volume of the sphere.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html#upAxis()" class="member-name-link">upAxis()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/HeightfieldCollisionShape.html" title="class in com.jme3.bullet.collision.shapes">HeightfieldCollisionShape</a></dt>
+<dd>
+<div class="block">Return the index of the height axis.</div>
 </dd>
 <dt><a href="com/jme3/bullet/objects/infos/VehicleController.html#upAxisIndex()" class="member-name-link">upAxisIndex()</a> - Method in class com.jme3.bullet.objects.infos.<a href="com/jme3/bullet/objects/infos/VehicleController.html" title="class in com.jme3.bullet.objects.infos">VehicleController</a></dt>
 <dd>
@@ -10907,6 +11208,34 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/jme3/bullet/collision/PcoType.html#user" class="member-name-link">user</a> - Static variable in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PcoType.html" title="class in com.jme3.bullet.collision">PcoType</a></dt>
 <dd>
 <div class="block">unused (native name: CO_USER_TYPE)</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#userIndex()" class="member-name-link">userIndex()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Return the object's primary user index (native field: m_userIndex).</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#userIndex()" class="member-name-link">userIndex()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
+<dd>
+<div class="block">Return the primary user index (native field: m_userIndex).</div>
+</dd>
+<dt><a href="com/jme3/bullet/MultiBody.html#userIndex()" class="member-name-link">userIndex()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
+<dd>
+<div class="block">Return the primary user index (native field: m_userIndex).</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#userIndex2()" class="member-name-link">userIndex2()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Return the object's secondary user index (native field: m_userIndex2).</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/CollisionShape.html#userIndex2()" class="member-name-link">userIndex2()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/CollisionShape.html" title="class in com.jme3.bullet.collision.shapes">CollisionShape</a></dt>
+<dd>
+<div class="block">Return the secondary user index (native field: m_userIndex2).</div>
+</dd>
+<dt><a href="com/jme3/bullet/MultiBody.html#userIndex2()" class="member-name-link">userIndex2()</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
+<dd>
+<div class="block">Return the secondary user index (native field: m_userIndex2).</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/PhysicsCollisionObject.html#userIndex3()" class="member-name-link">userIndex3()</a> - Method in class com.jme3.bullet.collision.<a href="com/jme3/bullet/collision/PhysicsCollisionObject.html" title="class in com.jme3.bullet.collision">PhysicsCollisionObject</a></dt>
+<dd>
+<div class="block">Return the object's tertiary user index (native field: m_userIndex3).</div>
 </dd>
 <dt><a href="com/jme3/bullet/MultiBody.html#useRK4(boolean)" class="member-name-link">useRK4(boolean)</a> - Method in class com.jme3.bullet.<a href="com/jme3/bullet/MultiBody.html" title="class in com.jme3.bullet">MultiBody</a></dt>
 <dd>
@@ -11237,6 +11566,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">volume conservation coefficient (&ge;0, default=0, native field: kVC)</div>
 </dd>
+<dt><a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html#volumeConvex()" class="member-name-link">volumeConvex()</a> - Method in class com.jme3.bullet.collision.shapes.infos.<a href="com/jme3/bullet/collision/shapes/infos/IndexedMesh.html" title="class in com.jme3.bullet.collision.shapes.infos">IndexedMesh</a></dt>
+<dd>
+<div class="block">Calculate volume of the mesh, assuming it's both closed and convex.</div>
+</dd>
 <dt><a href="com/jme3/bullet/util/DebugShapeFactory.html#volumeConvex(com.jme3.bullet.collision.shapes.ConvexShape,int)" class="member-name-link">volumeConvex(ConvexShape, int)</a> - Static method in class com.jme3.bullet.util.<a href="com/jme3/bullet/util/DebugShapeFactory.html" title="class in com.jme3.bullet.util">DebugShapeFactory</a></dt>
 <dd>
 <div class="block">Calculate the volume of a debug mesh for the specified convex shape.</div>
@@ -11374,6 +11707,16 @@ the order they are declared.</div>
 <dt><a href="jme3utilities/math/MyVector3f.html#yAxis" class="member-name-link">yAxis</a> - Static variable in class jme3utilities.math.<a href="jme3utilities/math/MyVector3f.html" title="class in jme3utilities.math">MyVector3f</a></dt>
 <dd>
 <div class="block">index of the Y axis</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#yMax()" class="member-name-link">yMax()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Return the Y offset of the upper base from the center of the parent
+ sphere.</div>
+</dd>
+<dt><a href="com/jme3/bullet/collision/shapes/SphericalSegment.html#yMin()" class="member-name-link">yMin()</a> - Method in class com.jme3.bullet.collision.shapes.<a href="com/jme3/bullet/collision/shapes/SphericalSegment.html" title="class in com.jme3.bullet.collision.shapes">SphericalSegment</a></dt>
+<dd>
+<div class="block">Return the Y offset of the lower base from the center of the parent
+ sphere.</div>
 </dd>
 <dt><a href="com/jme3/bullet/RotationOrder.html#YXZ" class="member-name-link">YXZ</a> - Enum constant in enum class com.jme3.bullet.<a href="com/jme3/bullet/RotationOrder.html" title="enum class in com.jme3.bullet">RotationOrder</a></dt>
 <dd>

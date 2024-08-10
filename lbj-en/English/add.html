@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/add.html">
     <link rel="prev" href="implementation.html">
     <link rel="next" href="sport.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="How to add Libbulletjme to an existing project">
@@ -142,7 +142,7 @@
     <span class="nav-text">Library APIs (javadoc)</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">Master branch</a>
+    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">"master" branch</a>
   </li>
 </ul>
   </li>
@@ -173,6 +173,12 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/LbjExamples">LbjExamples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/macana">Macana</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/sport">SPORT</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/V-Sport">V-Sport</a>
@@ -291,7 +297,7 @@ and add them to the physics space.</p>
 <div class="sect2">
 <h3 id="_gradle_built_projects"><a class="anchor" href="#_gradle_built_projects"></a>Gradle-built projects</h3>
 <div class="paragraph">
-<p>Add to the project&#8217;s "build.gradle" file:</p>
+<p>Add to the project&#8217;s "build.gradle" or "build.gradle.kts" file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -299,7 +305,7 @@ and add them to the physics space.</p>
     mavenCentral()
 }
 dependencies {
-    implementation 'com.github.stephengold:Libbulletjme:20.0.0'
+    implementation("com.github.stephengold:Libbulletjme:21.2.1")
 }</code></pre>
 </div>
 </div>
@@ -325,7 +331,7 @@ it&#8217;s necessary to replace <code>implementation</code> with <code>compile</
 &lt;dependency&gt;
   &lt;groupId&gt;com.github.stephengold&lt;/groupId&gt;
   &lt;artifactId&gt;Libbulletjme&lt;/artifactId&gt;
-  &lt;version&gt;20.0.0&lt;/version&gt;
+  &lt;version&gt;21.2.1&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -343,7 +349,7 @@ it&#8217;s necessary to replace <code>implementation</code> with <code>compile</
 </ul>
 </div>
 <div class="paragraph">
-<p>You&#8217;ll definitely need the class JAR ("Libbulletjme-20.0.0.jar")
+<p>You&#8217;ll definitely need the class JAR ("Libbulletjme-21.2.1.jar")
 and probably the "-sources" and "-javadoc" JARs as well.</p>
 </div>
 <div class="paragraph">
@@ -374,7 +380,7 @@ and probably the "-sources" and "-javadoc" JARs as well.</p>
 <p>Navigate to the download directory.</p>
 </li>
 <li>
-<p>Select the "Libbulletjme-20.0.0" file.</p>
+<p>Select the "Libbulletjme-21.2.1" file.</p>
 </li>
 <li>
 <p>Click on the <b class="button">Open</b> button.</p>
@@ -393,7 +399,7 @@ and probably the "-sources" and "-javadoc" JARs as well.</p>
 <p>Click on the <b class="button">Browse&#8230;&#8203;</b> button to the right of "Javadoc:"</p>
 </li>
 <li>
-<p>Select the "Libbulletjme-20.0.0-javadoc.jar" file.</p>
+<p>Select the "Libbulletjme-21.2.1-javadoc.jar" file.</p>
 </li>
 <li>
 <p>Click on the <b class="button">Open</b> button.</p>
@@ -402,7 +408,7 @@ and probably the "-sources" and "-javadoc" JARs as well.</p>
 <p>Click on the <b class="button">Browse&#8230;&#8203;</b> button to the right of "Sources:"</p>
 </li>
 <li>
-<p>Select the "Libbulletjme-20.0.0-sources.jar" file.</p>
+<p>Select the "Libbulletjme-21.2.1-sources.jar" file.</p>
 </li>
 <li>
 <p>Click on the <b class="button">Open</b> button button again.</p>
@@ -560,7 +566,8 @@ physicsSpace.addCollisionObject(body1);</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">float timeStep = 0.02f; // in seconds
-physicsSpace.update(timeStep, 0);</code></pre>
+int maxSteps = 0; // for a single step of the specified duration
+physicsSpace.update(timeStep, maxSteps);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -582,7 +589,7 @@ using the configured step size:</p>
 <h2 id="_hellolibbulletjme"><a class="anchor" href="#_hellolibbulletjme"></a>HelloLibbulletjme</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/console/HelloLibbulletjme.java">HelloLibbulletjme</a>
+<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/console/HelloLibbulletjme.java">HelloLibbulletjme</a> (also <a href="https://github.com/stephengold/LbjExamples/blob/master/kotlin-apps/src/main/kotlin/com/github/stephengold/lbjexamples/ktapps/console/HelloLibbulletjme.kt">in Kotlin</a>)
 is a complete console application (no graphics)
 that serves as a starting point for using Libbulletjme.</p>
 </div>
@@ -634,7 +641,7 @@ you should be able to launch tutorial apps from a command shell, like so:</p>
 <p><code>cd LbjExamples</code></p>
 </li>
 <li>
-<p><code>./gradlew HelloLibbulletjme</code></p>
+<p><code>./gradlew :apps:HelloLibbulletjme</code></p>
 </li>
 </ol>
 </div>

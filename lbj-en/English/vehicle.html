@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/vehicle.html">
     <link rel="prev" href="character.html">
     <link rel="next" href="new6dof.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="An introduction to vehicle physics">
@@ -142,7 +142,7 @@
     <span class="nav-text">Library APIs (javadoc)</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">Master branch</a>
+    <a class="nav-link" href="https://stephengold.github.io/Libbulletjme/javadoc/master">"master" branch</a>
   </li>
 </ul>
   </li>
@@ -173,6 +173,12 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/LbjExamples">LbjExamples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/macana">Macana</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/stephengold/sport">SPORT</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="https://github.com/stephengold/V-Sport">V-Sport</a>
@@ -306,7 +312,7 @@ For stability, a vehicle needs at least 3 wheels, and the chassis center of mass
 should be located between the wheels, roughly speaking.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloVehicle.java">HelloVehicle</a> is a SPORT app
+<p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloVehicle.java">HelloVehicle</a> (also <a href="https://github.com/stephengold/LbjExamples/blob/master/kotlin-apps/src/main/kotlin/com/github/stephengold/lbjexamples/ktapps/HelloVehicle.kt">in Kotlin</a>) is a SPORT app
 that demonstrates the direct creation of a vehicle,
 followed by automated steering and acceleration.
 Things to notice while running the app:</p>
@@ -424,9 +430,12 @@ causing the chassis to scrape the ground.</p>
 <div class="paragraph">
 <p>The default maximum suspension force is 6000 per wheel.
 For a vehicle with 4 wheels and a mass of 3000,
-the default is inadequate for a gravitational acceleration of 8 or more.
-If the weight of the chassis is distributed unevenly among the wheels,
-some of the maxima might need to be increased accordingly.</p>
+the default is inadequate for a gravitational acceleration of 8 or more,
+even if the weight of the chassis is distributed evenly among the wheels.</p>
+</div>
+<div class="paragraph">
+<p>If the weight is distributed unevenly,
+some of the maxima might need to be increased even more.</p>
 </div>
 </div>
 <div class="sect2">
