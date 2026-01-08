@@ -126,24 +126,9 @@ public class CompoundCollisionShape extends CollisionShape {
      *
      * @param childShape the child shape to add (not null, not a compound shape,
      * alias created)
-     * @param offset the local coordinates of the child shape's center (not
-     * null, unaffected)
-     */
-    public void addChildShape(CollisionShape childShape, Vector3f offset) {
-        Validate.nonNull(childShape, "child shape");
-        Validate.nonNull(offset, "offset");
-
-        addChildShape(childShape, offset, matrixIdentity);
-    }
-
-    /**
-     * Add a child shape with the specified local translation.
-     *
-     * @param childShape the child shape to add (not null, not a compound shape,
-     * alias created)
-     * @param offsetX the local X coordinate of the child shape's center
-     * @param offsetY the local Y coordinate of the child shape's center
-     * @param offsetZ the local Z coordinate of the child shape's center
+     * @param offsetX the local X coordinate of the child shape's origin
+     * @param offsetY the local Y coordinate of the child shape's origin
+     * @param offsetZ the local Z coordinate of the child shape's origin
      */
     public void addChildShape(CollisionShape childShape, float offsetX,
             float offsetY, float offsetZ) {
@@ -155,11 +140,26 @@ public class CompoundCollisionShape extends CollisionShape {
     }
 
     /**
+     * Add a child shape with the specified local translation.
+     *
+     * @param childShape the child shape to add (not null, not a compound shape,
+     * alias created)
+     * @param offset the local coordinates of the child shape's origin (not
+     * null, unaffected)
+     */
+    public void addChildShape(CollisionShape childShape, Vector3f offset) {
+        Validate.nonNull(childShape, "child shape");
+        Validate.nonNull(offset, "offset");
+
+        addChildShape(childShape, offset, matrixIdentity);
+    }
+
+    /**
      * Add a child shape with the specified local translation and orientation.
      *
      * @param childShape the child shape to add (not null, not a compound shape,
      * alias created)
-     * @param offset the local coordinates of the child shape's center (not
+     * @param offset the local coordinates of the child shape's origin (not
      * null, unaffected)
      * @param rotation the local orientation of the child shape (not null,
      * unaffected)
@@ -274,7 +274,7 @@ public class CompoundCollisionShape extends CollisionShape {
      */
     public int countChildren() {
         int numChildren = children.size();
-        assert numChildren == countChildren(nativeId());
+        assert numChildren == countChildren(nativeId()) : numChildren;
 
         return numChildren;
     }
@@ -382,14 +382,14 @@ public class CompoundCollisionShape extends CollisionShape {
 
     /**
      * Calculates the coordinate transform to be applied to a rigid body in
-     * order for this shape to be centered at the center of mass and its
+     * order for this shape to be centered on its center of mass and its
      * principal axes to coincide with its local axes. Apply the inverse of this
      * transform to each child shape using
      * {@link #correctAxes(com.jme3.math.Transform)}. The resulting moment of
      * inertia is also calculated.
      *
-     * @param masses the mass for each child shape (not null, direct, all
-     * elements &gt;0)
+     * @param masses the relative mass for each child shape (not null, direct,
+     * all elements &gt;0)
      * @param storeTransform storage for the transform (modified if not null)
      * @param storeInertia storage for the moment of inertia (not null,
      * modified)
@@ -412,7 +412,7 @@ public class CompoundCollisionShape extends CollisionShape {
     }
 
     /**
-     * Remove a child CollisionShape from this shape.
+     * Purge all references to the specified child shape from this shape.
      *
      * @param childShape the collision shape to remove (not null)
      */
@@ -585,7 +585,7 @@ public class CompoundCollisionShape extends CollisionShape {
     }
 
     /**
-     * Estimate how far this shape extends from its center.
+     * Estimate how far the shape extends from its origin.
      *
      * @return a distance estimate (in physics-space units, &ge;0)
      */
@@ -599,8 +599,8 @@ public class CompoundCollisionShape extends CollisionShape {
             child.copyOffset(tmpTransform.getTranslation());
             tmpTransform.getTranslation().multLocal(scale);
             child.copyRotation(tmpTransform.getRotation());
-            float childRadius = DebugShapeFactory.maxDistance(baseShape,
-                    tmpTransform, DebugShapeFactory.lowResolution);
+            float childRadius = DebugShapeFactory.maxDistance(
+                    baseShape, tmpTransform, DebugShapeFactory.lowResolution);
             if (childRadius > result) {
                 result = childRadius;
             }

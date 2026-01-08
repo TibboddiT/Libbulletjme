@@ -2,105 +2,323 @@
 # GitHub Actions workflow for commits pushed to the Libbulletjme repo - all branches
 
 name: CI at GitHub
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   Java8-Linux:
     if: contains(toJson(github.event.commits), '[ci skip] ') == false
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: 8
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y g++-multilib
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Dp -Pgithub=debug64
-      - if: failure()
-        run: cat build/reports/tests/test/classes/TestLibbulletjme.html
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Dp -Ptarget=Linux64 -x checkstyleMain -x checkstyleTest run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
 
   Java11-Linux:
     if: contains(toJson(github.event.commits), '[ci skip] ') == false
     runs-on: ubuntu-22.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: 11
-      - uses: gradle/wrapper-validation-action@v2
-      - uses: mattsb42/not-grep@master
-        with:
-          config-file: .github/not-grep.toml
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y g++-multilib
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Sp -Pgithub=debug64
-      - if: failure()
-        run: cat build/reports/tests/test/classes/TestLibbulletjme.html
-
-  Java11-Windows:
-    if: contains(toJson(github.event.commits), '[ci skip] ') == false
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 11
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Sp -Pgithub=debug64
-        shell: bash
-      - if: failure()
-        run: cat build/reports/tests/test/classes/TestLibbulletjme.html
-
-  Java17-MacOS:
-    if: contains(toJson(github.event.commits), '[ci skip] ') == false
-    runs-on: macOS-12
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - run: clang --version
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Sp -Pgithub=debug64
-      - if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: crash-log
-          path: '*.log'
-
-  Java17-Linux:
-    if: contains(toJson(github.event.commits), '[ci skip] ') == false
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y g++-multilib
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Dp -Pgithub=debug64
-      - if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: crash-log
-          path: '*.log'
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/wrapper-validation@v4
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Sp -Ptarget=Linux64 -Ptool=gcc -x checkstyleMain -x checkstyleTest run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
 
   Java17-Windows:
     if: contains(toJson(github.event.commits), '[ci skip] ') == false
     runs-on: windows-2022
+    timeout-minutes: 7
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: 17
-      - run: ./gradlew build --console=plain --no-daemon -Pflavor=Dp -Pgithub=debug64
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Sp -Ptarget=Windows64 run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
         shell: bash
-      - if: failure()
-        uses: actions/upload-artifact@v4
+
+  Java21-Linux:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
         with:
-          name: crash-log
-          path: '*.log'
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Dp -Ptarget=Linux64 -Ptool=gcc run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - name: gradlew -Partifact=Libbulletjme-Linux64 -Ptarget=Linux64 -Ptool=gcc clean release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-Linux64 -Ptarget=Linux64 -Ptool=gcc clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-MacOSX64:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Release -Pflavor=Sp -Ptarget=MacOSX64 install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-MacOSX64 -Ptarget=MacOSX64 clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-MacOSX_ARM64:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: macOS-15
+    timeout-minutes: 9
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Dp -Ptarget=MacOSX_ARM64 run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-MacOSX_ARM64 -Ptarget=MacOSX_ARM64 clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-Windows:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: windows-2025
+    timeout-minutes: 24
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Dp -Ptarget=Windows64 run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+        shell: bash
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-Windows64 -Ptarget=Windows64 clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+        shell: bash
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+        shell: bash
+
+  Java21-x-Android:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew --build-file=android.gradle -Pflavor=Sp -Ptarget=Android_ARM8 install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew --build-file=android.gradle -Partifact=Libbulletjme-Android -Pflavor=Sp clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-x-Linux_ARM32hf:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update
+      - run: sudo apt install g++-9-arm-linux-gnueabihf
+      - run: arm-linux-gnueabihf-g++-9 --version
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Ptarget=Linux_ARM32hf install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-Linux_ARM32hf -Ptarget=Linux_ARM32hf clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-x-Linux_ARM64:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update
+      - run: sudo apt install g++-10-aarch64-linux-gnu
+      - run: aarch64-linux-gnu-g++-10 --version
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Ptarget=Linux_ARM64 install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-Linux_ARM64 -Ptarget=Linux_ARM64 clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+      - name: uploadToCentral.sh
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          bash/uploadToCentral.sh -p '${{ secrets.CENTRAL_PASSWORD }}' \
+            -u '${{ secrets.CENTRAL_USERNAME }}'
+
+  Java21-x-Linux_LoongArch64:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update
+      - run: sudo apt install g++-13-loongarch64-linux-gnu
+      - run: loongarch64-linux-gnu-g++-13 --version
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Ptarget=Linux_LoongArch64 install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'
+      - if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          ./gradlew -Partifact=Libbulletjme-Linux_LoongArch64 -Ptarget=Linux_LoongArch64 clean release \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}' \
+            -PcentralPassword='${{ secrets.CENTRAL_PASSWORD }}' \
+            -PcentralUsername='${{ secrets.CENTRAL_USERNAME }}'
+
+  Java24-Linux:
+    if: contains(toJson(github.event.commits), '[ci skip] ') == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 24
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/setup-gradle@v5
+      - run: |
+          ./gradlew -Pbt=Debug -Pflavor=Dp -Ptarget=Linux64 run build install \
+            --console=plain \
+            -PsigningKeyEncoded='${{ secrets.SIGNING_KEY_ENCODED }}' \
+            -PsigningPassword='${{ secrets.SIGNING_PASSWORD }}'

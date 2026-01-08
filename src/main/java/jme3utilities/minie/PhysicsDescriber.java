@@ -26,6 +26,7 @@
  */
 package jme3utilities.minie;
 
+import com.jme3.bullet.CollisionConfiguration;
 import com.jme3.bullet.MultiBody;
 import com.jme3.bullet.SoftBodyWorldInfo;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
@@ -35,6 +36,7 @@ import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.collision.shapes.ConeCollisionShape;
+import com.jme3.bullet.collision.shapes.ConicalFrustum;
 import com.jme3.bullet.collision.shapes.Convex2dShape;
 import com.jme3.bullet.collision.shapes.ConvexShape;
 import com.jme3.bullet.collision.shapes.CustomConvexShape;
@@ -48,6 +50,7 @@ import com.jme3.bullet.collision.shapes.MultiSphere;
 import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
 import com.jme3.bullet.collision.shapes.SimplexCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.collision.shapes.SphericalSegment;
 import com.jme3.bullet.joints.Anchor;
 import com.jme3.bullet.joints.Constraint;
 import com.jme3.bullet.joints.JointEnd;
@@ -98,11 +101,42 @@ public class PhysicsDescriber extends Describer {
 
     /**
      * Instantiate a describer with the default separator.
+     * <p>
+     * This no-arg constructor was made explicit to avoid javadoc warnings from
+     * JDK 18+.
      */
-    public PhysicsDescriber() { // to avoid a warning from JDK 18 javadoc
+    public PhysicsDescriber() {
     }
     // *************************************************************************
     // new methods exposed
+
+    /**
+     * Generate a textual description for a CollisionConfiguration.
+     *
+     * @param configuration the configuration to describe (not null, unaffected)
+     * @return description (not null)
+     */
+    public String describe(CollisionConfiguration configuration) {
+        Validate.nonNull(configuration, "configuration");
+
+        int pdsValue = configuration.penetrationDepthSolver();
+        String pds;
+        switch (pdsValue) {
+            case 0:
+                pds = "minkowski";
+                break;
+            case 1:
+                pds = "epa";
+                break;
+            default:
+                pds = Integer.toString(pdsValue);
+        }
+
+        int maxM = configuration.maxManifolds();
+        String result = String.format("%s maxM=%d", pds, maxM);
+
+        return result;
+    }
 
     /**
      * Generate a textual description for a CollisionShape.
@@ -156,6 +190,18 @@ public class PhysicsDescriber extends Describer {
             desc = describeHeightAndRadius(height, radius);
             result.append(desc);
 
+        } else if (shape instanceof ConicalFrustum) {
+            ConicalFrustum frustum = (ConicalFrustum) shape;
+            result.append(" a=");
+            float a = frustum.aRadius();
+            result.append(MyString.describe(a));
+            result.append(" b=");
+            float b = frustum.bRadius();
+            result.append(MyString.describe(b));
+            result.append(" h=");
+            float h = frustum.height();
+            result.append(MyString.describe(h));
+
         } else if (shape instanceof Convex2dShape) {
             CollisionShape child = ((Convex2dShape) shape).getBaseShape();
             desc = describe(child);
@@ -174,13 +220,20 @@ public class PhysicsDescriber extends Describer {
             result.append(desc);
 
         } else if (shape instanceof GImpactCollisionShape) {
-            int numV = ((GImpactCollisionShape) shape).countMeshVertices();
-            desc = String.format("[%d]", numV);
+            GImpactCollisionShape giShape = (GImpactCollisionShape) shape;
+            int numS = giShape.countSubmeshes();
+            int numT = giShape.countMeshTriangles();
+            int numV = giShape.countMeshVertices();
+            desc = String.format("[numS=%s numT=%d numV=%d]", numS, numT, numV);
             result.append(desc);
 
         } else if (shape instanceof HeightfieldCollisionShape) {
-            int numV = ((HeightfieldCollisionShape) shape).countMeshVertices();
-            desc = String.format("[%d]", numV);
+            HeightfieldCollisionShape hcs = (HeightfieldCollisionShape) shape;
+            int numRows = hcs.countRows();
+            int numColumns = hcs.countColumns();
+            int upAxis = hcs.upAxis();
+            String up = MyString.axisName(upAxis);
+            desc = String.format("[%dx%d %sup]", numRows, numColumns, up);
             result.append(desc);
 
         } else if (shape instanceof HullCollisionShape) {
@@ -189,8 +242,15 @@ public class PhysicsDescriber extends Describer {
             result.append(desc);
 
         } else if (shape instanceof MeshCollisionShape) {
-            int numV = ((MeshCollisionShape) shape).countMeshVertices();
-            desc = String.format("[%d]", numV);
+            MeshCollisionShape meshShape = (MeshCollisionShape) shape;
+            int numS = meshShape.countSubmeshes();
+            int numT = meshShape.countMeshTriangles();
+            int numV = meshShape.countMeshVertices();
+            boolean compressed = meshShape.getBvh().isCompressed();
+            String un = compressed ? "" : "UN";
+            desc = String.format("[numS=%s numT=%d numV=%d %scompressed]",
+                    numS, numT, numV, un);
+
             result.append(desc);
 
         } else if (shape instanceof MinkowskiSum) {
@@ -238,11 +298,25 @@ public class PhysicsDescriber extends Describer {
             float radius = sphere.getRadius();
             result.append(MyString.describe(radius));
 
+        } else if (shape instanceof SphericalSegment) {
+            SphericalSegment segment = (SphericalSegment) shape;
+            result.append(" r=");
+            float radius = segment.sphereRadius();
+            result.append(MyString.describe(radius));
+            result.append(" y[");
+            float yMin = segment.yMin();
+            result.append(MyString.describe(yMin));
+            result.append(' ');
+            float yMax = segment.yMax();
+            result.append(MyString.describe(yMax));
+            result.append(']');
+
         } else if (!(shape instanceof CustomConvexShape)) {
             result.append('?');
         }
 
-        if (shape instanceof HeightfieldCollisionShape
+        if (shape instanceof GImpactCollisionShape
+                || shape instanceof HeightfieldCollisionShape
                 || shape instanceof MeshCollisionShape) {
             result.append(' ');
             if (!shape.isContactFilterEnabled()) {
@@ -254,6 +328,17 @@ public class PhysicsDescriber extends Describer {
         result.append(" marg=");
         float margin = shape.getMargin();
         result.append(MyString.describe(margin));
+
+        int userIndex = shape.userIndex();
+        if (userIndex != -1) {
+            result.append(" userIndex=");
+            result.append(userIndex);
+        }
+        int userIndex2 = shape.userIndex2();
+        if (userIndex2 != -1) {
+            result.append(" userIndex2=");
+            result.append(userIndex2);
+        }
 
         return result.toString();
     }

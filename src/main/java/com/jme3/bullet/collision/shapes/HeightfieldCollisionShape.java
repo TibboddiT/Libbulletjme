@@ -45,9 +45,10 @@ import jme3utilities.math.MyMath;
 /**
  * A collision shape for terrain defined by a matrix of height values, based on
  * Bullet's {@code btHeightfieldTerrainShape}. Should be more efficient than an
- * equivalent MeshCollisionShape. Not for use in dynamic bodies. Collisions
- * between HeightfieldCollisionShape, MeshCollisionShape, and
- * PlaneCollisionShape objects are never detected.
+ * equivalent {@code MeshCollisionShape}. Not for use in dynamic bodies.
+ * Collisions between {@code HeightfieldCollisionShape},
+ * {@code MeshCollisionShape}, and {@code PlaneCollisionShape} objects are never
+ * detected.
  *
  * @author Brent Owens
  */
@@ -118,32 +119,35 @@ public class HeightfieldCollisionShape extends CollisionShape {
     // constructors
 
     /**
-     * Instantiate a square shape for the specified height map.
+     * Instantiate a square shape for the specified array of heights.
      *
-     * @param heightmap (not null, length&ge;4, length a perfect square,
+     * @param heightArray (not null, length&ge;4, length a perfect square,
      * unaffected)
      */
-    public HeightfieldCollisionShape(float[] heightmap) {
-        Validate.nonEmpty(heightmap, "heightmap");
-        assert heightmap.length >= 4 : heightmap.length;
+    public HeightfieldCollisionShape(float[] heightArray) {
+        Validate.nonEmpty(heightArray, "height array");
+        Validate.inRange(heightArray.length, "number of heights",
+                4, Integer.MAX_VALUE);
 
-        createCollisionHeightfield(heightmap, scaleIdentity);
+        createCollisionHeightfield(heightArray, scaleIdentity);
     }
 
     /**
-     * Instantiate a square shape for the specified height map and scale vector.
+     * Instantiate a square shape for the specified height array and scale
+     * vector.
      *
-     * @param heightmap (not null, length&ge;4, length a perfect square,
+     * @param heightArray (not null, length&ge;4, length a perfect square,
      * unaffected)
      * @param scale the desired scale factor for each local axis (not null, no
      * negative component, unaffected, default=(1,1,1))
      */
-    public HeightfieldCollisionShape(float[] heightmap, Vector3f scale) {
-        Validate.nonEmpty(heightmap, "heightmap");
-        assert heightmap.length >= 4 : heightmap.length;
+    public HeightfieldCollisionShape(float[] heightArray, Vector3f scale) {
+        Validate.nonEmpty(heightArray, "height array");
+        Validate.inRange(heightArray.length, "number of heights",
+                4, Integer.MAX_VALUE);
         Validate.nonNegative(scale, "scale");
 
-        createCollisionHeightfield(heightmap, scale);
+        createCollisionHeightfield(heightArray, scale);
     }
 
     /**
@@ -193,15 +197,47 @@ public class HeightfieldCollisionShape extends CollisionShape {
     // new methods exposed
 
     /**
-     * Count how many data points are in the heightfield.
+     * Count how many columns are in the heightfield.
      *
-     * @return the count (&gt;0)
+     * @return the count (&ge;2)
+     */
+    public int countColumns() {
+        assert heightStickWidth >= 2 : heightStickWidth;
+        return heightStickWidth;
+    }
+
+    /**
+     * Count how many heights are in the heightfield.
+     *
+     * @return the count (&ge;4)
      */
     public int countMeshVertices() {
         int count = heightfieldData.length;
 
-        assert count > 0 : count;
+        assert count >= 4 : count;
         return count;
+    }
+
+    /**
+     * Count how many rows are in the heightfield.
+     *
+     * @return the count (&ge;2)
+     */
+    public int countRows() {
+        assert heightStickLength >= 2 : heightStickLength;
+        return heightStickLength;
+    }
+
+    /**
+     * Return the index of the height axis.
+     *
+     * @return the axis index: 0&rarr;X, 1&rarr;Y, 2&rarr;Z
+     */
+    public int upAxis() {
+        assert upAxis == PhysicsSpace.AXIS_X
+                || upAxis == PhysicsSpace.AXIS_Y
+                || upAxis == PhysicsSpace.AXIS_Z : upAxis;
+        return upAxis;
     }
     // *************************************************************************
     // CollisionShape methods
@@ -262,16 +298,16 @@ public class HeightfieldCollisionShape extends CollisionShape {
     /**
      * Instantiate a square {@code btHeightfieldTerrainShape}.
      *
-     * @param heightmap (not null, length&ge;4, length a perfect square,
+     * @param heightArray (not null, length&ge;4, length a perfect square,
      * unaffected)
      * @param worldScale the desired scale factor for each local axis (not null,
      * no negative component, unaffected)
      */
-    private void
-            createCollisionHeightfield(float[] heightmap, Vector3f worldScale) {
+    private void createCollisionHeightfield(
+            float[] heightArray, Vector3f worldScale) {
         scale.set(worldScale);
 
-        this.heightfieldData = heightmap.clone();
+        this.heightfieldData = heightArray.clone();
         this.heightStickWidth = (int) FastMath.sqrt(heightfieldData.length);
         assert heightStickWidth > 1 : heightStickWidth;
 

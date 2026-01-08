@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 jMonkeyEngine
+ * Copyright (c) 2019-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,8 +62,11 @@ abstract public class PhysicsBody extends PhysicsCollisionObject {
 
     /**
      * Instantiate a PhysicsBody.
+     * <p>
+     * This no-arg constructor was made explicit to avoid javadoc warnings from
+     * JDK 18+.
      */
-    protected PhysicsBody() { // explicit to avoid a warning from JDK 18 javadoc
+    protected PhysicsBody() {
     }
     // *************************************************************************
     // new methods exposed
@@ -116,7 +119,7 @@ abstract public class PhysicsBody extends PhysicsCollisionObject {
     abstract public float getMass();
 
     /**
-     * Test the global deactivation enabled flag.
+     * Test the global deactivation enable flag.
      *
      * @return true if deactivation is enabled, otherwise false
      */
@@ -158,7 +161,7 @@ abstract public class PhysicsBody extends PhysicsCollisionObject {
     native public static void setDeactivationDeadline(float newDeadline);
 
     /**
-     * Alter the global deactivation enabled flag.
+     * Alter the global deactivation enable flag.
      *
      * @param newSetting true to enable deactivation, false to disable it
      * (default=true)

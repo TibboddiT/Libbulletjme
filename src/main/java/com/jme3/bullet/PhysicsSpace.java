@@ -32,9 +32,6 @@
 package com.jme3.bullet;
 
 import com.jme3.bullet.collision.ContactListener;
-import com.jme3.bullet.collision.PersistentManifolds;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.ProceduralCollisionShape;
 import com.jme3.bullet.joints.Constraint;
@@ -45,11 +42,9 @@ import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.bullet.objects.PhysicsVehicle;
 import com.jme3.bullet.util.NativeLibrary;
 import com.jme3.math.Vector3f;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -117,15 +112,10 @@ public class PhysicsSpace
     // fields
 
     /**
-     * contact-processed events not yet distributed to listeners
+     * list of registered tick listeners
      */
-    final private Deque<PhysicsCollisionEvent> contactProcessedEvents
-            = new ArrayDeque<>(20);
-    /**
-     * contact-started events not yet distributed to listeners
-     */
-    final private Deque<PhysicsCollisionEvent> contactStartedEvents
-            = new ArrayDeque<>(20);
+    final private Collection<PhysicsTickListener> tickListeners
+            = new ArrayList<>(4);
     /**
      * time step (in seconds, &gt;0) ignored when maxSubSteps=0
      */
@@ -135,27 +125,12 @@ public class PhysicsSpace
      */
     private float maxTimeStep = 0.1f;
     /**
-     * maximum number of time steps per frame, or 0 for a variable time step
-     * (&ge;0)
+     * maximum number of simulation steps per frame (&gt;0) or 0 for a variable
+     * time step
      */
     private int maxSubSteps = 4;
     /**
-     * list of registered listeners for ongoing contacts
-     */
-    final private Collection<PhysicsCollisionListener> contactProcessedListeners
-            = new ArrayList<>(4);
-    /**
-     * list of registered listeners for new contacts
-     */
-    final private Collection<PhysicsCollisionListener> contactStartedListeners
-            = new ArrayList<>(4);
-    /**
-     * list of registered tick listeners
-     */
-    final private Collection<PhysicsTickListener> tickListeners
-            = new ArrayList<>(4);
-    /**
-     * map character IDs to added objects
+     * map character IDs to added collision objects
      */
     final private Map<Long, PhysicsCharacter> characterMap
             = new ConcurrentHashMap<>(64);
@@ -165,12 +140,12 @@ public class PhysicsSpace
     final private Map<Long, PhysicsJoint> jointMap
             = new ConcurrentHashMap<>(64);
     /**
-     * map rigid-body IDs to added objects (including vehicles)
+     * map rigid-body IDs to added collision object (including vehicles)
      */
     final private Map<Long, PhysicsRigidBody> rigidMap
             = new ConcurrentHashMap<>(64);
     /**
-     * map vehicle-controller IDs to added objects
+     * map vehicle-controller IDs to added collision objects
      */
     final private Map<Long, PhysicsVehicle> vehicleMap
             = new ConcurrentHashMap<>(64);
@@ -183,10 +158,11 @@ public class PhysicsSpace
      */
     private SolverType solverType = SolverType.SI;
     /**
-     * copy of gravity-acceleration vector for newly-added bodies (default is
-     * 9.81 in the -Y direction, corresponding to Earth-normal in MKS units)
+     * copy of the gravity-acceleration vector for newly-added bodies (default
+     * is 9.81 in the -Y direction, approximating Earth-normal gravity in MKS
+     * units for a Y-up coordinate system)
      */
-    final private Vector3f gravity = new Vector3f(0, -9.81f, 0);
+    final private Vector3f gravity = new Vector3f(0f, -9.81f, 0f);
     // *************************************************************************
     // constructors
 
@@ -197,8 +173,8 @@ public class PhysicsSpace
      * @param broadphaseType which broadphase accelerator to use (not null)
      */
     public PhysicsSpace(BroadphaseType broadphaseType) {
-        this(new Vector3f(-10000f, -10000f, -10000f),
-                new Vector3f(10000f, 10000f, 10000f), broadphaseType);
+        this(new Vector3f(-10_000f, -10_000f, -10_000f),
+                new Vector3f(10_000f, 10_000f, 10_000f), broadphaseType);
     }
 
     /**
@@ -249,6 +225,26 @@ public class PhysicsSpace
     }
 
     /**
+     * Instantiate a PhysicsSpace with the specified number of
+     * sequential-impulse solvers. Must be invoked on the designated physics
+     * thread.
+     *
+     * @param worldMin the desired minimum coordinate values (not null,
+     * unaffected, default=(-10k,-10k,-10k))
+     * @param worldMax the desired maximum coordinate values (not null,
+     * unaffected, default=(10k,10k,10k))
+     * @param broadphaseType which broadphase accelerator to use (not null)
+     * @param numSolvers the desired number of solvers in the thread-safe pool
+     * (&ge;1, &le;64, default=numThreads)
+     * @param configuration the desired configuration (not null)
+     */
+    public PhysicsSpace(
+            Vector3f worldMin, Vector3f worldMax, BroadphaseType broadphaseType,
+            int numSolvers, CollisionConfiguration configuration) {
+        super(worldMin, worldMax, broadphaseType, numSolvers, configuration);
+    }
+
+    /**
      * Instantiate a PhysicsSpace with the specified contact-and-constraint
      * solver. Must be invoked on the designated physics thread.
      *
@@ -261,7 +257,26 @@ public class PhysicsSpace
      */
     public PhysicsSpace(Vector3f worldMin, Vector3f worldMax,
             BroadphaseType broadphaseType, SolverType solverType) {
-        super(worldMin, worldMax, broadphaseType);
+        this(worldMin, worldMax, broadphaseType, solverType,
+                new CollisionConfiguration());
+    }
+
+    /**
+     * Instantiate a PhysicsSpace with the specified contact-and-constraint
+     * solver. Must be invoked on the designated physics thread.
+     *
+     * @param worldMin the desired minimum coordinate values (not null,
+     * unaffected, default=(-10k,-10k,-10k))
+     * @param worldMax the desired maximum coordinate values (not null,
+     * unaffected, default=(10k,10k,10k))
+     * @param broadphaseType which broadphase accelerator to use (not null)
+     * @param solverType the desired contact-and-constraint solver (not null)
+     * @param configuration the desired configuration (not null)
+     */
+    public PhysicsSpace(Vector3f worldMin, Vector3f worldMax,
+            BroadphaseType broadphaseType, SolverType solverType,
+            CollisionConfiguration configuration) {
+        super(worldMin, worldMax, broadphaseType, 1, configuration);
         Validate.nonNull(solverType, "solver type");
 
         if (this.solverType != solverType) {
@@ -273,7 +288,7 @@ public class PhysicsSpace
     // new methods exposed
 
     /**
-     * Activate all rigid bodies in this space.
+     * Activate all rigid bodies in the space.
      *
      * @param forceFlag true to force activation
      */
@@ -284,7 +299,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Add the specified PhysicsJoint to this space.
+     * Add the specified PhysicsJoint to the space.
      *
      * @param joint the joint to add (not null, alias created)
      */
@@ -297,7 +312,7 @@ public class PhysicsSpace
         }
         assert joint.getPhysicsSpace() == null;
 
-        // Warn if the jointed bodies aren't already added to this space.
+        // Warn if the jointed bodies aren't already added to the space.
         PhysicsBody a = joint.getBodyA();
         if (a != null && !contains(a)) {
             logger.log(Level.WARNING,
@@ -328,7 +343,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Register the specified tick listener with this space.
+     * Register the specified tick listener with the space.
      * <p>
      * Tick listeners are notified before and after each simulation step. A
      * simulation step is not necessarily the same as a frame; it is more
@@ -346,7 +361,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Test whether the specified PhysicsJoint is added to this space.
+     * Test whether the specified PhysicsJoint is added to the space.
      *
      * @param joint the joint to test (not null, unaffected)
      * @return true if currently added, otherwise false
@@ -359,7 +374,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Count the joints in this space.
+     * Count the joints in the space.
      *
      * @return the count (&ge;0)
      */
@@ -372,7 +387,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Count the collision manifolds in this space.
+     * Count the collision manifolds in the space.
      *
      * @return the current number of btPersistentManifolds (&ge;0)
      */
@@ -384,7 +399,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Count the rigid bodies in this space, including vehicles.
+     * Count the rigid bodies in the space, including vehicles.
      *
      * @return count (&ge;0)
      */
@@ -394,7 +409,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Count how many tick listeners are registered with this space.
+     * Count how many tick listeners are registered with the space.
      *
      * @return the count (&ge;0)
      */
@@ -404,7 +419,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Read the accuracy: the time step used when maxSubSteps&gt;0.
+     * Return the simulation accuracy: the time step used when maxSubSteps&gt;0.
      *
      * @return the time step (in seconds, &gt;0)
      */
@@ -413,7 +428,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Enumerate physics characters that have been added to this space and not
+     * Enumerate physics characters that have been added to the space and not
      * yet removed.
      *
      * @return a new unmodifiable collection of pre-existing instances (not
@@ -442,7 +457,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Enumerate physics joints that have been added to this space and not yet
+     * Enumerate physics joints that have been added to the space and not yet
      * removed.
      *
      * @return a new unmodifiable collection of pre-existing instances (not
@@ -490,7 +505,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Determine the type of solver.
+     * Return the type of contact-and-constraint solver in use.
      *
      * @return an enum value (not null)
      */
@@ -499,7 +514,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Enumerate physics vehicles that have been added to this space and not yet
+     * Enumerate physics vehicles that have been added to the space and not yet
      * removed.
      *
      * @return a new unmodifiable collection of pre-existing instances (not
@@ -527,7 +542,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Test whether this space uses Speculative Contact Restitution (native
+     * Test whether the space uses Speculative Contact Restitution (native
      * field: m_applySpeculativeContactRestitution).
      *
      * @return true if using SCR, otherwise false
@@ -540,7 +555,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Enumerate the native IDs of all collision manifolds in this space.
+     * Enumerate the native IDs of all collision manifolds in the space.
      *
      * @return a new array (not null, may be empty)
      * @see com.jme3.bullet.collision.PersistentManifolds
@@ -559,9 +574,9 @@ public class PhysicsSpace
     }
 
     /**
-     * Read the maximum number of time steps per frame.
+     * Return the maximum number of simulation steps per frame.
      *
-     * @return number of steps (&gt;0) or 0 for a variable time step
+     * @return the number of steps (&gt;1) or 0 for a variable time step
      */
     public int maxSubSteps() {
         assert maxSubSteps >= 0 : maxSubSteps;
@@ -569,7 +584,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Read the maximum time step (imposed when maxSubSteps=0).
+     * Return the maximum time step (imposed when maxSubSteps=0).
      *
      * @return the maximum time step (in seconds, &gt;0, default=0.1)
      */
@@ -579,7 +594,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Remove the specified PhysicsJoint from this space.
+     * Remove the specified PhysicsJoint from the space.
      *
      * @param joint the joint to remove (not null)
      */
@@ -649,7 +664,7 @@ public class PhysicsSpace
      * <p>
      * Typically, when a body is added to a space, the body's gravity gets set
      * to that of the space. Thus, it is preferable to set the space's gravity
-     * before adding any bodies to the space.
+     * before adding any bodies.
      *
      * @param gravity the desired acceleration vector (in physics-space
      * coordinates, not null, unaffected, default=(0,-9.81,0))
@@ -674,7 +689,7 @@ public class PhysicsSpace
      */
     public void setMaxSubSteps(int steps) {
         Validate.nonNegative(steps, "steps");
-        maxSubSteps = steps;
+        this.maxSubSteps = steps;
     }
 
     /**
@@ -692,9 +707,9 @@ public class PhysicsSpace
     }
 
     /**
-     * Update this space. Can be used to single-step the physics simulation, if
-     * maxSubSteps is set to 0 or 1. This method should be invoked from the
-     * thread that created the space.
+     * Update the space. Can be used to single-step the physics simulation, if
+     * maxSubSteps is set to 0 or 1. This method should be invoked on the thread
+     * that created the space.
      *
      * @see #setMaxSubSteps(int)
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
@@ -713,7 +728,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Update this space. This method should be invoked from the thread that
+     * Update the space. This method should be invoked on the thread that
      * created the space.
      *
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
@@ -725,13 +740,13 @@ public class PhysicsSpace
         assert Validate.nonNegative(maxSteps, "max steps");
 
         boolean doEnded = false;
-        boolean doProcessed = !contactProcessedListeners.isEmpty();
-        boolean doStarted = !contactStartedListeners.isEmpty();
+        boolean doProcessed = false;
+        boolean doStarted = false;
         update(timeInterval, maxSteps, doEnded, doProcessed, doStarted);
     }
 
     /**
-     * Update this space. This method should be invoked from the thread that
+     * Update the space. This method should be invoked from the thread that
      * created the space.
      *
      * @param timeInterval the time interval to simulate (in seconds, &ge;0)
@@ -760,7 +775,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Alter whether this space uses Speculative Contact Restitution (native
+     * Alter whether the space uses Speculative Contact Restitution (native
      * field: m_applySpeculativeContactRestitution).
      *
      * @param setting true to enable SCR, false to disable it (default=false)
@@ -775,7 +790,7 @@ public class PhysicsSpace
     /**
      * Access the map from native IDs to physics joints.
      *
-     * @return the pre-existing instance
+     * @return the pre-existing instance (not null)
      */
     protected Map<Long, PhysicsJoint> getJointMap() {
         return jointMap;
@@ -784,7 +799,7 @@ public class PhysicsSpace
     /**
      * Determine the type of the underlying btDynamicsWorld.
      *
-     * @param spaceId the Bullet identifier for this space (non-zero)
+     * @param spaceId the Bullet identifier of the space (non-zero)
      * @return 2 (for a discrete world) or 4 (for a soft-rigid world)
      */
     native protected static int getWorldType(long spaceId);
@@ -795,7 +810,7 @@ public class PhysicsSpace
     protected void initSolverInfo() {
         long spaceId = nativeId();
         long solverInfoId = getSolverInfo(spaceId);
-        solverInfo = new SolverInfo(solverInfoId);
+        this.solverInfo = new SolverInfo(solverInfoId);
     }
 
     /**
@@ -811,7 +826,7 @@ public class PhysicsSpace
     // CollisionSpace methods
 
     /**
-     * Add the specified object to this space.
+     * Add the specified object to the space.
      *
      * @param object the collision object or PhysicsJoint to add (not null)
      */
@@ -827,7 +842,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Add the specified collision object to this space.
+     * Add the specified collision object to the space.
      *
      * @param pco the collision object to add (not null)
      */
@@ -845,7 +860,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Test whether the specified collision object is added to this space.
+     * Test whether the specified collision object is added to the space.
      *
      * @param pco the object to test (not null, unaffected)
      * @return true if currently added, otherwise false
@@ -874,8 +889,10 @@ public class PhysicsSpace
         Vector3f max = getWorldMax(null);
         Vector3f min = getWorldMin(null);
         int numSolvers = countSolvers();
-        long nativeId
-                = createPhysicsSpace(min, max, broadphase, numSolvers);
+        CollisionConfiguration configuration = getConfiguration();
+        long configurationId = configuration.nativeId();
+        long nativeId = createPhysicsSpace(
+                min, max, broadphase, numSolvers, configurationId);
         assert nativeId != 0L;
 
         assert getWorldType(nativeId) == 2 // BT_DISCRETE_DYNAMICS_WORLD
@@ -904,8 +921,8 @@ public class PhysicsSpace
     }
 
     /**
-     * Enumerate collision objects that have been added to this space and not
-     * yet removed.
+     * Enumerate collision objects that have been added to the space and not yet
+     * removed.
      *
      * @return a new modifiable collection of pre-existing instances (not null)
      */
@@ -919,7 +936,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Test whether this space is empty.
+     * Test whether the space is empty.
      *
      * @return true if empty, otherwise false
      */
@@ -934,7 +951,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Remove the specified object from this space.
+     * Remove the specified object from the space.
      *
      * @param object the collision object or PhysicsJoint to remove, or null
      */
@@ -948,7 +965,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Remove the specified collision object from this space.
+     * Remove the specified collision object from the space.
      *
      * @param pco the collision object to remove (not null)
      */
@@ -996,14 +1013,6 @@ public class PhysicsSpace
     public void onContactProcessed(PhysicsCollisionObject pcoA,
             PhysicsCollisionObject pcoB, long pointId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
-
-        if (!contactProcessedListeners.isEmpty()) {
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
-
-            // Queue the event to be handled later by distributeEvents().
-            contactProcessedEvents.add(event);
-        }
     }
 
     /**
@@ -1018,36 +1027,12 @@ public class PhysicsSpace
     @Override
     public void onContactStarted(long manifoldId) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
-
-        if (contactStartedListeners.isEmpty()) {
-            return;
-        }
-        int numPoints = PersistentManifolds.countPoints(manifoldId);
-        if (numPoints == 0) {
-            return;
-        }
-
-        long bodyAId = PersistentManifolds.getBodyAId(manifoldId);
-        PhysicsCollisionObject pcoA
-                = PhysicsCollisionObject.findInstance(bodyAId);
-        long bodyBId = PersistentManifolds.getBodyBId(manifoldId);
-        PhysicsCollisionObject pcoB
-                = PhysicsCollisionObject.findInstance(bodyBId);
-
-        for (int i = 0; i < numPoints; ++i) {
-            long pointId = PersistentManifolds.getPointId(manifoldId, i);
-            PhysicsCollisionEvent event
-                    = new PhysicsCollisionEvent(pcoA, pcoB, pointId);
-
-            // Queue the event to be handled later by distributeEvents().
-            contactStartedEvents.add(event);
-        }
     }
     // *************************************************************************
     // Java private methods
 
     /**
-     * Add the specified PhysicsCharacter to this space.
+     * Add the specified PhysicsCharacter to the space.
      *
      * @param character the character to add (not null, alias created)
      */
@@ -1074,12 +1059,12 @@ public class PhysicsSpace
     }
 
     /**
-     * Add the specified PhysicsRigidBody to this space.
+     * Add the specified PhysicsRigidBody to the space.
      * <p>
      * NOTE: When a rigid body is added, its gravity gets set to that of the
      * space.
      *
-     * @param rigidBody the body to add (not null, alias created)
+     * @param rigidBody the body to add (not null, modified)
      */
     private void addRigidBody(PhysicsRigidBody rigidBody) {
         if (contains(rigidBody)) {
@@ -1139,7 +1124,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Compare Bullet's gravity vector to the JVM copy.
+     * Compare Bullet's gravity vector to the local copy.
      *
      * @param storeVector caller-allocated temporary storage (not null)
      * @return true if scale factors are exactly equal, otherwise false
@@ -1157,7 +1142,7 @@ public class PhysicsSpace
     /**
      * Callback invoked (by native code) just after the physics is stepped.
      *
-     * @param timeStep the time per simulation step (in seconds, &ge;0)
+     * @param timeStep the duration of the simulation step (in seconds, &ge;0)
      */
     private void postTick(float timeStep) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
@@ -1170,7 +1155,7 @@ public class PhysicsSpace
     /**
      * Callback invoked (by native code) just before the physics is stepped.
      *
-     * @param timeStep the time per simulation step (in seconds, &ge;0)
+     * @param timeStep the duration of the simulation step (in seconds, &ge;0)
      */
     private void preTick(float timeStep) {
         assert NativeLibrary.jniEnvId() == jniEnvId() : "wrong thread";
@@ -1181,7 +1166,7 @@ public class PhysicsSpace
     }
 
     /**
-     * Remove the specified PhysicsCharacter from this space.
+     * Remove the specified PhysicsCharacter from the space.
      *
      * @param character the character to remove (not null)
      */
@@ -1207,9 +1192,9 @@ public class PhysicsSpace
     }
 
     /**
-     * Remove the specified PhysicsRigidBody from this space.
+     * Remove the specified PhysicsRigidBody from the space.
      *
-     * @param rigidBody the body to remove (not null)
+     * @param rigidBody the body to remove (not null, modified)
      */
     private void removeRigidBody(PhysicsRigidBody rigidBody) {
         long rigidBodyId = rigidBody.nativeId();
@@ -1260,8 +1245,9 @@ public class PhysicsSpace
     native private static void addProceduralStaticRigidBody(long spaceId,
             long rigidBodyId, long shapeId, int proxyGroup, int proxyMask);
 
-    native private long createPhysicsSpace(Vector3f minVector,
-            Vector3f maxVector, int broadphaseType, int numSolvers);
+    native private long createPhysicsSpace(
+            Vector3f minVector, Vector3f maxVector, int broadphaseType,
+            int numSolvers, long configurationId);
 
     native private static void getGravity(long spaceId, Vector3f storeVector);
 
@@ -1297,7 +1283,6 @@ public class PhysicsSpace
             setSpeculativeContactRestitution(long spaceId, boolean apply);
 
     native private static void stepSimulation(long spaceId, float timeInterval,
-            int maxSubSteps, float accuracy, boolean enableContactEndedCallback,
-            boolean enableContactProcessedCallback,
-            boolean enableContactStartedCallback);
+            int maxSubSteps, float accuracy, boolean enableContactEnded,
+            boolean enableContactProcessed, boolean enableContactStarted);
 }

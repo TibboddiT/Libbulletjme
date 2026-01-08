@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 jMonkeyEngine
+ * Copyright (c) 2009-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,10 @@ public class CollisionSpace extends NativePhysicsObject {
      */
     final private PhysicsSpace.BroadphaseType broadphaseType;
     /**
+     * tuning parameters
+     */
+    final private CollisionConfiguration collisionConfiguration;
+    /**
      * comparator for raytest results
      */
     final private static Comparator<PhysicsRayTestResult> hitFractionComparator
@@ -88,7 +92,7 @@ public class CollisionSpace extends NativePhysicsObject {
         }
     };
     /**
-     * number of contact-and-constraint solvers (&ge;1, &le;64, default=1)
+     * number of worker threads (&ge;1, &le;64, default=1)
      */
     final private int numSolvers;
     /**
@@ -101,7 +105,12 @@ public class CollisionSpace extends NativePhysicsObject {
     final private Map<Long, PhysicsGhostObject> ghostMap
             = new ConcurrentHashMap<>(64);
     /**
-     * physics-space reference for each thread
+     * collision-space reference for each thread
+     * <p>
+     * When a collision space is created, the current thread automatically
+     * becomes associated with it. For the space to be garbage collected, the
+     * same thread should null out its reference (using
+     * {@code setLocalThreadPhysicsSpace()}) before terminating.
      */
     final private static ThreadLocal<CollisionSpace> physicsSpaceTL
             = new ThreadLocal<>();
@@ -109,12 +118,13 @@ public class CollisionSpace extends NativePhysicsObject {
      * copy of maximum coordinate values when using AXIS_SWEEP broadphase
      * algorithms
      */
-    final private Vector3f worldMax = new Vector3f(10000f, 10000f, 10000f);
+    final private Vector3f worldMax = new Vector3f(10_000f, 10_000f, 10_000f);
     /**
      * copy of minimum coordinate values when using AXIS_SWEEP broadphase
      * algorithms
      */
-    final private Vector3f worldMin = new Vector3f(-10000f, -10000f, -10000f);
+    final private Vector3f worldMin
+            = new Vector3f(-10_000f, -10_000f, -10_000f);
     // *************************************************************************
     // constructors
 
@@ -146,24 +156,45 @@ public class CollisionSpace extends NativePhysicsObject {
      */
     protected CollisionSpace(Vector3f worldMin, Vector3f worldMax,
             PhysicsSpace.BroadphaseType broadphaseType, int numSolvers) {
+        this(worldMin, worldMax, broadphaseType, numSolvers,
+                new CollisionConfiguration());
+    }
+
+    /**
+     * Used internally.
+     *
+     * @param worldMin the desired minimum coordinate values (not null,
+     * unaffected, default=(-10k,-10k,-10k))
+     * @param worldMax the desired maximum coordinate values (not null,
+     * unaffected, default=(10k,10k,10k))
+     * @param broadphaseType which broadphase accelerator to use (not null)
+     * @param numSolvers the number of contact-and-constraint solvers in the
+     * thread-safe pool (&ge;1, &le;64, default=1)
+     * @param configuration the desired configuration (not null)
+     */
+    protected CollisionSpace(Vector3f worldMin, Vector3f worldMax,
+            PhysicsSpace.BroadphaseType broadphaseType, int numSolvers,
+            CollisionConfiguration configuration) {
         Validate.finite(worldMin, "world min");
         Validate.finite(worldMax, "world max");
         Validate.nonNull(broadphaseType, "broadphase type");
         Validate.inRange(numSolvers, "number of solvers", 1, 64);
+        Validate.nonNull(configuration, "configuration");
 
         this.worldMin.set(worldMin);
         this.worldMax.set(worldMax);
         this.broadphaseType = broadphaseType;
         this.numSolvers = numSolvers;
+        this.collisionConfiguration = configuration;
         create();
     }
     // *************************************************************************
     // new methods exposed
 
     /**
-     * Add the specified object to this space.
+     * Add the specified object to the space.
      *
-     * @param object the collision object to add (not null)
+     * @param object the object to add (not null)
      */
     public void add(Object object) {
         Validate.nonNull(object, "object");
@@ -178,7 +209,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Add the specified collision object to this space.
+     * Add the specified collision object to the space.
      *
      * @param pco the collision object to add (not null, modified)
      */
@@ -212,7 +243,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Test whether the specified collision object is added to this space.
+     * Test whether the specified collision object is added to the space.
      *
      * @param pco the object to test (not null, unaffected)
      * @return true if currently added, otherwise false
@@ -232,7 +263,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Count the collision objects in this space.
+     * Count the collision objects in the space.
      *
      * @return the count (&ge;0)
      */
@@ -244,16 +275,18 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Count the solvers.
+     * Count the worker threads.
      *
      * @return the count (&ge;1, &le;64)
      */
     public int countSolvers() {
+        assert numSolvers >= 1 : numSolvers;
+        assert numSolvers <= 64 : numSolvers;
         return numSolvers;
     }
 
     /**
-     * Remove all collision objects and physics joints.
+     * Remove all collision objects and physics joints. Meant to be overridden.
      */
     public void destroy() {
         for (PhysicsGhostObject character : ghostMap.values()) {
@@ -262,7 +295,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Read the type of acceleration structure used for broadphase collision
+     * Return the type of acceleration structure used for broadphase collision
      * detection.
      *
      * @return an enum value (not null)
@@ -272,10 +305,9 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Access the CollisionSpace <b>running on this thread</b>. For parallel
-     * physics, this may be invoked from the OpenGL thread.
+     * Access the CollisionSpace associated with the current thread.
      *
-     * @return the pre-existing CollisionSpace running on this thread
+     * @return the pre-existing CollisionSpace, or {@code null} if none
      */
     public static CollisionSpace getCollisionSpace() {
         CollisionSpace result = physicsSpaceTL.get();
@@ -283,7 +315,16 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Enumerate ghost objects that have been added to this space and not yet
+     * Access the tuning parameters.
+     *
+     * @return the pre-existing instance (not null)
+     */
+    public CollisionConfiguration getConfiguration() {
+        return collisionConfiguration;
+    }
+
+    /**
+     * Enumerate ghost objects that have been added to the space and not yet
      * removed.
      *
      * @return a new unmodifiable collection of pre-existing instances (not
@@ -297,8 +338,8 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Enumerate collision objects that have been added to this space and not
-     * yet removed.
+     * Enumerate collision objects that have been added to the space and not yet
+     * removed.
      *
      * @return a new modifiable collection of pre-existing instances (not null)
      */
@@ -320,7 +361,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Copy the maximum coordinate values for this space.
+     * Copy the maximum coordinate values for the space.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the maximum coordinates (either storeResult or a new vector, not
@@ -338,7 +379,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Copy the minimum coordinate values for this space.
+     * Copy the minimum coordinate values for the space.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the minimum coordinates (either storeResult or a new vector, not
@@ -390,7 +431,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Test whether this space is empty.
+     * Test whether the space is empty.
      *
      * @return true if empty, otherwise false
      */
@@ -425,7 +466,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Return the address of the JNIEnv that this space uses for callbacks. For
+     * Return the address of the JNIEnv that the space uses for callbacks. For
      * debugging and testing.
      *
      * @return the virtual address of the (native) object (not zero)
@@ -446,7 +487,7 @@ public class CollisionSpace extends NativePhysicsObject {
      * @param pcoA the first collision object (not null)
      * @param pcoB the 2nd collision object (not null)
      * @return true to simulate collisions between pcoA and pcoB, false to
-     * ignore such collisions during this timestep
+     * ignore such collisions during this simulation step
      */
     public boolean needsCollision(
             PhysicsCollisionObject pcoA, PhysicsCollisionObject pcoB) {
@@ -570,15 +611,14 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Remove the specified object from this space.
+     * Remove the specified object from the space.
      *
-     * @param object the collision object to remove, or null
+     * @param object the object to remove, or null
      */
     public void remove(Object object) {
         if (object == null) {
             return;
-        }
-        if (object instanceof PhysicsCollisionObject) {
+        } else if (object instanceof PhysicsCollisionObject) {
             removeCollisionObject((PhysicsCollisionObject) object);
         } else {
             String typeName = object.getClass().getCanonicalName();
@@ -589,7 +629,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Remove the specified collision object from this space.
+     * Remove the specified collision object from the space.
      *
      * @param pco the collision object to remove (not null, modified)
      */
@@ -619,11 +659,12 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Used internally.
+     * Alter the CollisionSpace associated with this thread.
      *
-     * @param space which space to simulate on the current thread
+     * @param space which space to associate with the current thread, or
+     * {@code null} for none
      */
-    static void setLocalThreadPhysicsSpace(CollisionSpace space) {
+    public static void setLocalThreadPhysicsSpace(CollisionSpace space) {
         physicsSpaceTL.set(space);
     }
 
@@ -692,8 +733,10 @@ public class CollisionSpace extends NativePhysicsObject {
         assert numSolvers == 1 : numSolvers;
 
         int broadphase = getBroadphaseType().ordinal();
-        long spaceId = createCollisionSpace(worldMin.x, worldMin.y, worldMin.z,
-                worldMax.x, worldMax.y, worldMax.z, broadphase);
+        long configurationId = collisionConfiguration.nativeId();
+        long spaceId = createCollisionSpace(
+                worldMin.x, worldMin.y, worldMin.z, worldMax.x, worldMax.y,
+                worldMax.z, broadphase, configurationId);
         assert spaceId != 0L;
 
         initThread(spaceId);
@@ -703,7 +746,7 @@ public class CollisionSpace extends NativePhysicsObject {
     /**
      * Must be invoked on the designated physics thread.
      *
-     * @param spaceId the Bullet identifier for this space (non-zero)
+     * @param spaceId the Bullet identifier for the space (non-zero)
      */
     protected void initThread(long spaceId) {
         setNativeId(spaceId);
@@ -713,7 +756,7 @@ public class CollisionSpace extends NativePhysicsObject {
     // Java private methods
 
     /**
-     * Add the specified PhysicsGhostObject to this space.
+     * Add the specified PhysicsGhostObject to the space.
      *
      * @param ghost the object to add (not null, alias created)
      */
@@ -756,7 +799,7 @@ public class CollisionSpace extends NativePhysicsObject {
      * @param pcoA the first collision object (not null)
      * @param pcoB the 2nd collision object (not null)
      * @return true to simulate collisions between pcoA and pcoB, false to
-     * ignore such collisions during this timestep
+     * ignore such collisions during this simulation step
      */
     private boolean notifyCollisionGroupListeners(
             PhysicsCollisionObject pcoA, PhysicsCollisionObject pcoB) {
@@ -765,7 +808,7 @@ public class CollisionSpace extends NativePhysicsObject {
     }
 
     /**
-     * Remove the specified PhysicsGhostObject from this space.
+     * Remove the specified PhysicsGhostObject from the space.
      *
      * @param ghost the object to remove (not null)
      */
@@ -794,8 +837,9 @@ public class CollisionSpace extends NativePhysicsObject {
     native private static int contactTest(
             long spaceId, long pcoId, PhysicsCollisionListener listener);
 
-    native private long createCollisionSpace(float minX, float minY, float minZ,
-            float maxX, float maxY, float maxZ, int broadphaseType);
+    native private long createCollisionSpace(
+            float minX, float minY, float minZ, float maxX, float maxY,
+            float maxZ, int broadphaseType, long configurationId);
 
     native private static void finalizeNative(long spaceId);
 

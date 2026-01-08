@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2024, Stephen Gold
+ Copyright (c) 2013-2025 Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,7 @@
 package jme3utilities.minie;
 
 import com.jme3.bounding.BoundingBox;
+import com.jme3.bullet.CollisionConfiguration;
 import com.jme3.bullet.DeformableSpace;
 import com.jme3.bullet.MultiBody;
 import com.jme3.bullet.MultiBodyJointType;
@@ -85,7 +86,7 @@ import jme3utilities.math.MyQuaternion;
 import jme3utilities.math.MyVector3f;
 
 /**
- * Dump Minie data structures for debugging purposes.
+ * Dump Libbulletjme data structures for debugging purposes.
  * <p>
  * The level of detail can be configured dynamically.
  *
@@ -154,7 +155,6 @@ public class PhysicsDumper extends Dumper {
      * Instantiate a PhysicsDumper that uses {@code System.out} for output.
      */
     public PhysicsDumper() {
-        super();
         PhysicsDescriber newDescriber = new PhysicsDescriber();
         setDescriber(newDescriber);
     }
@@ -238,6 +238,8 @@ public class PhysicsDumper extends Dumper {
         desc = describer.describeGroups(collider);
         stream.print(desc);
 
+        addUserIndices(collider);
+
         long objectId = collider.nativeId();
         addNativeId(objectId);
         /*
@@ -277,6 +279,8 @@ public class PhysicsDumper extends Dumper {
 
         Vector3f ang = character.getAngularVelocity(null);
         stream.printf(" angV[%s]", MyVector3f.describe(ang));
+
+        addUserIndices(character);
 
         long objectId = character.nativeId();
         addNativeId(objectId);
@@ -366,6 +370,8 @@ public class PhysicsDumper extends Dumper {
             String orientText = MyQuaternion.describe(orientation);
             stream.printf(" orient[%s]", orientText);
         }
+
+        addUserIndices(ghost);
 
         long objectId = ghost.nativeId();
         addNativeId(objectId);
@@ -521,6 +527,8 @@ public class PhysicsDumper extends Dumper {
             stream.printf(" orient[%s]", orientText);
         }
 
+        addUserIndices(body);
+
         long objectId = body.nativeId();
         addNativeId(objectId);
 
@@ -611,6 +619,8 @@ public class PhysicsDumper extends Dumper {
         float margin = body.margin();
         desc = MyString.describe(margin);
         stream.print(desc);
+
+        addUserIndices(body);
 
         long objectId = body.nativeId();
         addNativeId(objectId);
@@ -808,8 +818,12 @@ public class PhysicsDumper extends Dumper {
         int mode = solverInfo.mode();
         stream.printf(" mode=%s]", SolverMode.describe(mode));
 
-        // 4th line: use flags, raytest flags, and world extent
-        addLine(indent);
+        // 4th line: configuration, use flags, raytest flags, and world extent
+        CollisionConfiguration configuration = space.getConfiguration();
+        PhysicsDescriber describer = getDescriber();
+        String confDesc = describer.describe(configuration);
+        stream.printf("%n%s conf[%s]", indent, confDesc);
+
         if (space.isCcdWithStaticOnly()) {
             stream.print(" CCDwso");
         }
@@ -833,7 +847,6 @@ public class PhysicsDumper extends Dumper {
         }
 
         // For soft spaces, 5th line has the world info.
-        PhysicsDescriber describer = getDescriber();
         if (space instanceof PhysicsSoftSpace) {
             SoftBodyWorldInfo info = ((PhysicsSoftSpace) space).getWorldInfo();
             String infoDesc = describer.describe(info);
@@ -1066,14 +1079,14 @@ public class PhysicsDumper extends Dumper {
      * @param rigidBody (not null, unaffected)
      * @param indent (not null)
      */
-    private void addDynamicProperties(PhysicsRigidBody rigidBody,
-            String indent) {
+    private void addDynamicProperties(
+            PhysicsRigidBody rigidBody, String indent) {
         // first line: gravity, CCD, damping, and sleep/activation
         addLine(indent);
 
-        Vector3f gravity = rigidBody.getGravity(null);
-        String graString = MyVector3f.describe(gravity);
-        stream.printf(" grav[%s] ", graString);
+        Vector3f grav = rigidBody.getGravity(null);
+        String gravString = MyVector3f.describe(grav);
+        stream.printf(" grav[%s] ", gravString);
 
         if (!rigidBody.isGravityProtected()) {
             stream.print("NOT");
@@ -1115,7 +1128,9 @@ public class PhysicsDumper extends Dumper {
         Vector3f force = rigidBody.totalAppliedForce(null);
         stream.printf(" force[%s]", MyVector3f.describe(force));
         Vector3f lFact = rigidBody.getLinearFactor(null);
-        stream.printf(" lFact[%s]", MyVector3f.describe(lFact));
+        if (!MyVector3f.isScaleUniform(lFact)) {
+            stream.printf(" lFact[%s]", MyVector3f.describe(lFact));
+        }
 
         // 3rd line: inertia, angular velocity, applied torque, angular factor
         addLine(indent);
@@ -1131,7 +1146,9 @@ public class PhysicsDumper extends Dumper {
         Vector3f torq = rigidBody.totalAppliedTorque(null);
         stream.printf(" torq[%s]", MyVector3f.describe(torq));
         Vector3f aFact = rigidBody.getAngularFactor(null);
-        stream.printf(" aFact[%s]", MyVector3f.describe(aFact));
+        if (!MyVector3f.isScaleUniform(aFact)) {
+            stream.printf(" aFact[%s]", MyVector3f.describe(aFact));
+        }
     }
 
     /**
@@ -1144,6 +1161,31 @@ public class PhysicsDumper extends Dumper {
             stream.print(" #");
             String hex = Long.toHexString(id);
             stream.print(hex);
+        }
+    }
+
+    /**
+     * Add the PCO user indices, if other than -1.
+     *
+     * @param pco the object being dumped (not null, unaffected)
+     */
+    private void addUserIndices(PhysicsCollisionObject pco) {
+        int userIndex = pco.userIndex();
+        if (userIndex != -1) {
+            stream.print(" userIndex=");
+            stream.print(userIndex);
+        }
+
+        int userIndex2 = pco.userIndex2();
+        if (userIndex2 != -1) {
+            stream.print(" userIndex2=");
+            stream.print(userIndex2);
+        }
+
+        int userIndex3 = pco.userIndex3();
+        if (userIndex3 != -1) {
+            stream.print(" userIndex3=");
+            stream.print(userIndex3);
         }
     }
 

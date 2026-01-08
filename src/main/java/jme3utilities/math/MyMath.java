@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2024, Stephen Gold
+ Copyright (c) 2013-2024 Stephen Gold
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -74,12 +74,72 @@ final public class MyMath {
     // new methods exposed
 
     /**
+     * Return the (one-sided) area of the specified triangle.
+     *
+     * @param triangle (not null, unaffected)
+     * @return the area (&ge;0)
+     */
+    public static double area(Triangle triangle) {
+        Vector3f a = triangle.get1();
+        Vector3f b = triangle.get2();
+        Vector3f c = triangle.get3();
+
+        Vector3f ab = b.subtract(a); // TODO garbage
+        Vector3f ac = c.subtract(a);
+
+        Vector3f cross = ab.cross(ac); // TODO garbage
+        double areaSquared = MyVector3f.lengthSquared(cross) / 4.0;
+        double area = Math.sqrt(areaSquared);
+
+        return area;
+    }
+
+    /**
+     * Return the circle function {@code sqrt(1 - x^2)} for a double-precision
+     * value.
+     *
+     * @param abscissa input (&le;1, &ge;-1)
+     * @return positive ordinate of the unit circle at the abscissa (&le;1,
+     * &ge;0)
+     */
+    public static double circle(double abscissa) {
+        assert Validate.inRange(abscissa, "abscissa", -1.0, 1.0);
+
+        double y = Math.sqrt(1.0 - abscissa * abscissa);
+
+        assert y >= 0.0 : y;
+        assert y <= 1.0 : y;
+        return y;
+    }
+
+    /**
+     * Return the circle function {@code sqrt(1 - x^2)} for a single-precision
+     * value. Double-precision arithmetic is used to reduce the risk of
+     * overflow.
+     *
+     * @param abscissa input (&le;1, &ge;-1)
+     * @return positive ordinate of the unit circle at the abscissa (&le;1,
+     * &ge;0)
+     */
+    public static float circle(float abscissa) {
+        assert Validate.inRange(abscissa, "abscissa", -1f, 1f);
+
+        double x = abscissa;
+        float y = (float) Math.sqrt(1.0 - x * x);
+
+        assert y >= 0f : y;
+        assert y <= 1f : y;
+        return y;
+    }
+
+    /**
      * Clamp a double-precision value between 2 limits.
      *
      * @param dValue input value to be clamped
      * @param min lower limit of the clamp
      * @param max upper limit of the clamp
      * @return the value between min and max inclusive that is closest to fValue
+     * @see com.jme3.math.FastMath#clamp(float,float,float)
      */
     public static double clamp(double dValue, double min, double max) {
         double result;

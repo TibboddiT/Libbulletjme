@@ -1,1 +1,20 @@
+// global build settings for the Libbulletjme project
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google() // to find plugins released to Google's Maven Repository
+    }
+}
+
 rootProject.name = 'Libbulletjme'
+
+dependencyResolutionManagement {
+    repositories {
+        //mavenLocal() // to find libraries installed locally
+        google() // to find libraries released to Google's Maven Repository
+        mavenCentral() // to find libraries released to the Maven Central repository
+    }
+}
+
+// no subprojects

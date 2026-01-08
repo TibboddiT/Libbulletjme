@@ -48,7 +48,9 @@ class btSerializer;
 
 // 10 gives the potential for 1024 parts, with at most 2^21 (2097152) (minus one
 // actually) triangles each (since the sign bit is reserved
-#define MAX_NUM_PARTS_IN_BITS 10
+#define MAX_NUM_PARTS_IN_BITS 10 // stephengold uncommented 2024-03-09
+//#define MAX_NUM_PARTS_IN_BITS 4 // stephengold commented out 2024-03-09
+#define TRIANGLE_INDEX_MASK 0x1fffff             // stephengold added 2024-04-19
 
 ///btQuantizedBvhNode is a compressed aabb node, 16 bytes.
 ///Node can be used for leafnode or internal node. Leafnodes can point to 32-bit triangle index (non-negative range).
@@ -76,10 +78,10 @@ btQuantizedBvhNode
 	int getTriangleIndex() const
 	{
 		btAssert(isLeafNode());
-		unsigned int x = 0;
-		unsigned int y = (~(x & 0)) << (31 - MAX_NUM_PARTS_IN_BITS);
+//		unsigned int x = 0;// stephengold commented out 2024-04-19
+//		unsigned int y = (~(x & 0)) << (31 - MAX_NUM_PARTS_IN_BITS);// stephengold commented out 2024-04-19
 		// Get only the lower bits where the triangle index is stored
-		return (m_escapeIndexOrTriangleIndex & ~(y));
+		return (m_escapeIndexOrTriangleIndex & TRIANGLE_INDEX_MASK);// stephengold modified 2024-04-19
 	}
 	int getPartId() const
 	{
@@ -90,13 +92,13 @@ btQuantizedBvhNode
 };
 
 /// btOptimizedBvhNode contains both internal and leaf node information.
-/// Total node size is 44 bytes / node. You can use the compressed version of 16 bytes.
+// stephengold deleted a comment 2024-04-19
 ATTRIBUTE_ALIGNED16(struct)
 btOptimizedBvhNode
 {
 	BT_DECLARE_ALIGNED_ALLOCATOR();
 
-	//32 bytes
+	//32 bytes or 64 bytes // stephengold modified 2024-04-19
 	btVector3 m_aabbMinOrg;
 	btVector3 m_aabbMaxOrg;
 
@@ -108,7 +110,7 @@ btOptimizedBvhNode
 	int m_subPart;
 	int m_triangleIndex;
 
-	//pad the size to 64 bytes
+	//pad the struct to a multiple of 32 bytes // stephengold modified 2024-04-19
 	char m_padding[20];
 };
 
@@ -450,10 +452,66 @@ public:
 
 	////////////////////////////////////////////////////////////////////
 
-	SIMD_FORCE_INLINE bool isQuantized()
+	SIMD_FORCE_INLINE bool isQuantized() const // stephengold modified 2024-04-20
 	{
 		return m_useQuantization;
 	}
+        void checkSanity() const // stephengold added 2024-04-20
+        { // stephengold added 2024-04-20
+            btAssert(m_bulletVersion == BT_BULLET_VERSION); // stephengold added 2024-04-20
+            btAssert(m_traversalMode == TRAVERSAL_STACKLESS || // stephengold added 2024-04-20
+		m_traversalMode == TRAVERSAL_STACKLESS_CACHE_FRIENDLY || // stephengold added 2024-04-20
+		m_traversalMode == TRAVERSAL_RECURSIVE); // stephengold added 2024-04-20
+            btAssert(m_bvhAabbMin.x() <= m_bvhAabbMax.x()); // stephengold added 2024-04-20
+            btAssert(m_bvhAabbMin.y() <= m_bvhAabbMax.y()); // stephengold added 2024-04-20
+            btAssert(m_bvhAabbMin.z() <= m_bvhAabbMax.z()); // stephengold added 2024-04-20
+            btAssert(m_subtreeHeaderCount == m_SubtreeHeaders.size()); // stephengold added 2024-04-20
+        } // stephengold added 2024-04-20
+        const btVector3& getAabbMax() const { return m_bvhAabbMax; } // stephengold added 2024-04-24
+        const btVector3& getAabbMin() const { return m_bvhAabbMin; } // stephengold added 2024-04-24
+        const btVector3& getQuantization() const { return m_bvhQuantization; } // stephengold added 2024-04-24
+	int getEscapeIndex(int nodeIndex) const  // stephengold added 2024-04-23
+	{                                        // stephengold added 2024-04-23
+		if (m_useQuantization) {         // stephengold added 2024-04-23
+			return m_quantizedContiguousNodes[nodeIndex].getEscapeIndex(); // stephengold added 2024-04-23
+		} else {                         // stephengold added 2024-04-23
+			return m_contiguousNodes[nodeIndex].m_escapeIndex; // stephengold added 2024-04-23
+		}                                // stephengold added 2024-04-23
+	}                                        // stephengold added 2024-04-23
+	int getNumLeafNodes() const              // stephengold added 2024-04-23
+	{                                        // stephengold added 2024-04-23
+		if (m_useQuantization) {         // stephengold added 2024-04-23
+			return m_quantizedLeafNodes.size(); // stephengold added 2024-04-23
+		} else {                         // stephengold added 2024-04-23
+			return m_leafNodes.size(); // stephengold added 2024-04-23
+		}                                // stephengold added 2024-04-23
+	}                                        // stephengold added 2024-04-23
+	int getNumNodes() const { return m_curNodeIndex; } // stephengold modified 2024-04-24
+	int getPartId(int nodeIndex) const       // stephengold added 2024-04-23
+	{                                        // stephengold added 2024-04-23
+		if (m_useQuantization) {         // stephengold added 2024-04-23
+			return m_quantizedContiguousNodes[nodeIndex].getPartId(); // stephengold added 2024-04-23
+		} else {                         // stephengold added 2024-04-23
+			return m_contiguousNodes[nodeIndex].m_subPart; // stephengold added 2024-04-23
+		}                                // stephengold added 2024-04-23
+	}                                        // stephengold added 2024-04-23
+	btTraversalMode getTraversalMode() const { return m_traversalMode; } // stephengold added 2024-04-23
+	int getTriangleIndex(int nodeIndex) const // stephengold added 2024-04-23
+	{                                        // stephengold added 2024-04-23
+		if (m_useQuantization) {         // stephengold added 2024-04-23
+			return m_quantizedContiguousNodes[nodeIndex].getTriangleIndex(); // stephengold added 2024-04-23
+		} else {                         // stephengold added 2024-04-23
+			return m_contiguousNodes[nodeIndex].m_triangleIndex; // stephengold added 2024-04-23
+		}                                // stephengold added 2024-04-23
+	}                                        // stephengold added 2024-04-23
+	bool isLeafNode(int nodeIndex) const     // stephengold added 2024-04-23
+	{                                        // stephengold added 2024-04-23
+		if (m_useQuantization) {         // stephengold added 2024-04-23
+			return m_quantizedContiguousNodes[nodeIndex].isLeafNode(); // stephengold added 2024-04-23
+		} else {                         // stephengold added 2024-04-23
+			return m_contiguousNodes[nodeIndex].m_escapeIndex == -1; // stephengold added 2024-04-23
+		}                                // stephengold added 2024-04-23
+	}                                        // stephengold added 2024-04-23
 
 private:
 	// Special "copy" constructor that allows for in-place deserialization

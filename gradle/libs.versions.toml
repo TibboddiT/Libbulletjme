@@ -1,0 +1,16 @@
+## catalog of libraries and plugins used to build the Libbulletjme project
+
+[versions]
+
+android-ndk = "29.0.14206865"
+checkstyle = "12.3.1"
+
+[libraries]
+
+junit4 = "junit:junit:4.13.2"
+
+[bundles]
+
+[plugins]
+
+android-library = { id = "com.android.library", version = "8.13.2" }

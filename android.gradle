@@ -1,73 +1,187 @@
-// Gradle script to build Android native libraries
+// Gradle script to build and publish Libbulletjme Android artifacts
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
-    }
+import com.github.stephengold.build.BuildSrc
+
+plugins {
+    id 'maven-publish' // to publish artifacts to Maven repositories
+    id 'signing'       // to sign artifacts for publication
+
+    alias(libs.plugins.android.library) // to build Android libraries
 }
-apply plugin: 'com.android.library'
 
-String flavor = 'Sp'
-if (project.hasProperty('flavor')) {
-    flavor = project.ext.flavor
+// $artifact and $lbjVersion are set in the gradle.properties file
+// or by -P options on the Gradle command line.
+
+ext {
+    baseName = "${artifact}-${lbjVersion}" // for artifacts
+    groupID = 'com.github.stephengold'
+    websiteUrl = 'https://github.com/stephengold/Libbulletjme'
 }
 
 android {
-    buildTypes.debug {
-        jniDebuggable = true
+    buildTypes {
+        debug {
+            externalNativeBuild {
+                ndkBuild {
+                    cppFlags '-D_DEBUG'
+                    //cppFlags '-DBT_ADDITIONAL_DEBUG'
+                    //cppFlags '-DBT_DEBUG_MEMORY_ALLOCATIONS'
+                    //cppFlags '-DDEBUG_PERSISTENCY'
+                    //cppFlags '-DVERBOSE_RESIDUAL_PRINTF'
+                }
+            }
+            jniDebuggable = true
+        }
+        release {
+            minifyEnabled = true
+        }
     }
-    compileSdkVersion 30
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    compileSdk = 35
     defaultConfig {
-        minSdkVersion 22
-        targetSdkVersion 30
+        aarMetadata {
+            minCompileSdk = 22
+        }
+        minSdk = 22
         ndk {
-            //abiFilters 'x86_64'
+            if (!project.hasProperty('target')) {
+                abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+            } else if (target == 'Android_ARM7') {
+                abiFilters 'armeabi-v7a'
+            } else if (target == 'Android_ARM8') {
+                abiFilters 'arm64-v8a'
+            } else if (target == 'Android_X86') {
+                abiFilters 'x86'
+            } else if (target == 'Android_X86_64') {
+                abiFilters 'x86_64'
+            }
+        }
+        targetSdk = 22
+    }
+    externalNativeBuild {
+        ndkBuild {
+            path 'Android.mk'
         }
     }
-    externalNativeBuild.ndkBuild {
-        path 'Android.mk'
+    flavorDimensions 'precision'
+    namespace = groupID + '.libbulletjme'
+    ndkVersion = libs.versions.android.ndk.get()
+    productFlavors {
+        if (!project.hasProperty('flavor') || flavor == 'Dp') {
+            Dp { // flavor with double-precision locations
+                dimension 'precision'
+                externalNativeBuild {
+                    ndkBuild {
+                        cppFlags '-DBT_USE_DOUBLE_PRECISION'
+                    }
+                }
+            }
+        }
+        if (!project.hasProperty('flavor') || flavor == 'Sp') {
+            Sp { // flavor with single-precision locations
+                dimension 'precision'
+            }
+        }
     }
-    ndkVersion '21.3.6528147'
-}
-
-tasks.register('copyToDist') {}
-def archmap = [ 'ARM7' : 'armeabi-v7a', \
-                'ARM8' : 'arm64-v8a', \
-                'X86' : 'x86', \
-                'X86_64' : 'x86_64' ]
-def btmap = [ 'Debug' : 'merged_native_libs/debug', \
-              'Release' : 'stripped_native_libs/release' ]
-archmap.each { arch ->
-    btmap.each { bt ->
-        String q = arch.key + bt.key + flavor
-        String so = bt.value + "/out/lib/${arch.value}/libbulletjme.so"
-        def sharedLibraryFile = file('build/intermediates/' + so)
-        copyToDist.dependsOn('copyToDist_' + q)
-        tasks.register('copyToDist_' + q, Copy) {
-            dependsOn 'assemble' + bt.key
-            from sharedLibraryFile
-            rename { return 'Android_' + q + '_libbulletjme.so' }
-            into 'dist'
+    publishing {
+        multipleVariants('complete') {
+            allVariants()
+            withJavadocJar()
+            withSourcesJar()
         }
     }
 }
 
-repositories {
-    google()
-    mavenCentral()
+dependencies {
+    testImplementation(libs.junit4)      // framework for automated testing
 }
 
-// Register cleanup tasks:
+// Register publishing tasks:
 
-clean.dependsOn('cleanCxx', 'cleanDist')
-
-tasks.register('cleanCxx', Delete) {
-    delete '.cxx'
+tasks.register('install') {
+    dependsOn 'publishMavenPublicationToMavenLocal'
+    description = 'Installs the Maven artifacts to the local repository.'
 }
-tasks.register('cleanDist', Delete) { // files to be distributed
-    delete 'dist'
+tasks.register('release') {
+    dependsOn 'publishMavenPublicationToCentralRepository'
+    description = 'Stages the Maven artifacts to the Central Publisher Portal.'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            afterEvaluate { from components.complete }
+            artifactId = artifact
+            groupId = groupID
+            pom {
+                description = 'a JNI interface for Bullet Physics and V-HACD'
+                developers {
+                    developer {
+                        email = 'sgold@sonic.net'
+                        id = 'stephengold'
+                        name = 'Stephen Gold'
+                    }
+                }
+                inceptionYear = '2018'
+                licenses {
+                    license {
+                        distribution = 'repo'
+                        name = 'New BSD (3-clause) License'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                name = groupID + ':' + artifact
+                scm {
+                    connection = 'scm:git:git://github.com/stephengold/Libbulletjme.git'
+                    developerConnection = 'scm:git:ssh://github.com:stephengold/Libbulletjme.git'
+                    url = websiteUrl + '/tree/master'
+                }
+                url = websiteUrl
+            }
+            version = lbjVersion
+        }
+    }
+
+    repositories {
+        maven { // the staging repo of the Sonatype Central Publisher Portal
+
+            // Staging to the Central Publisher Portal relies on the existence of 2 properties
+            // (centralUsername and centralPassword)
+            // which should be set in the ~/.gradle/gradle.properties file
+            // or by -P options on the command line.
+
+            credentials {
+                username = project.hasProperty('centralUsername') ? centralUsername : 'Unknown user'
+                password = project.hasProperty('centralPassword') ? centralPassword : 'Unknown password'
+            }
+            name = 'Central'
+            url = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+        }
+    }
+}
+publishMavenPublicationToMavenLocal.dependsOn('assemble')
+publishMavenPublicationToMavenLocal.doLast {
+    println 'installed locally as ' + baseName
+}
+
+// Register tasks to sign artifacts for publication:
+
+// Signing relies on the existence of 2 properties
+// (signingKeyEncoded and signingPassword)
+// which should be set in the ~/.gradle/gradle.properties file
+// or by -P options on the command line.
+
+signing {
+    String signingKey = BuildSrc.decodeBase64(findProperty('signingKeyEncoded'))
+    String signingPassword = findProperty('signingPassword')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+
+    sign configurations.archives
+    sign publishing.publications.maven
+}
+tasks.withType(Sign).configureEach {
+    onlyIf { project.hasProperty('signingKeyEncoded') }
 }

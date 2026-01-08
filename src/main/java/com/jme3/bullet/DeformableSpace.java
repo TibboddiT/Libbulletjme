@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2022 jMonkeyEngine
+ * Copyright (c) 2009-2025 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -209,7 +209,9 @@ public class DeformableSpace extends MultiBodySpace {
         int broadphase = getBroadphaseType().ordinal();
         Vector3f max = getWorldMax(null);
         Vector3f min = getWorldMin(null);
-        long nativeId = createSpace(min, max, broadphase);
+        CollisionConfiguration configuration = getConfiguration();
+        long configurationId = configuration.nativeId();
+        long nativeId = createSpace(min, max, broadphase, configurationId);
         assert nativeId != 0L;
 
         assert getWorldType(nativeId)
@@ -320,6 +322,11 @@ public class DeformableSpace extends MultiBodySpace {
         }
     }
 
+    /**
+     * Remove the specified soft body from this space.
+     *
+     * @param softBody the body to remove (not null)
+     */
     private void removeSoftBody(PhysicsSoftBody softBody) {
         long softBodyId = softBody.nativeId();
         if (!softBodyMap.containsKey(softBodyId)) {
@@ -340,8 +347,8 @@ public class DeformableSpace extends MultiBodySpace {
 
     native private static void addSoftBody(long spaceId, long softBodyId);
 
-    native private long createSpace(
-            Vector3f minVector, Vector3f maxVector, int broadphaseType);
+    native private long createSpace(Vector3f minVector, Vector3f maxVector,
+            int broadphaseType, long configurationId);
 
     native private static int getNumSoftBodies(long spaceId);
 

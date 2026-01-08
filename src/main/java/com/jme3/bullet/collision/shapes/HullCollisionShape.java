@@ -54,7 +54,7 @@ import vhacd4.Vhacd4Hull;
 
 /**
  * A convex-hull collision shape based on Bullet's {@code btConvexHullShape}.
- * For a 2-D convex hull, use Convex2dShape.
+ * For a 2-D convex hull, use {@code Convex2dShape}.
  */
 public class HullCollisionShape extends ConvexShape {
     // *************************************************************************
@@ -73,7 +73,7 @@ public class HullCollisionShape extends ConvexShape {
     // fields
 
     /**
-     * direct buffer for passing vertices to Bullet
+     * non-flipped direct buffer for passing vertices to Bullet
      * <p>
      * A Java reference must persist after createShape() completes, or else the
      * buffer might get garbage collected.
@@ -101,6 +101,10 @@ public class HullCollisionShape extends ConvexShape {
         this.points = new float[numAxes * numLocations];
         int j = 0;
         for (Vector3f location : locations) {
+            if (!Vector3f.isValidVector(location)) {
+                throw new IllegalArgumentException(
+                        "illegal coordinates: " + location);
+            }
             this.points[j + PhysicsSpace.AXIS_X] = location.x;
             this.points[j + PhysicsSpace.AXIS_Y] = location.y;
             this.points[j + PhysicsSpace.AXIS_Z] = location.z;
@@ -111,19 +115,19 @@ public class HullCollisionShape extends ConvexShape {
     }
 
     /**
-     * Instantiate a shape based on an array containing coordinates. For best
+     * Instantiate a shape based on the specified array of coordinates. For best
      * performance and stability, the convex hull should have no more than 100
      * vertices.
      *
-     * @param points an array of coordinates on which to base the shape (not
-     * null, not empty, length a multiple of 3, unaffected)
+     * @param coordinates an array of coordinates on which to base the shape
+     * (not null, not empty, length a multiple of 3, unaffected)
      */
-    public HullCollisionShape(float... points) {
-        Validate.nonEmpty(points, "points");
+    public HullCollisionShape(float... coordinates) {
+        Validate.nonEmpty(coordinates, "coordinates");
         Validate.require(
-                points.length % numAxes == 0, "length a multiple of 3");
+                coordinates.length % numAxes == 0, "length a multiple of 3");
 
-        this.points = points.clone();
+        this.points = coordinates.clone();
         createShape();
     }
 
@@ -143,7 +147,11 @@ public class HullCollisionShape extends ConvexShape {
 
         this.points = new float[numFloats];
         for (int i = 0; i < numFloats; ++i) {
-            this.points[i] = flippedBuffer.get(i);
+            float f = flippedBuffer.get(i);
+            if (!Float.isFinite(f)) {
+                throw new IllegalArgumentException("illegal coordinate: " + f);
+            }
+            this.points[i] = f;
         }
 
         createShape();
@@ -186,19 +194,24 @@ public class HullCollisionShape extends ConvexShape {
     }
 
     /**
-     * Instantiate a shape based on an array of locations. For best performance
-     * and stability, the convex hull should have no more than 100 vertices.
+     * Instantiate a shape based on the specified array of locations. For best
+     * performance and stability, the convex hull should have no more than 100
+     * vertices.
      *
      * @param locations an array of location vectors (in shape coordinates, not
      * null, not empty, unaffected)
      */
     public HullCollisionShape(Vector3f... locations) {
-        Validate.nonEmpty(locations, "points");
+        Validate.nonEmpty(locations, "locations");
 
         int numFloats = numAxes * locations.length;
         this.points = new float[numFloats];
         int floatIndex = 0;
         for (Vector3f location : locations) {
+            if (!Vector3f.isValidVector(location)) {
+                throw new IllegalArgumentException(
+                        "illegal coordinates: " + location);
+            }
             this.points[floatIndex + PhysicsSpace.AXIS_X] = location.x;
             this.points[floatIndex + PhysicsSpace.AXIS_Y] = location.y;
             this.points[floatIndex + PhysicsSpace.AXIS_Z] = location.z;
@@ -466,9 +479,9 @@ public class HullCollisionShape extends ConvexShape {
     // ConvexShape methods
 
     /**
-     * Test whether this shape can be split by an arbitrary plane.
+     * Test whether the shape can be split by an arbitrary plane.
      *
-     * @return true if splittable, false otherwise
+     * @return true
      */
     @Override
     public boolean canSplit() {
@@ -478,7 +491,7 @@ public class HullCollisionShape extends ConvexShape {
     /**
      * Calculate how far this shape extends from its center, including margin.
      *
-     * @return a distance (in physics-space units, &ge;0)
+     * @return the distance (in physics-space units, &ge;0)
      */
     @Override
     public float maxRadius() {
@@ -505,7 +518,7 @@ public class HullCollisionShape extends ConvexShape {
     }
 
     /**
-     * Recalculate this shape's bounding box if necessary.
+     * Recalculate the shape's bounding box if necessary.
      */
     @Override
     protected void recalculateAabb() {

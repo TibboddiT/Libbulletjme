@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 jMonkeyEngine
+ * Copyright (c) 2020-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,9 +34,19 @@
  * Author: Stephen Gold
  */
 #include "com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy.h"
+#ifdef _WIN32
+#include <Winsock2.h> // for htons()
+#else
+#include <arpa/inet.h> // for htons()
+#endif
 #include "jmeBulletUtil.h"
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
 
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    deSerialize
+ * Signature: ([B)J
+ */
 JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_deSerialize
 (JNIEnv *pEnv, jclass, jbyteArray bytearray) {
     int len = pEnv->GetArrayLength(bytearray);
@@ -46,9 +56,24 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValu
             reinterpret_cast<jbyte *> (pBuffer));
     EXCEPTION_CHK(pEnv, 0);
 
+    bool swapEndian = (htons(1) != 1);
     btOptimizedBvh * const
-            pBvh = btOptimizedBvh::deSerializeInPlace(pBuffer, len, true);
-    return reinterpret_cast<jlong> (pBvh);
+            pBvh = btOptimizedBvh::deSerializeInPlace(pBuffer, len, swapEndian);
+    jlong result = reinterpret_cast<jlong> (pBvh);
+#ifdef _DEBUG
+    /*
+     * sanity checks:
+     */
+    unsigned int bufferSize = pBvh->calculateSerializeBufferSize();
+    btAssert(bufferSize == len);
+
+    jlong bufferId = reinterpret_cast<jlong> (pBuffer);
+    btAssert(bufferId == result);
+
+    pBvh->checkSanity();
+#endif
+
+    return result;
 }
 
 /*
@@ -57,11 +82,102 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValu
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_finalizeNative
-(JNIEnv *, jclass, jlong bvhId) {
-    if (bvhId != 0) {
-        void *pBuffer = reinterpret_cast<void *> (bvhId);
-        btAlignedFree(pBuffer); //dance035
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);
+    pBvh->checkSanity();
+
+    pBvh->~btOptimizedBvh();
+
+    void *pBuffer = reinterpret_cast<void *> (bvhId);
+    btAlignedFree(pBuffer); //dance035
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getAabb
+ * Signature: (JLcom/jme3/math/Vector3f;Lcom/jme3/math/Vector3f;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getAabb
+(JNIEnv *pEnv, jclass, jlong bvhId, jobject storeMinima, jobject storeMaxima) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);
+    NULL_CHK(pEnv, storeMaxima, "The storeMaxima does not exist.",);
+    NULL_CHK(pEnv, storeMinima, "The storeMinima does not exist.",);
+
+    const btVector3& aabbMin = pBvh->getAabbMin();
+    jmeBulletUtil::convert(pEnv, &aabbMin, storeMinima);
+    EXCEPTION_CHK(pEnv,);
+
+    const btVector3& aabbMax = pBvh->getAabbMax();
+    jmeBulletUtil::convert(pEnv, &aabbMax, storeMaxima);
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getEscapeIndex
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getEscapeIndex
+(JNIEnv *pEnv, jclass, jlong bvhId, jint nodeIndex) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = -1;
+    if (!pBvh->isLeafNode(nodeIndex)) {
+        result = pBvh->getEscapeIndex(nodeIndex);
     }
+
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getNumLeafNodes
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getNumLeafNodes
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = pBvh->getNumLeafNodes();
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getNumNodes
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getNumNodes
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = pBvh->getNumNodes();
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getNumSubtreeHeaders
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getNumSubtreeHeaders
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    btOptimizedBvh * const pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    BvhSubtreeInfoArray &array = pBvh->getSubtreeInfoArray();
+    int result = array.size();
+
+    return result;
 }
 
 /*
@@ -76,8 +192,115 @@ JNIEXPORT jlong JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValu
     NULL_CHK(pEnv, pShape, "The btBvhTriangleMeshShape does not exist.", 0);
     ASSERT_CHK(pEnv, pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE, 0);
 
-    btOptimizedBvh * const pBvh = pShape->getOptimizedBvh();
+    btOptimizedBvh *pBvh = pShape->getOptimizedBvh();
+    if (pBvh == NULL) {
+        pShape->buildOptimizedBvh();
+        pBvh = pShape->getOptimizedBvh();
+        btAssert(pBvh);
+    }
+    pBvh->checkSanity();
+
     return reinterpret_cast<jlong> (pBvh);
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getPartId
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getPartId
+(JNIEnv *pEnv, jclass, jlong bvhId, jint nodeIndex) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = -1;
+    if (pBvh->isLeafNode(nodeIndex)) {
+        result = pBvh->getPartId(nodeIndex);
+    }
+
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getQuantization
+ * Signature: (JLcom/jme3/math/Vector3f;)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getQuantization
+(JNIEnv *pEnv, jclass, jlong bvhId, jobject storeVector) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);
+    NULL_CHK(pEnv, storeVector, "The store vector does not exist.",);
+
+    const btVector3& quantization = pBvh->getQuantization();
+    jmeBulletUtil::convert(pEnv, &quantization, storeVector);
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getTraversalMode
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getTraversalMode
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = pBvh->getTraversalMode();
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    getTriangleIndex
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_getTriangleIndex
+(JNIEnv *pEnv, jclass, jlong bvhId, jint nodeIndex) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    int result = -1;
+    if (pBvh->isLeafNode(nodeIndex)) {
+        result = pBvh->getTriangleIndex(nodeIndex);
+    }
+
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    isCompressed
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_isCompressed
+(JNIEnv *pEnv, jclass, jlong bvhId) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", JNI_FALSE);
+    pBvh->checkSanity();
+
+    bool result = pBvh->isQuantized();
+    return result;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    isLeafNode
+ * Signature: (JI)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_isLeafNode
+(JNIEnv *pEnv, jclass, jlong bvhId, jint nodeIndex) {
+    const btOptimizedBvh * const
+            pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+
+    bool result = pBvh->isLeafNode(nodeIndex);
+    return result;
 }
 
 /*
@@ -90,10 +313,12 @@ JNIEXPORT jbyteArray JNICALL Java_com_jme3_bullet_collision_shapes_infos_Boundin
     const btOptimizedBvh * const
             pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
     NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.", 0);
+    pBvh->checkSanity();
 
     unsigned int bufferSize = pBvh->calculateSerializeBufferSize();
     char *pBuffer = (char *) btAlignedAlloc(bufferSize, 16); //dance015
-    bool success = pBvh->serialize(pBuffer, bufferSize, true);
+    bool swapEndian = (htons(1) != 1);
+    bool success = pBvh->serialize(pBuffer, bufferSize, swapEndian);
     if (!success) {
         pEnv->ThrowNew(jmeClasses::RuntimeException,
                 "Unable to serialize, native error reported");
@@ -107,4 +332,23 @@ JNIEXPORT jbyteArray JNICALL Java_com_jme3_bullet_collision_shapes_infos_Boundin
     btAlignedFree(pBuffer); //dance015
 
     return byteArray;
+}
+
+/*
+ * Class:     com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy
+ * Method:    setTraversalMode
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_com_jme3_bullet_collision_shapes_infos_BoundingValueHierarchy_setTraversalMode
+(JNIEnv *pEnv, jclass, jlong bvhId, jint mode) {
+    btOptimizedBvh * const pBvh = reinterpret_cast<btOptimizedBvh *> (bvhId);
+    NULL_CHK(pEnv, pBvh, "The btOptimizedBvh does not exist.",);
+
+    enum btQuantizedBvh::btTraversalMode traversalMode
+            = static_cast<enum btQuantizedBvh::btTraversalMode> (mode);
+    btAssert(traversalMode == btQuantizedBvh::TRAVERSAL_STACKLESS ||
+            traversalMode == btQuantizedBvh::TRAVERSAL_STACKLESS_CACHE_FRIENDLY ||
+            traversalMode == btQuantizedBvh::TRAVERSAL_RECURSIVE);
+
+    pBvh->setTraversalMode(traversalMode);
 }

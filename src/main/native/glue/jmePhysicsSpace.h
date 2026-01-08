@@ -32,6 +32,9 @@
 #ifndef JME_PHYSICS_SPACE_H
 #define JME_PHYSICS_SPACE_H
 
+/*
+ * Author: Normen Hansen
+ */
 #include "jmeCollisionSpace.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
@@ -40,9 +43,6 @@
 #include "BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
 #include "BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
 
-/*
- * Author: Normen Hansen
- */
 class jmePhysicsSpace : public jmeCollisionSpace {
 protected:
     void
@@ -73,10 +73,11 @@ public:
     void
 #if BT_THREADSAFE
     createMultiThreadedSpace(const btVector3& min, const btVector3& max,
-            int broadphaseType, int numSolvers);
+            int broadphaseType, int numSolvers,
+            const btDefaultCollisionConstructionInfo *);
 #else
     createPhysicsSpace(const btVector3& min, const btVector3& max,
-            int broadphaseType);
+            int broadphaseType, const btDefaultCollisionConstructionInfo *);
 #endif // BT_THREADSAFE
 
     /*

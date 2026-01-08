@@ -34,7 +34,6 @@
  * Author: Stephen Gold
  */
 #include "com_jme3_bullet_collision_shapes_CustomConvexShape.h"
-#include "BulletCollision/CollisionShapes/btConvexInternalShape.h"
 #include "jmeBulletUtil.h"
 
 /*
@@ -43,38 +42,62 @@
  */
 ATTRIBUTE_ALIGNED16(class)
 jmeConvexShape : public btConvexInternalShape {
+protected:
+    /*
+     * true to calculate bounding boxes using supporting vertices,
+     * false to use the descaled half extents:
+     */
+    bool m_useSlowAabb;
+    /*
+     * if m_useSlowAabb is false, these are the shape's half extents
+     * on each local axis, for scale=(1,1,1) and margin=0:
+     */
+    btVector3 m_descaledHalfExtents;
+    /*
+     * (rotational) inertia around each local axis, for mass=1:
+     */
+    btVector3 m_scaledInertia;
+    /*
+     * interface pointer for the thread that created this collision shape:
+     */
+    JNIEnv *m_pCreateEnv;
+    /*
+     * weak reference to the corresponding Java instance:
+     */
+    jweak m_javaShapeRef;
+
 public:
     BT_DECLARE_ALIGNED_ALLOCATOR();
     /*
      * constructors:
      */
     jmeConvexShape(JNIEnv *pEnv, jweak javaShapeRef)
-    : btConvexInternalShape() {
-        m_useSlowAabb = true;
-
-        m_javaShapeRef = javaShapeRef;
-        m_pCreateEnv = pEnv;
-        m_shapeType = CUSTOM_CONVEX_SHAPE_TYPE;
+    : btConvexInternalShape(),
+      m_javaShapeRef(javaShapeRef),
+      m_pCreateEnv(pEnv),
+      m_useSlowAabb(true)
+    {
+      m_shapeType = CUSTOM_CONVEX_SHAPE_TYPE;
     }
 
     jmeConvexShape(JNIEnv *pEnv, jweak javaShapeRef,
         const btVector3& descaledHalfExtents)
-    : btConvexInternalShape() {
-        m_useSlowAabb = false;
-        m_descaledHalfExtents = descaledHalfExtents;
-
-        m_javaShapeRef = javaShapeRef;
-        m_pCreateEnv = pEnv;
-        m_shapeType = CUSTOM_CONVEX_SHAPE_TYPE;
+    : btConvexInternalShape(),
+      m_descaledHalfExtents(descaledHalfExtents),
+      m_javaShapeRef(javaShapeRef),
+      m_pCreateEnv(pEnv),
+      m_useSlowAabb(false)
+    {
+      m_shapeType = CUSTOM_CONVEX_SHAPE_TYPE;
     }
 
     virtual ~jmeConvexShape() {}
 
     void
     batchedUnitVectorGetSupportingVertexWithoutMargin(
-        const btVector3 *pLocationsIn, btVector3 *pVerticesOut, int numV) const
+        const btVector3 *pLocationsIn, btVector3 *pVerticesOut, int numVectors) const
     {
-        for (int i = 0; i < numV; i++) {
+        for (int i = 0; i < numVectors; ++i) {
             const btVector3& testVector = pLocationsIn[i];
             pVerticesOut[i] = localGetSupportingVertexWithoutMargin(testVector);
         }
@@ -82,7 +105,7 @@ public:
 
     void
     calculateLocalInertia(btScalar mass, btVector3& storeResult) const {
-        storeResult = m_scaledInertia;
+        storeResult = mass * m_scaledInertia;
     }
 
     void
@@ -116,7 +139,7 @@ public:
         btVector3 result;
         jmeBulletUtil::convert(m_pCreateEnv, javaVertex, &result);
 
-#ifdef BT_DEBUG
+#ifdef _DEBUG
         if (!m_useSlowAabb) {
             /*
              * The supporting vertex must lie on or inside
@@ -139,30 +162,6 @@ public:
     setScaledInertia(btScalar x, btScalar y, btScalar z) {
         m_scaledInertia.setValue(x, y, z);
     }
-
-private:
-    /*
-     * true to calculate bounding boxes using supporting vertices,
-     * false to use the descaled half extents:
-     */
-    bool m_useSlowAabb;
-    /*
-     * if m_useSlowAabb is false, these are the shape's half extents
-     * on each local axis, for scale=(1,1,1) and margin=0:
-     */
-    btVector3 m_descaledHalfExtents;
-    /*
-     * (rotational) inertia around each local axis, for mass=1:
-     */
-    btVector3 m_scaledInertia;
-    /*
-     * interface pointer for the thread that created this collision shape:
-     */
-    JNIEnv *m_pCreateEnv;
-    /*
-     * weak reference to the corresponding Java instance:
-     */
-    jweak m_javaShapeRef;
 };
 
 /*

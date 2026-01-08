@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 jMonkeyEngine
+ * Copyright (c) 2009-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,18 +29,20 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "BulletSoftBody/BulletReducedDeformableBody/btReducedDeformableBodySolver.h"
-#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
-#include "jmeClasses.h"
-#include "jmeDeformableSpace.h"
 
 /*
  * Author: Stephen Gold
  *
  * Based on jmePhysicsSoftSpace.cpp by dokthar
  */
+#include "BulletSoftBody/BulletReducedDeformableBody/btReducedDeformableBodySolver.h"
+#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
+#include "jmeClasses.h"
+#include "jmeDeformableSpace.h"
+
 void jmeDeformableSpace::createDeformableSpace(const btVector3& min,
-        const btVector3& max, jint broadphaseType) {
+        const btVector3& max, int broadphaseType,
+        const btDefaultCollisionConstructionInfo *pInfo) {
     // Create the pair cache for broadphase collision detection.
     btBroadphaseInterface * const
             pBroadphase = createBroadphase(min, max, broadphaseType);
@@ -48,7 +50,7 @@ void jmeDeformableSpace::createDeformableSpace(const btVector3& min,
     // Register some soft-body collision algorithms on top of the default
     // collision dispatcher plus GImpact.
     btCollisionConfiguration * const pCollisionConfiguration
-            = new btSoftBodyRigidBodyCollisionConfiguration(); //dance010
+            = new btSoftBodyRigidBodyCollisionConfiguration(*pInfo); //dance010
     btCollisionDispatcher * const
             pDispatcher = new btCollisionDispatcher(pCollisionConfiguration); //dance008
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);

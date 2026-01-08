@@ -36,6 +36,7 @@ import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.collision.shapes.ConvexShape;
 import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
 import com.jme3.bullet.collision.shapes.infos.ChildCollisionShape;
+import com.jme3.bullet.collision.shapes.infos.IndexedMesh;
 import com.jme3.math.Plane;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
@@ -56,11 +57,18 @@ final public class DebugShapeFactory {
     // constants and loggers
 
     /**
-     * specify high-res debug meshes for convex shapes (up to 256 vertices)
+     * specify high-resolution debug meshes for convex shapes (up to 256
+     * vertices) and zero-margin debug meshes for concave shapes
      */
     final public static int highResolution = 1;
     /**
-     * specify low-res debug meshes for convex shapes (up to 42 vertices)
+     * specify high-resolution debug meshes for convex shapes (up to 256
+     * vertices) and actual-margin debug meshes for concave shapes
+     */
+    final public static int highResolution2 = 2;
+    /**
+     * specify low-res debug meshes for convex shapes (up to 42 vertices) and
+     * zero-margin debug meshes for concave shapes
      */
     final public static int lowResolution = 0;
     /**
@@ -92,7 +100,8 @@ final public class DebugShapeFactory {
      * recursive!
      *
      * @param shape the input shape (not null, unaffected)
-     * @param meshResolution (0=low, 1=high)
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 3)
      */
@@ -100,7 +109,7 @@ final public class DebugShapeFactory {
             CollisionShape shape, int meshResolution) {
         Validate.nonNull(shape, "shape");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
-                highResolution);
+                highResolution2);
 
         FloatBuffer result;
         if (shape instanceof CompoundCollisionShape) {
@@ -108,19 +117,12 @@ final public class DebugShapeFactory {
             result = createCompoundVertices(ccs, meshResolution);
 
         } else if (shape instanceof PlaneCollisionShape) {
-            float halfExt = 1000f;
+            float halfExt = 1_000f;
             result = createPlaneVertices((PlaneCollisionShape) shape, halfExt);
 
         } else {
-            long shapeId = shape.nativeId();
-            DebugMeshCallback callback = new DebugMeshCallback();
-            boolean success = getVertices(shapeId, meshResolution, callback);
-            if (!success) {
-                String shapeType = shape.getClass().getSimpleName();
-                throw new RuntimeException(
-                        "getVertices() failed, shapeType = " + shapeType);
-            }
-            result = callback.getVertices();
+            IndexedMesh debugMesh = new IndexedMesh(shape, meshResolution);
+            result = debugMesh.copyVertexPositions();
         }
 
         assert (result.capacity() % numAxes) == 0 : result.capacity();
@@ -132,7 +134,8 @@ final public class DebugShapeFactory {
      * collision shape. Note: recursive!
      *
      * @param shape the shape to visualize (not null, unaffected)
-     * @param meshResolution (0=low, 1=high)
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 9)
      */
@@ -140,7 +143,7 @@ final public class DebugShapeFactory {
             CollisionShape shape, int meshResolution) {
         Validate.nonNull(shape, "shape");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
-                highResolution);
+                highResolution2);
 
         FloatBuffer result;
         if (shape instanceof CompoundCollisionShape) {
@@ -148,19 +151,12 @@ final public class DebugShapeFactory {
             result = createCompoundTriangles(ccs, meshResolution);
 
         } else if (shape instanceof PlaneCollisionShape) {
-            float halfExt = 1000f;
+            float halfExt = 1_000f;
             result = createPlaneTriangles((PlaneCollisionShape) shape, halfExt);
 
         } else {
-            long shapeId = shape.nativeId();
-            DebugMeshCallback callback = new DebugMeshCallback();
-            boolean success = getTriangles(shapeId, meshResolution, callback);
-            if (!success) {
-                String shapeType = shape.getClass().getSimpleName();
-                throw new RuntimeException(
-                        "getTriangles() failed, shapeType = " + shapeType);
-            }
-            result = callback.getVertices();
+            IndexedMesh debugMesh = new IndexedMesh(shape, meshResolution);
+            result = debugMesh.copyTriangles();
         }
 
         assert (result.capacity() % 9) == 0 : result.capacity();
@@ -173,28 +169,24 @@ final public class DebugShapeFactory {
      * are taken into account, but not its debug-mesh resolution.
      *
      * @param shape (not null, not compound, not plane, unaffected)
-     * @param transform the transform to apply to debug-mesh coordinates (not
+     * @param shapeToWorld the transform to apply to debug-mesh coordinates (not
      * null, unaffected)
-     * @param meshResolution (0=low, 1=high)
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return the maximum length of the transformed vertex locations (&ge;0)
      */
     public static float maxDistance(
-            CollisionShape shape, Transform transform, int meshResolution) {
-        assert !(shape instanceof CompoundCollisionShape);
-        assert !(shape instanceof PlaneCollisionShape);
-        Validate.nonNull(transform, "transform");
+            CollisionShape shape, Transform shapeToWorld, int meshResolution) {
+        Validate.require(
+                !(shape == null || shape instanceof CompoundCollisionShape
+                || shape instanceof PlaneCollisionShape),
+                "a non-null value, neither a compound nor a plane shape");
+        Validate.nonNull(shapeToWorld, "shapeToWorld");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
-                highResolution);
+                highResolution2);
 
-        long shapeId = shape.nativeId();
-        DebugMeshCallback callback = new DebugMeshCallback();
-        boolean success = getVertices(shapeId, meshResolution, callback);
-        if (!success) {
-            String shapeType = shape.getClass().getSimpleName();
-            throw new RuntimeException(
-                    "getVertices() failed, shapeType = " + shapeType);
-        }
-        float result = callback.maxDistance(transform);
+        IndexedMesh debugMesh = new IndexedMesh(shape, meshResolution);
+        float result = debugMesh.maxDistance(shapeToWorld);
 
         return result;
     }
@@ -204,23 +196,18 @@ final public class DebugShapeFactory {
      * shape's scale and margin are taken into account, but not its debug-mesh
      * resolution.
      *
-     * @param shape (not null, convex, unaffected)
-     * @param meshResolution (0=low, 1=high)
+     * @param shape the convex shape to analyze (not null, unaffected)
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return the scaled volume (in physics-space units cubed, &ge;0)
      */
     public static float volumeConvex(ConvexShape shape, int meshResolution) {
+        Validate.nonNull(shape, "shape");
         Validate.inRange(meshResolution, "mesh resolution", lowResolution,
-                highResolution);
+                highResolution2);
 
-        long shapeId = shape.nativeId();
-        DebugMeshCallback callback = new DebugMeshCallback();
-        boolean success = getTriangles(shapeId, meshResolution, callback);
-        if (!success) {
-            String shapeType = shape.getClass().getSimpleName();
-            throw new RuntimeException(
-                    "getTriangles() failed, shapeType = " + shapeType);
-        }
-        float volume = callback.volumeConvex();
+        IndexedMesh debugMesh = new IndexedMesh(shape, meshResolution);
+        float volume = debugMesh.volumeConvex();
 
         assert volume >= 0f : volume;
         return volume;
@@ -233,8 +220,8 @@ final public class DebugShapeFactory {
      * CompoundCollisionShape.
      *
      * @param compoundShape (not null, unaffected)
-     * @param meshResolution (0=low, 1=high)
-     *
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 9)
      */
@@ -275,8 +262,8 @@ final public class DebugShapeFactory {
      * Determine vertex locations for the specified CompoundCollisionShape.
      *
      * @param compoundShape (not null, unaffected)
-     * @param meshResolution (0=low, 1=high)
-     *
+     * @param meshResolution 0&rarr;low, 1&rarr;high for convex shapes,
+     * 2&rarr;high for all shapes
      * @return a new, unflipped, direct buffer full of scaled shape coordinates
      * (capacity a multiple of 3)
      */
@@ -383,7 +370,7 @@ final public class DebugShapeFactory {
      * specified PlaneCollisionShape.
      *
      * @param shape (not null, unaffected) units, &gt;0)
-     * @return a new Transform with scale=1
+     * @return a new Transform with scale=(1,1,1)
      */
     private static Transform planeTransform(PlaneCollisionShape shape) {
         Transform result = new Transform();
@@ -399,12 +386,4 @@ final public class DebugShapeFactory {
 
         return result;
     }
-    // *************************************************************************
-    // native private methods
-
-    native private static boolean getTriangles(
-            long shapeId, int meshResolution, DebugMeshCallback buffer);
-
-    native private static boolean getVertices(
-            long shapeId, int meshResolution, DebugMeshCallback buffer);
 }

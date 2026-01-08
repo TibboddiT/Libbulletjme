@@ -130,7 +130,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     // new methods exposed
 
     /**
-     * Reactivate this body if it has been deactivated due to lack of motion.
+     * Reactivate the body if it has been deactivated due to lack of motion.
      */
     public void activate() {
         activate(true);
@@ -138,14 +138,14 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply a central force to the body. Effective on the next time step, then
-     * cleared.
+     * Apply a force to the body's center of mass. Effective on the next
+     * simulation step, then cleared.
      * <p>
      * To apply an impulse, use
      * {@link #applyCentralImpulse(com.jme3.math.Vector3f)}.
      *
-     * @param force the force vector (mass times physics-space units per second
-     * squared in physics-space coordinates, not null, unaffected)
+     * @param force the force vector (mass times distance per second squared in
+     * physics-space coordinates, not null, finite, unaffected)
      */
     public void applyCentralForce(Vector3f force) {
         Validate.finite(force, "force");
@@ -156,10 +156,10 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply a central impulse to the body.
+     * Apply an impulse to the body's center of mass.
      *
-     * @param impulse the impulse vector (mass times physics-space units per
-     * second in physics-space coordinates, not null, unaffected)
+     * @param impulse the impulse vector (mass times distance per second in
+     * physics-space coordinates, not null, unaffected)
      */
     public void applyCentralImpulse(Vector3f impulse) {
         Validate.finite(impulse, "impulse");
@@ -170,15 +170,16 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply a force to the body. Effective on the next time step, then cleared.
+     * Apply a force to the body. Effective on the next simulation step, then
+     * cleared.
      * <p>
      * To apply an impulse, use
      * {@link #applyImpulse(com.jme3.math.Vector3f, com.jme3.math.Vector3f)}.
      *
-     * @param force the force vector (mass times physics-space units per second
-     * squared in physics-space coordinates, not null, unaffected)
+     * @param force the force vector (mass times distance per second squared in
+     * physics-space coordinates, not null, finite, unaffected)
      * @param offset the location to apply the force (relative to the body's
-     * center in physics-space coordinates, not null, unaffected)
+     * center in physics-space coordinates, not null, finite, unaffected)
      */
     public void applyForce(Vector3f force, Vector3f offset) {
         Validate.finite(force, "force");
@@ -190,12 +191,12 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply an impulse to the body.
+     * Apply an off-center impulse to the body.
      *
-     * @param impulse the impulse vector (mass times physics-space units per
-     * second in physics-space coordinates, not null, unaffected)
-     * @param offset the location to apply the impulse (relative to the body's
-     * center in physics-space coordinates, not null, unaffected)
+     * @param impulse the impulse vector (mass times distance per second in
+     * physics-space coordinates, not null, unaffected)
+     * @param offset where to apply the impulse (relative to the body's center
+     * of mass in physics-space coordinates, not null, unaffected)
      */
     public void applyImpulse(Vector3f impulse, Vector3f offset) {
         Validate.finite(impulse, "impulse");
@@ -207,14 +208,14 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply a torque to the body. Effective on the next time step, then
+     * Apply a torque to the body. Effective on the next simulation step, then
      * cleared.
      * <p>
      * To apply a torque impulse, use
      * {@link #applyTorqueImpulse(com.jme3.math.Vector3f)}.
      *
-     * @param torque the torque vector (mass times physics-space units squared
-     * per second squared in physics-space coordinates, not null, unaffected)
+     * @param torque the torque vector (mass times distance squared per second
+     * squared in physics-space coordinates, not null, finite, unaffected)
      */
     public void applyTorque(Vector3f torque) {
         Validate.finite(torque, "torque");
@@ -240,7 +241,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Clear all forces and torques acting on this body, including gravity.
+     * Clear all forces and torques acting on the body, including gravity.
      */
     public void clearForces() {
         long objectId = nativeId();
@@ -248,7 +249,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Read this body's angular damping.
+     * Return the body's angular damping.
      *
      * @return the damping fraction (&ge;0, &le;1)
      */
@@ -262,7 +263,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy this body's angular factor.
+     * Copy the body's angular factors.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the angular factor for each axis (either storeResult or a new
@@ -278,7 +279,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Read this body's angular-motion sleeping threshold. Note that "sleeping"
+     * Return the body's angular-motion sleeping threshold. Note that "sleeping"
      * is synonym for "deactivation".
      *
      * @return the angular-motion threshold (in radians per second, &ge;0)
@@ -291,10 +292,10 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy this body's angular velocity. The body must be in dynamic mode.
+     * Copy the body's angular velocity. The body must be in dynamic mode.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return a velocity vector (radians per second in physics-space
+     * @return an angular-velocity vector (radians per second in physics-space
      * coordinates, either storeResult or a new vector, not null)
      */
     public Vector3f getAngularVelocity(Vector3f storeResult) {
@@ -308,10 +309,10 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy this body's angular velocity. The body must be in dynamic mode.
+     * Copy the body's angular velocity. The body must be in dynamic mode.
      *
      * @param storeResult storage for the result (modified if not null)
-     * @return a velocity vector (radians per second in physics-space
+     * @return an angular-velocity vector (radians per second in physics-space
      * coordinates, either storeResult or a new vector, not null)
      */
     public Vec3d getAngularVelocityDp(Vec3d storeResult) {
@@ -325,7 +326,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Calculate this body's angular velocity in its local coordinates. The body
+     * Calculate the body's angular velocity in its local coordinates. The body
      * must be in dynamic mode.
      *
      * @param storeResult storage for the result (modified if not null)
@@ -345,7 +346,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy this body's gravitational acceleration.
+     * Copy the body's gravitational acceleration.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return an acceleration vector in physics-space coordinates (either
@@ -392,7 +393,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Read this body's linear damping.
+     * Return the body's linear damping.
      *
      * @return the damping fraction (&ge;0, &le;1)
      */
@@ -406,7 +407,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy this body's linear factors.
+     * Copy the body's linear factors.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return the linear factor for each axis (either storeResult or a new
@@ -422,7 +423,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Read this body's linear-motion sleeping threshold. Note that "sleeping"
+     * Return the body's linear-motion sleeping threshold. Note that "sleeping"
      * is synonym for "deactivation".
      *
      * @return the linear-motion threshold (in physics-space units per second,
@@ -436,7 +437,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy the linear velocity of this body's center of mass. The body must be
+     * Copy the linear velocity of the body's center of mass. The body must be
      * in dynamic mode.
      *
      * @param storeResult storage for the result (modified if not null)
@@ -454,7 +455,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Copy the linear velocity of this body's center of mass. The body must be
+     * Copy the linear velocity of the body's center of mass. The body must be
      * in dynamic mode.
      *
      * @param storeResult storage for the result (modified if not null)
@@ -472,7 +473,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Access this body's motion state.
+     * Access the body's motion state.
      *
      * @return the pre-existing instance (not null)
      */
@@ -481,7 +482,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Calculate the squared speed of this body. The body must be in dynamic
+     * Calculate the squared speed of the body. The body must be in dynamic
      * mode.
      *
      * @return the squared speed (in physics-space units squared per second
@@ -497,7 +498,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Test whether this body is in dynamic mode.
+     * Test whether the body is in dynamic mode.
      *
      * @return true if in dynamic mode, otherwise false (static/kinematic mode)
      */
@@ -507,9 +508,9 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Test whether this body's gravity can be overwritten by PhysicsSpace.
+     * Test whether the body's gravity can be overwritten by PhysicsSpace.
      *
-     * @return false if this body's gravity can be overwritten, otherwise true
+     * @return false if the body's gravity can be overwritten, otherwise true
      */
     public boolean isGravityProtected() {
         long objectId = nativeId();
@@ -519,7 +520,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Test whether this body is in kinematic mode.
+     * Test whether the body is in kinematic mode.
      * <p>
      * In kinematic mode, the body is not influenced by physics but can affect
      * other physics objects. Its kinetic force is calculated based on its
@@ -533,7 +534,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Calculate this body's kinetic energy (linear + angular). The body must be
+     * Calculate the body's kinetic energy (linear + angular). The body must be
      * in dynamic mode.
      *
      * @return the total kinetic energy (&ge;0)
@@ -558,7 +559,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Calculate the mechanical energy of this body (kinetic + potential)
+     * Calculate the mechanical energy of the body (kinetic + potential)
      * assuming a uniform gravitational field. The body must be in dynamic mode.
      *
      * @return the total mechanical energy
@@ -575,7 +576,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Rebuild this rigid body with a new native object.
+     * Rebuild the rigid body with a new native object.
      */
     public void rebuildRigidBody() {
         long oldId = 0L;
@@ -636,7 +637,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular damping.
+     * Alter the body's angular damping.
      *
      * @param angularDamping the desired angular damping fraction (&ge;0, &le;1,
      * default=0)
@@ -649,7 +650,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular factor.
+     * Alter the body's angular factor.
      *
      * @param factor the desired angular factor for all axes (not null,
      * unaffected, default=1)
@@ -660,7 +661,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular factors, used to scale applied torques.
+     * Alter the body's angular factors, used to scale applied torques.
      *
      * @param factor the desired angular factor for each axis (not null,
      * unaffected, default=(1,1,1))
@@ -671,7 +672,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular-motion sleeping threshold. Note that "sleeping"
+     * Alter the body's angular-motion sleeping threshold. Note that "sleeping"
      * is synonym for "deactivation".
      *
      * @param threshold the desired threshold (in radians per second, &ge;0,
@@ -683,10 +684,10 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular velocity.
+     * Alter the body's angular velocity.
      *
-     * @param omega the desired angular velocity (in physics-space coordinates,
-     * not null, unaffected)
+     * @param omega the desired angular velocity (radians per second in
+     * physics-space coordinates, not null, finite, unaffected)
      */
     public void setAngularVelocity(Vector3f omega) {
         Validate.finite(omega, "omega");
@@ -697,10 +698,10 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's angular velocity.
+     * Alter the body's angular velocity.
      *
-     * @param omega the desired angular velocity (in physics-space coordinates,
-     * not null, unaffected)
+     * @param omega the desired angular velocity (radians per second in
+     * physics-space coordinates, not null, unaffected)
      */
     public void setAngularVelocityDp(Vec3d omega) {
         long objectId = nativeId();
@@ -709,23 +710,23 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Apply the specified CollisionShape to this body. The body gets rebuilt on
+     * Apply the specified CollisionShape to the body. The body gets rebuilt on
      * the native side.
      *
-     * @param collisionShape the shape to apply (not null, alias created)
+     * @param desiredShape the shape to apply (not null, alias created)
      */
     @Override
-    public void setCollisionShape(CollisionShape collisionShape) {
-        Validate.nonNull(collisionShape, "collision shape");
+    public void setCollisionShape(CollisionShape desiredShape) {
+        Validate.nonNull(desiredShape, "desired shape");
         if (isDynamic()) {
-            validateDynamicShape(collisionShape);
+            validateDynamicShape(desiredShape);
         }
 
-        super.setCollisionShape(collisionShape);
+        super.setCollisionShape(desiredShape);
 
         if (hasAssignedNativeObject()) {
             long objectId = nativeId();
-            long shapeId = collisionShape.nativeId();
+            long shapeId = desiredShape.nativeId();
             setCollisionShape(objectId, shapeId);
             updateMassProps(objectId, shapeId, mass);
 
@@ -735,7 +736,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Enable/disable this body's contact response.
+     * Enable/disable the body's contact response.
      *
      * @param newState true to respond to contacts, false to ignore them
      * (default=true)
@@ -752,7 +753,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's damping.
+     * Alter the body's damping.
      *
      * @param linearDamping the desired linear damping fraction (&ge;0, &le;1,
      * default=0)
@@ -768,7 +769,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's activation state to allow/disallow sleeping. Note that
+     * Alter the body's activation state to allow/disallow sleeping. Note that
      * "sleeping" is synonym for "deactivation".
      *
      * @param setting true&rarr;enable sleeping, false&rarr;disable sleeping
@@ -784,7 +785,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's gravitational acceleration.
+     * Alter the body's gravitational acceleration.
      * <p>
      * Invoke this method <em>after</em> adding the body to a PhysicsSpace.
      * Unless protection is set, adding a body to a PhysicsSpace overrides its
@@ -823,7 +824,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Put this body into kinematic mode or take it out of kinematic mode.
+     * Put the body into kinematic mode or take it out of kinematic mode.
      * <p>
      * In kinematic mode, the body is not influenced by physics but can affect
      * other physics objects. Its kinetic force is calculated based on its mass
@@ -841,7 +842,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's linear damping.
+     * Alter the body's linear damping.
      *
      * @param linearDamping the desired linear damping fraction (&ge;0, &le;1,
      * default=0)
@@ -855,7 +856,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's linear factors.
+     * Alter the body's linear factors.
      *
      * @param factor the desired linear factor for each axis (not null,
      * unaffected, default=(1,1,1))
@@ -868,7 +869,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's linear-motion sleeping threshold. Note that "sleeping"
+     * Alter the body's linear-motion sleeping threshold. Note that "sleeping"
      * is synonym for "deactivation".
      *
      * @param threshold the desired threshold (in physics-space units per
@@ -880,7 +881,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter the linear velocity of this body's center of mass.
+     * Alter the linear velocity of the body's center of mass.
      *
      * @param velocity the desired velocity (physics-space units per second in
      * physics-space coordinates, not null, finite, unaffected)
@@ -894,7 +895,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter the linear velocity of this body's center of mass.
+     * Alter the linear velocity of the body's center of mass.
      *
      * @param velocity the desired velocity (physics-space units per second in
      * physics-space coordinates, not null, unaffected)
@@ -908,7 +909,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly relocate this body's center of mass.
+     * Directly relocate the body's center of mass.
      *
      * @param location the desired location (in physics-space coordinates, not
      * null, unaffected)
@@ -921,7 +922,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly alter this body's orientation.
+     * Directly alter the body's orientation.
      *
      * @param orientation the desired orientation (rotation matrix relative to
      * physics-space coordinates, not null, unaffected)
@@ -938,7 +939,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly reorient this body.
+     * Directly reorient the body.
      *
      * @param orientation the desired orientation (relative to physics-space
      * coordinates, not null, not zero, unaffected)
@@ -955,7 +956,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly reorient this body.
+     * Directly reorient the body.
      *
      * @param orientation the desired orientation (rotation matrix relative to
      * physics-space coordinates, not null, unaffected)
@@ -972,7 +973,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly reorient this body.
+     * Directly reorient the body.
      *
      * @param orientation the desired orientation (relative to physics-space
      * coordinates, not null, not zero, unaffected)
@@ -989,7 +990,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Rescale this body. Note that if it has joints, their pivot locations will
+     * Rescale the body. Note that if it has joints, their pivot locations will
      * not be adjusted.
      *
      * @param newScale the desired scale factor for each local axis (not null,
@@ -1005,8 +1006,8 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly alter this body's transform, including the scale of its shape.
-     * If the body has joints, their pivot points will not be adjusted for scale
+     * Directly alter the body's transform, including the scale of its shape. If
+     * the body has joints, their pivot points will not be adjusted for scale
      * changes.
      *
      * @param transform the desired transform (relative to physics-space
@@ -1019,11 +1020,11 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter whether this body's gravity should be overwritten if the body gets
+     * Alter whether the body's gravity should be overwritten if the body gets
      * added to a PhysicsSpace or the gravity of the PhysicsSpace changes.
      *
-     * @param newState true to preserve this body's gravity, false to allow it
-     * to be overwritten (default=false)
+     * @param newState true to preserve the body's gravity, false to allow it to
+     * be overwritten (default=false)
      */
     public void setProtectGravity(boolean newState) {
         long objectId = nativeId();
@@ -1031,8 +1032,8 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's sleeping thresholds. Note that "sleeping" is synonym
-     * for "deactivation".
+     * Alter the body's sleeping thresholds. Note that "sleeping" is synonym for
+     * "deactivation".
      * <p>
      * These thresholds influence whether the body will be deactivated to save
      * resources. Low values keep the body active when it barely moves.
@@ -1051,7 +1052,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Determine the total force applied to this body (excluding contact forces,
+     * Determine the total force applied to the body (excluding contact forces,
      * damping, and gravity).
      *
      * @param storeResult storage for the result (modified if not null)
@@ -1068,7 +1069,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Determine the total torque applied to this body (excluding contact forces
+     * Determine the total torque applied to the body (excluding contact forces
      * and damping).
      *
      * @param storeResult storage for the result (modified if not null)
@@ -1113,7 +1114,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     // PhysicsBody methods
 
     /**
-     * Copy this body's gravitational acceleration.
+     * Copy the body's gravitational acceleration.
      *
      * @param storeResult storage for the result (modified if not null)
      * @return an acceleration vector in physics-space coordinates (either
@@ -1130,7 +1131,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Read this body's mass.
+     * Return the body's mass.
      *
      * @return the mass (&gt;0) or zero for a static body
      */
@@ -1141,7 +1142,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's gravitational acceleration.
+     * Alter the body's gravitational acceleration.
      * <p>
      * Invoke this method <em>after</em> adding the body to a PhysicsSpace.
      * Unless protection is set, adding a body to a PhysicsSpace overrides its
@@ -1169,7 +1170,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Alter this body's mass. Static bodies have mass=0. For dynamic bodies, it
+     * Alter the body's mass. Static bodies have mass=0. For dynamic bodies, it
      * is best to keep the mass on the order of 1.
      *
      * @param mass the desired mass (&ge;0, default=1)
@@ -1208,7 +1209,7 @@ public class PhysicsRigidBody extends PhysicsBody {
     }
 
     /**
-     * Directly relocate this body's center of mass.
+     * Directly relocate the body's center of mass.
      *
      * @param location the desired location (in physics-space coordinates, not
      * null, finite, unaffected)

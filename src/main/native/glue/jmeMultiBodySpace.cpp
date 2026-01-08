@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 jMonkeyEngine
+ * Copyright (c) 2020-2024 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,23 +29,24 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "jmeMultiBodySpace.h"
-#include "jmeClasses.h"
-#include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 
 /*
  * Author: Stephen Gold
  */
+#include "jmeMultiBodySpace.h"
+#include "jmeClasses.h"
+#include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
+
 void jmeMultiBodySpace::
 createMultiBodySpace(const btVector3& min, const btVector3& max,
-        jint broadphaseType) {
+        int broadphaseType, const btDefaultCollisionConstructionInfo *pInfo) {
     // Create the pair cache for broadphase collision detection.
     btBroadphaseInterface * const
             pBroadphase = createBroadphase(min, max, broadphaseType);
 
     // Use the default collision dispatcher plus GImpact.
     btCollisionConfiguration * const
-            pCollisionConfiguration = new btDefaultCollisionConfiguration(); //dance010
+            pCollisionConfiguration = new btDefaultCollisionConfiguration(*pInfo); //dance010
     btCollisionDispatcher * const
             pDispatcher = new btCollisionDispatcher(pCollisionConfiguration); //dance008
     btGImpactCollisionAlgorithm::registerAlgorithm(pDispatcher);

@@ -39,7 +39,8 @@ import java.util.logging.Logger;
  * The abstract base class for convex collision shapes based on Bullet's
  * {@code btConvexShape}.
  * <p>
- * Subclasses include BoxCollisionShape and CapsuleCollisionShape.
+ * Subclasses include {@code BoxCollisionShape} and
+ * {@code CapsuleCollisionShape}.
  *
  * @author Stephen Gold sgold@sonic.net
  */
@@ -58,8 +59,11 @@ abstract public class ConvexShape extends CollisionShape {
     /**
      * Instantiate a collision shape with no tracker and no assigned native
      * object.
+     * <p>
+     * This no-arg constructor was made explicit to avoid javadoc warnings from
+     * JDK 18+.
      */
-    protected ConvexShape() { // explicit to avoid a warning from JDK 18 javadoc
+    protected ConvexShape() {
     }
     // *************************************************************************
     // new methods exposed
@@ -90,7 +94,7 @@ abstract public class ConvexShape extends CollisionShape {
      * those types might actually be "convex" in the mathematical sense of the
      * word.
      *
-     * @return true if concave type, false otherwise
+     * @return false
      */
     @Override
     public boolean isConcave() {
@@ -104,7 +108,7 @@ abstract public class ConvexShape extends CollisionShape {
      * non-convex types might still be "convex" in the mathematical sense of the
      * word.
      *
-     * @return true if convex type, false otherwise
+     * @return true
      */
     @Override
     public boolean isConvex() {

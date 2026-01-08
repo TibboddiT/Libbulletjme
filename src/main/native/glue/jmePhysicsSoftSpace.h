@@ -32,13 +32,12 @@
 #ifndef JME_PHYSICS_SOFT_SPACE_H
 #define JME_PHYSICS_SOFT_SPACE_H
 
-#include "jmePhysicsSpace.h"
-#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
-#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
-
 /*
  * Author: Dokthar
  */
+#include "jmePhysicsSpace.h"
+#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+
 class jmePhysicsSoftSpace : public jmePhysicsSpace {
 public:
     /*
@@ -50,7 +49,7 @@ public:
 
     void
     createPhysicsSoftSpace(const btVector3& min, const btVector3& max,
-            int broadphaseType);
+            int broadphaseType, const btDefaultCollisionConstructionInfo *);
 
     const btSoftRigidDynamicsWorld *
     getSoftDynamicsWorld() const {
