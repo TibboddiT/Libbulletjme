@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>How Libbulletjme works :: The Libbulletjme project</title>
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/implementation.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="How Libbulletjme works">
@@ -264,9 +264,11 @@ a mature, open-source, 3-D physics simulator,
 released under <a href="https://github.com/bulletphysics/bullet3/blob/master/LICENSE.txt">a Zlib license</a>.</p>
 </div>
 <div class="paragraph">
-<p>To enable efficient simulation of moving meshes,
+<p>To enable efficient simulation of complex moving shapes,
 Libbulletjme also incorporates Khaled Mamou&#8217;s
-<a href="https://github.com/kmammou/v-hacd">Volumetric-Hierarchical Approximate Convex Decomposition <em>(V-HACD)</em> algorithm</a>.</p>
+<a href="https://github.com/kmammou/v-hacd">Volumetric-Hierarchical Approximate Convex Decomposition <em>(V-HACD)</em> algorithm</a>,
+released under
+<a href="https://github.com/kmammou/v-hacd/blob/master/LICENSE">a 3-Clause BSD License</a>.</p>
 </div>
 </div>
 </div>
@@ -283,24 +285,25 @@ to access their objects and methods.</p>
 (a modified partial snapshot of Bullet, a snapshot of V-HACD, and some "glue code")
 resides in <a href="https://github.com/stephengold/Libbulletjme/tree/master/src/main/native">its "native" directory</a>.
 Before instantiating physics objects,
-a Libbulletjme application must <a href="https://en.wikipedia.org/wiki/Dynamic_loading">dynamically load</a>
+a Libbulletjme app must <a href="https://en.wikipedia.org/wiki/Dynamic_loading">dynamically load</a>
 a <em>native library</em> of this code,
 compiled for the <a href="https://en.wikipedia.org/wiki/Computing_platform">platform</a>
 on which the app is executing.</p>
 </div>
 <div class="paragraph">
-<p>Libbulletjme publishes native libraries for 14 different platforms:</p>
+<p>The Libbulletjme project publishes native libraries
+for 10 different platforms:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Windows (32-bit and 64-bit),</p>
+<p>Windows (64-bit),</p>
 </li>
 <li>
-<p>Linux (x86-64, x86, arm, armhf, and aarch64),</p>
+<p>Linux (x86-64, armhf, and aarch64),</p>
 </li>
 <li>
-<p>macOS (x86-64, IA-32, and ARM64), and</p>
+<p>macOS (x86-64 and ARM64), and</p>
 </li>
 <li>
 <p>Android (armeabi-v7a, arm64-v8a, x86, and x86_64).</p>
@@ -326,15 +329,15 @@ count as distinct platforms!
 <div class="ulist">
 <ul>
 <li>
-<p>"Debug" (for development use) and</p>
+<p>"Debug" (for development, debugging, and functional testing) and</p>
 </li>
 <li>
-<p>"Release" (for production use).</p>
+<p>"Release" (for performance testing and production use).</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Furthermore, native libraries come in various flavors, including:</p>
+<p>Furthermore, native libraries come in various <em>flavors</em>, including:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -365,9 +368,11 @@ so a single JVM library suffices.</p>
 <h2 id="_collision_objects_spaces_and_shapes"><a class="anchor" href="#_collision_objects_spaces_and_shapes"></a>Collision objects, spaces, and shapes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Collision detection is organized around <em>collision objects</em>
-that interact in the context of a <em>collision space</em>.
-Collision objects can be <em>soft</em> (varying shape) or <em>rigid</em> (non-varying shape).
+<p>Collision detection is organized around <em>collision objects</em> and <em>physics joints</em>
+that interact in the context of a <em>collision space</em>.</p>
+</div>
+<div class="paragraph">
+<p>Collision objects can be <em>soft</em> (varying shape) or <em>rigid</em> (non-varying shape).
 Rigid objects can be <em>mobile</em> (moving) or <em>static</em> (non-moving).
 And mobile objects can be <em>dynamic</em> (driven by <a href="https://en.wikipedia.org/wiki/Force">forces</a>,
 <a href="https://en.wikipedia.org/wiki/Torque">torques</a>, and <a href="https://en.wikipedia.org/wiki/Impulse_(physics)">impulses</a>)
@@ -447,7 +452,7 @@ to apply contact forces, solve constraints, and update positions.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>For fast-moving objects,
+<p>For fast-moving rigid bodies,
 Libbulletjme offers optional continuous collision detection (CCD)
 using swept spheres.</p>
 </div>
@@ -480,7 +485,7 @@ To enable this feature, a multithreaded (Mt) native library must be loaded.</p>
 <h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next steps</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For more detail about Bullet physics, download and read the
+<p>For more detail about how Bullet physics works, download and read the
 <a href="https://github.com/bulletphysics/bullet3/blob/master/docs/Bullet_User_Manual.pdf">Bullet User Manual</a>.</p>
 </div>
 <div class="paragraph">
@@ -497,7 +502,7 @@ proceed to <a href="add.html" class="xref page">the first tutorial page</a>.</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2024 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2026 by Stephen Gold</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>

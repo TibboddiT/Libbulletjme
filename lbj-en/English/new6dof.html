@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/new6dof.html">
     <link rel="prev" href="vehicle.html">
     <link rel="next" href="collision.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="An introduction to New6Dof constraints">
@@ -264,6 +264,11 @@
 <p>A <em>physics joint</em> connects one physics body to another
 (or to a fixed point in space), constraining how the body(s) can move.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conceptual_examples"><a class="anchor" href="#_conceptual_examples"></a>Conceptual examples</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>For instance, a door might swing on hinges.
 In simulation, the hinges would be represented by a joint
@@ -329,14 +334,14 @@ or as a <em>single-ended</em> constraint (connecting a rigid body to a fixed poi
 </div>
 <div class="paragraph">
 <p><code>New6Dof</code> can simulate up to 3 rotation DOFs
-and up to 3 translation DOFs, so an instance
+and up to 3 translation DOFs, so it
 can potentially rotate or slide on any axis or axes.
 By default, the translation DOFs are <em>locked</em> at a zero,
 while the rotation DOFs are <em>free</em> to assume any angular value.
 In other words, it defaults to a point-to-point joint.</p>
 </div>
 <div class="paragraph">
-<p>By locking and/or unlocking DOFs, you simulate different types of joints:</p>
+<p>By locking and/or unlocking DOFs, you simulate other types of joints:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -560,7 +565,8 @@ Then you can specify <code>Matrix3f.IDENTITY</code> for each "rot" parameter.
 <h3 id="_example_apps"><a class="anchor" href="#_example_apps"></a>Example apps</h3>
 <div class="paragraph">
 <p><a href="https://github.com/stephengold/LbjExamples/blob/master/apps/src/main/java/com/github/stephengold/lbjexamples/apps/HelloJoint.java">HelloJoint</a> (also <a href="https://github.com/stephengold/LbjExamples/blob/master/kotlin-apps/src/main/kotlin/com/github/stephengold/lbjexamples/ktapps/HelloJoint.kt">in Kotlin</a>) is a SPORT app
-that demonstrates a single-ended <code>New6Dof</code> constraint.</p>
+that demonstrates a single-ended <code>New6Dof</code>
+simulating a point-to-point joint.</p>
 </div>
 <div class="paragraph">
 <p>Things to notice while running the app:</p>
@@ -669,7 +675,7 @@ The limits of a rotational DOF are measured in radians.
 that demonstrates a single-ended <code>New6Dof</code> constraint
 with limited translation DOFs.
 The joint&#8217;s translations are limited,
-confining the ball to a horizontal square centered on the origin.</p>
+confining the ball to a 6x6 horizontal square centered on the origin.</p>
 </div>
 </div>
 </div>
@@ -870,7 +876,7 @@ This can be mitigated by increasing the error-reduction parameter (ERP).</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2024 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2026 by Stephen Gold</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>

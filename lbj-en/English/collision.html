@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/collision.html">
     <link rel="prev" href="new6dof.html">
     <link rel="next" href="softbody.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="Managing collisions">
@@ -497,7 +497,9 @@ to disable collisions between the ends of a joint.
 <div class="sect2">
 <h3 id="_using_a_dynamic_filter"><a class="anchor" href="#_using_a_dynamic_filter"></a>Using a dynamic filter</h3>
 <div class="paragraph">
-<p>Libbulletjme invokes <code>space.needsCollision()</code> for each AABB overlap
+<p>For each collision group in a space,
+you can register a collision-group listener.
+Libbulletjme invokes the collision-group listeners for each AABB overlap
 that isn&#8217;t suppressed by collision groups or ignore lists.
 The default implementation returns <code>true</code>, meaning "process this overlap".</p>
 </div>
@@ -752,7 +754,7 @@ against a space.</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2024 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2026 by Stephen Gold</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>

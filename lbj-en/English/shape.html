@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://stephengold.github.io/Libbulletjme/lbj-en/English/shape.html">
     <link rel="prev" href="rigidbody.html">
     <link rel="next" href="character.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../_/css/site.css">
 <meta property="og:image" content="../../_/img/iconx128.png">
 <meta property="og:description" content="Choosing collision shapes">
@@ -530,8 +530,8 @@ assert convexClass == isConvex;</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In this context, "convex" is a property of classes, not instances.
-While specific <strong>instances</strong> of non-convex classes have the convex property,
+In Libbulletjme, "convex" is a property of classes, not objects.
+While specific <strong>instances</strong> of non-convex classes possess the convex property,
 those classes don&#8217;t guarantee it for <strong>all</strong> instances.
 </td>
 </tr>
@@ -995,17 +995,25 @@ should be your last resort!
 <div class="paragraph">
 <p>Faced with the task of simulating a non-convex rigid body
 (such as a cross or ring),
-it&#8217;s best to decompose it into convex shapes that,
+it&#8217;s best to decompose it into a small number of convex shapes that,
 when recombined, will approximate the desired behavior.</p>
 </div>
 <div class="paragraph">
 <p>There are various approaches,
-depending how much the developer knows about the object&#8217;s shape.
-If the model&#8217;s mesh is generated procedurally, it may be possible
-to decompose it during the generation process.
-Or if the object is modeled in Blender,
-it may be practical to manually decompose it there
-into meshes that are convex or nearly so.</p>
+depending how much you know about the body&#8217;s shape.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the mesh was generated procedurally, it may be convenient
+to decompose it during the generation process.</p>
+</li>
+<li>
+<p>If the mesh was crafted in a tool such as <a href="https://www.blender.org/">Blender</a>,
+it may be practical to manually decompose it there,
+into sub-meshes that are convex or nearly so.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1013,11 +1021,11 @@ into meshes that are convex or nearly so.</p>
 <h2 id="_automated_decomposition"><a class="anchor" href="#_automated_decomposition"></a>Automated decomposition</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For situations where manual decomposition is impractical,
+<p>For situations where other decomposition approaches are impractical,
 Libbulletjme incorporates Khaled Mamou&#8217;s
 <a href="https://github.com/kmammou/v-hacd">Volumetric-Hierarchical Approximate Convex Decomposition (V-HACD) algorithm</a>.
-V-HACD makes it easy to decompose a 3-D model into a
-compound of hull shapes:</p>
+V-HACD makes it easy to decompose a 3-D mesh of triangles into a
+compound of convex-hull shapes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1102,7 +1110,7 @@ either during model construction or using V-HACD.</p>
 </main>
 </div>
 <footer class="footer">
-  <p>Copyright &copy; 2020&ndash;2024 by Stephen Gold</p>
+  <p>Copyright &copy; 2020&ndash;2026 by Stephen Gold</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>
