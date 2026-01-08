@@ -97,20 +97,20 @@ model {
         gcc(Gcc)
         gcc10Arm(Gcc) { // used when cross-compiling on Linux
             target('Linux_ARM64') {
-                cppCompiler.executable = 'aarch64-linux-gnu-g++-10'
-                linker.executable = 'aarch64-linux-gnu-g++-10'
+                cppCompiler.executable = 'aarch64-linux-gnu-g++'
+                linker.executable = 'aarch64-linux-gnu-g++'
             }
         }
         gcc9Arm(Gcc) { // used when cross-compiling on Linux
             target('Linux_ARM32hf') {
-                cppCompiler.executable = 'arm-linux-gnueabihf-g++-9'
-                linker.executable = 'arm-linux-gnueabihf-g++-9'
+                cppCompiler.executable = 'arm-linux-gnueabihf-g++'
+                linker.executable = 'arm-linux-gnueabihf-g++'
             }
         }
         gcc13Loong(Gcc) { // used when cross-compiling on Linux
             target('Linux_LoongArch64') {
-                cppCompiler.executable = 'loongarch64-linux-gnu-g++-13'
-                linker.executable = 'loongarch64-linux-gnu-g++-13'
+                cppCompiler.executable = 'loongarch64-linux-gnu-g++'
+                linker.executable = 'loongarch64-linux-gnu-g++'
             }
         }
     }
@@ -247,7 +247,14 @@ model {
                     }
                     if (isMt) {
                         cppCompiler.args '-fopenmp'
-                        linker.args '-lgomp'
+
+                        if (toolChain instanceof Gcc) {
+                            // GCC → libgomp
+                            linker.args '-lgomp'
+                        } else if (toolChain instanceof Clang) {
+                            // Clang → libomp
+                            linker.args '-lomp'
+                        }
                     }
 
                     if (os == 'osx') {
@@ -267,6 +274,7 @@ model {
 
                 if (buildable) {
                     println 'Build ' + q + ' using ' + toolChain
+                    println flavor.name + buildType.name
 
                     // Generate resource path for native library (per jme3-desktop) one of:
                     //   native/linux/arm32/libbulletjme.so
