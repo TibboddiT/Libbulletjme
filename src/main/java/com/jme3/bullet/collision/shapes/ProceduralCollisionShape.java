@@ -53,15 +53,33 @@ public class ProceduralCollisionShape extends CollisionShape {
      */
     final public static Logger logger2
             = Logger.getLogger(ProceduralCollisionShape.class.getName());
+
     // *************************************************************************
     // fields
 
+    /**
+     * triangles feeder
+     */
     final private ProceduralCollisionShapeTrianglesFeeder trianglesFeeder;
+
+    /**
+     * max number of triangles the feeder will return
+     */
     final private int maxTriangles;
 
+    /**
+     * triangles storage
+     */
     final private FloatBuffer trianglesStorage;
 
+    /**
+     * AABB min
+     */
     private Vector3f aabbMin = new Vector3f();
+
+    /**
+     * AABB max
+     */
     private Vector3f aabbMax = new Vector3f();
 
     // *************************************************************************
